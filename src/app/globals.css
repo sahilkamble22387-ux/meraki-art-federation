@@ -14,7 +14,7 @@
 }
 
 body {
-  background-color: #0b090e;
+  background-color: #08060a;
   color: #f4efe8;
   font-family: var(--font-sans), sans-serif;
   overflow-x: hidden;
@@ -34,17 +34,39 @@ body {
   box-shadow: 0 0 24px rgba(205, 162, 80, 0.15);
 }
 
+/* Atelier architectural grid */
+.atelier-grid {
+  background-image: 
+    linear-gradient(to right, rgba(205, 162, 80, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(205, 162, 80, 0.05) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+.atelier-grid-fine {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Subtle atmospheric grain */
+.atelier-grain {
+  background-image: radial-gradient(rgba(205, 162, 80, 0.12) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
 /* Custom minimal scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b090e;
+  background: #08060a;
 }
 ::-webkit-scrollbar-thumb {
-  background: #272130;
+  background: #231b2c;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #cda250;
 }
+

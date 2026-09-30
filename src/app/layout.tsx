@@ -16,17 +16,17 @@ const sansFont = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Meraki Art Federation — Global Collective of Visionary Artists",
+  title: "Under Construction — Meraki Art Federation | Designed by Foxbyte Studios",
   description:
-    "Meraki Art Federation is an international coalition of contemporary painters, sculptors, and creative visionaries — curating world-class exhibitions, fellowships, and private collections.",
+    "The digital pavilion of the Meraki Art Federation is currently under construction, designed and engineered by Foxbyte Studios. Unveiling our global vault of fine arts, sculpture, and master fellowships soon.",
   metadataBase: new URL("https://merakiartfed.com"),
   alternates: {
     canonical: "https://merakiartfed.com",
   },
   openGraph: {
-    title: "Meraki Art Federation — Where Passion Takes Form",
+    title: "Meraki Art Federation — Digital Pavilion Under Construction",
     description:
-      "International collective of contemporary artists, sculptors, and cultural visionaries.",
+      "Crafted by Foxbyte Studios for the Meraki Art Federation. Archiving visionary painters, sculptors, and creative soul.",
     url: "https://merakiartfed.com",
     siteName: "Meraki Art Federation",
     locale: "en_US",
