@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+  --color-gold: #cda250;
+  --color-gold-light: #e6c587;
+  --color-terracotta: #b85d38;
+}
+
+:root {
+  --background: #0b090e;
+  --foreground: #f4efe8;
+}
+
+body {
+  background-color: #0b090e;
+  color: #f4efe8;
+  font-family: var(--font-sans), sans-serif;
+  overflow-x: hidden;
+}
+
+.font-serif-luxury {
+  font-family: var(--font-serif), Georgia, serif;
+}
+
+/* Subtle gallery gold border shimmer */
+.gold-border {
+  border: 1px solid rgba(205, 162, 80, 0.22);
+}
+
+.gold-border-glow:hover {
+  border-color: rgba(205, 162, 80, 0.55);
+  box-shadow: 0 0 24px rgba(205, 162, 80, 0.15);
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0b090e;
+}
+::-webkit-scrollbar-thumb {
+  background: #272130;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #cda250;
+}
