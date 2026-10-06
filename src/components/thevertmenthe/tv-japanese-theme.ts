@@ -890,3 +890,117 @@ export function createSakuraParticles(
 
   return { group, update }
 }
+
+/**
+ * Creates the handcrafted Meraki Artist Satchel & Hanging Japanese Art Scrolls.
+ * Parented directly to the character's spine/torso bone so it naturally sways with movement.
+ */
+export function createArtistSatchel(): THREE.Group {
+  const satchel = new THREE.Group()
+
+  // Materials
+  const leatherMat = new THREE.MeshStandardMaterial({
+    color: "#3e2718", // Warm chestnut saddle leather
+    roughness: 0.5,
+    metalness: 0.1,
+  })
+
+  const brassMat = new THREE.MeshStandardMaterial({
+    color: "#d4af37", // Brushed antique brass
+    roughness: 0.35,
+    metalness: 0.85,
+  })
+
+  const scrollMat = new THREE.MeshStandardMaterial({
+    color: "#f0ebe1", // Aged natural washi parchment
+    roughness: 0.88,
+    metalness: 0.0,
+  })
+
+  const ribbonMat = new THREE.MeshStandardMaterial({
+    color: "#b71c1c", // Meraki vermillion red silk ribbon
+    roughness: 0.45,
+    metalness: 0.1,
+  })
+
+  const rodMat = new THREE.MeshStandardMaterial({
+    color: "#181410", // Smoked timber rod ends
+    roughness: 0.6,
+  })
+
+  // 1. Leather messenger bag body
+  const bagGeo = new THREE.BoxGeometry(0.68, 0.52, 0.16)
+  const bag = new THREE.Mesh(bagGeo, leatherMat)
+  bag.position.set(0, 0, 0)
+  bag.castShadow = true
+  satchel.add(bag)
+
+  // 2. Leather flap over the front
+  const flapGeo = new THREE.BoxGeometry(0.7, 0.26, 0.18)
+  const flap = new THREE.Mesh(flapGeo, leatherMat)
+  flap.position.set(0, -0.06, 0.01)
+  flap.castShadow = true
+  satchel.add(flap)
+
+  // 3. Brass closure buckle on the flap
+  const buckleGeo = new THREE.BoxGeometry(0.08, 0.09, 0.04)
+  const buckle = new THREE.Mesh(buckleGeo, brassMat)
+  buckle.position.set(0, -0.16, 0.1)
+  satchel.add(buckle)
+
+  // 4. Two rolled Japanese Washi Art Scrolls strapped across top
+  // Scroll 1
+  const scroll1 = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.88, 16), scrollMat)
+  scroll1.rotation.z = Math.PI * 0.48
+  scroll1.rotation.x = 0.1
+  scroll1.position.set(0, 0.28, -0.02)
+  scroll1.castShadow = true
+  satchel.add(scroll1)
+
+  // Scroll 1 wooden rod tips
+  const rod1A = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.06, 12), rodMat)
+  rod1A.position.y = 0.45
+  const rod1B = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.06, 12), rodMat)
+  rod1B.position.y = -0.45
+  scroll1.add(rod1A, rod1B)
+
+  // Scroll 1 red silk ribbon tie
+  const tie1 = new THREE.Mesh(new THREE.TorusGeometry(0.058, 0.012, 8, 16), ribbonMat)
+  tie1.rotation.x = Math.PI * 0.5
+  tie1.position.set(0, 0.28, -0.02)
+  satchel.add(tie1)
+
+  // Scroll 2 (slightly angled behind scroll 1)
+  const scroll2 = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.048, 0.82, 16), scrollMat)
+  scroll2.rotation.z = Math.PI * 0.52
+  scroll2.rotation.x = -0.15
+  scroll2.position.set(0, 0.24, -0.09)
+  scroll2.castShadow = true
+  satchel.add(scroll2)
+
+  const tie2 = new THREE.Mesh(new THREE.TorusGeometry(0.051, 0.012, 8, 16), ribbonMat)
+  tie2.rotation.x = Math.PI * 0.5
+  tie2.position.set(0, 0.24, -0.09)
+  satchel.add(tie2)
+
+  // 5. Diagonal Leather Strap wrapping over the shoulder
+  const strapGeo = new THREE.BoxGeometry(0.07, 1.4, 0.025)
+  const strap = new THREE.Mesh(strapGeo, leatherMat)
+  strap.rotation.z = -0.55
+  strap.rotation.y = 0.25
+  strap.position.set(-0.25, 0.55, 0.1)
+  satchel.add(strap)
+
+  // 6. Meraki Vermillion Artist Seal Badge on strap
+  const seal = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 0.02), ribbonMat)
+  seal.position.set(-0.35, 0.82, 0.12)
+  seal.rotation.z = -0.55
+  satchel.add(seal)
+
+  // Angle the satchel naturally on the back
+  satchel.rotation.z = 0.18
+  satchel.rotation.y = -0.12
+  satchel.position.set(0.12, -0.12, -0.68)
+
+  return satchel
+}
