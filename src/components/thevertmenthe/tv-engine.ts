@@ -319,7 +319,7 @@ export class TvEngine {
       }
     })
 
-    p.scale.set(0.08, 0.08, 0.08)
+    p.scale.set(0.13, 0.13, 0.13)
     this.personnage = p
 
     // Warm museum studio lighting to showcase the smooth clay/ceramic tactile depth
@@ -862,7 +862,7 @@ export class TvEngine {
     const bone = this.personnage.getObjectByName(boneName)
     const pos = new THREE.Vector3()
     const lateral = new THREE.Vector3(1, 0, 0).applyQuaternion(this.personnage.quaternion)
-    const sideOffset = foot === "left" ? -0.042 : 0.042
+    const sideOffset = foot === "left" ? -0.055 : 0.055
 
     if (bone) {
       bone.getWorldPosition(pos)
@@ -880,7 +880,7 @@ export class TvEngine {
       opacity: 0.45,
       depthWrite: false,
     })
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(0.08, 0.128), mat)
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(0.10, 0.16), mat)
     m.quaternion.copy(this.personnage.quaternion)
     m.rotateX(-Math.PI * 0.5)
     m.rotateZ(Math.PI)
@@ -941,8 +941,8 @@ export class TvEngine {
       this.rebuildLinks()
       if (this.personnage) {
         this.personnage.position.set(0, 0, 0)
-        this.camPosTarget.set(0, 1, 3)
-        this.camTarget.set(0, 0.6, -0.5)
+        this.camPosTarget.set(0, 1.25, 3.2)
+        this.camTarget.set(0, 0.72, -0.5)
         this.camera.position.copy(this.camPosTarget)
         if (this.smoothedTarget) this.smoothedTarget.copy(this.camTarget)
         this.camera.lookAt(this.camTarget)
@@ -962,8 +962,8 @@ export class TvEngine {
       if (this.personnage) {
         const gx = Math.max(0, this.lastGalleryX)
         this.personnage.position.set(gx, 0, 0.4)
-        this.camPosTarget.set(gx, 1, 3.4)
-        this.camTarget.set(gx, 0.6, -0.1)
+        this.camPosTarget.set(gx, 1.25, 3.5)
+        this.camTarget.set(gx, 0.72, -0.1)
         this.camera.position.copy(this.camPosTarget)
         if (this.smoothedTarget) this.smoothedTarget.copy(this.camTarget)
         this.camera.lookAt(this.camTarget)
@@ -1116,8 +1116,8 @@ export class TvEngine {
     const { x, y, z } = this.personnage.position
     const anyOpen = this.buttons.some((b) => b.isOpen)
     if (!anyOpen) {
-      this.camPosTarget.set(x, y + 1, z + 3)
-      this.camTarget.set(x, y + 0.6, z - 0.5)
+      this.camPosTarget.set(x, y + 1.25, z + 3.2)
+      this.camTarget.set(x, y + 0.72, z - 0.5)
     } else {
       const btn = this.buttons.find((b) => b.isOpen)
       const cadre = btn ? this.cadres[btn.cadreIndex] : null
