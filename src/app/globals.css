@@ -1,37 +1,3394 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+/* ==========================================================================
+   Self-hosted fonts (public/fonts/*.woff2) — replaces next/font/google.
+   Variable-weight files: one @font-face per family, weight = range.
+   ========================================================================== */
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-style: normal;
+  font-weight: 300 500;
+  font-display: swap;
+  src: url("/fonts/cormorant-garamond.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Karla";
+  font-style: normal;
+  font-weight: 300 400;
+  font-display: swap;
+  src: url("/fonts/karla.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Caveat";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/caveat.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Great Vibes";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/great-vibes.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Dancing Script";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/dancing-script.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/lora.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Shantell Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/shantell-sans.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Italiana";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/italiana.woff2") format("woff2");
+}
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 100 1000;
+  font-display: swap;
+  src: url("/fonts/dm-sans.woff2") format("woff2");
+}
+
+/* font variables previously provided by next/font */
+:root {
+  --font-cormorant: "Cormorant Garamond", Georgia, serif;
+  --font-karla: "Karla", system-ui, sans-serif;
+  --font-caveat: "Caveat", "Segoe Script", cursive;
+  --font-great-vibes: "Great Vibes", cursive;
+  --font-dancing-script: "Dancing Script", cursive;
+  --font-lora-sc: "Lora", Georgia, serif;
+  --font-shantell: "Shantell Sans", "Comic Sans MS", cursive;
+  --font-italiana: "Italiana", Georgia, serif;
+  --font-dm-sans: "DM Sans", system-ui, sans-serif;
+}
+
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-serif: var(--font-serif);
-  --font-sans: var(--font-sans);
-  --color-gold: #cda250;
-  --color-gold-light: #e6c587;
-  --color-terracotta: #b85d38;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-ivory: var(--ivory);
+  --color-error-wash: var(--error-wash);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --font-sans: var(--font-karla), Karla, system-ui, sans-serif;
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-hand: var(--font-caveat), Caveat, "Segoe Script", cursive;
+  /* scrapbook ink (cover/finale text) — enables text-script-ink and /90 */
+  --color-script-ink: oklch(100% 0 0);
 }
 
 :root {
-  --background: #0b090e;
-  --foreground: #f4efe8;
+  --radius: 0.625rem;
+  --background: oklch(100% 0 0);
+  --foreground: oklch(12.9% 0.042 264.695);
+  --card: oklch(100% 0 0);
+  --card-foreground: oklch(12.9% 0.042 264.695);
+  --popover: oklch(100% 0 0);
+  --popover-foreground: oklch(12.9% 0.042 264.695);
+  --primary: oklch(20.8% 0.042 265.755);
+  --primary-foreground: oklch(98.4% 0.003 247.858);
+  --secondary: oklch(96.8% 0.007 247.896);
+  --secondary-foreground: oklch(20.8% 0.042 265.755);
+  --muted: oklch(96.8% 0.007 247.896);
+  --muted-foreground: oklch(55.4% 0.046 257.417);
+  --accent: oklch(96.8% 0.007 247.896);
+  --accent-foreground: oklch(20.8% 0.042 265.755);
+  --destructive: oklch(57.7% 0.245 27.325);
+  --destructive-foreground: oklch(98.4% 0.003 247.858);
+  --border: oklch(92.9% 0.013 255.508);
+  --input: oklch(92.9% 0.013 255.508);
+  --ring: oklch(70.4% 0.04 256.788);
+  --ivory: oklch(97.5% 0.008 85);
+  --blush: oklch(86% 0.045 25);
+  --error-wash: oklch(72% 0.13 22);
+  --glass: oklch(100% 0 0 / 0.28);
+  --glass-border: oklch(100% 0 0 / 0.45);
+  --shadow-soft: 0 24px 60px -24px oklch(45% 0.03 60 / 0.35);
 }
 
-body {
-  background-color: #070608;
-  color: #f4efe8;
-  font-family: var(--font-sans), sans-serif;
-  overflow-x: hidden;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
-/* Custom minimal scrollbar */
-::-webkit-scrollbar {
+/* ---------- Glassmorphism panel ---------- */
+.glass-panel {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes enter-pan {
+  0% {
+    opacity: 0;
+    transform: translateY(56px) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translate(0);
+  }
+  10%,
+  90% {
+    transform: translate(-8px);
+  }
+  20%,
+  80% {
+    transform: translate(9px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translate(-12px);
+  }
+  40%,
+  60% {
+    transform: translate(12px);
+  }
+}
+
+@keyframes error-flash {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.3;
+  }
+  70% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes bloom-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes photo-print {
+  0%,
+  8% {
+    transform: translateY(-100%);
+  }
+  26% {
+    transform: translateY(-66.67%);
+  }
+  34% {
+    transform: translateY(-66.67%);
+  }
+  36% {
+    transform: translateY(-67.5%);
+  }
+  38% {
+    transform: translateY(-66.67%);
+  }
+  40% {
+    transform: translateY(-66.67%);
+  }
+  58% {
+    transform: translateY(-33.33%);
+  }
+  66% {
+    transform: translateY(-33.33%);
+  }
+  68% {
+    transform: translateY(-34.16%);
+  }
+  70% {
+    transform: translateY(-33.33%);
+  }
+  72% {
+    transform: translateY(-33.33%);
+  }
+  88% {
+    transform: translateY(0%);
+  }
+  94% {
+    transform: translateY(0%);
+  }
+  96% {
+    transform: translateY(-1%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fab-pulse {
+  0%,
+  100% {
+    box-shadow: 0 10px 30px -12px oklch(60% 0.09 25 / 0.45);
+  }
+  50% {
+    box-shadow: 0 16px 42px -10px oklch(60% 0.12 25 / 0.65);
+  }
+}
+
+@keyframes spin-360 {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Animation utilities ---------- */
+.animate-enter-pan {
+  animation: enter-pan 1.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-shake {
+  animation: shake 0.56s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+.animate-error-flash {
+  animation: error-flash 0.62s ease-out both;
+}
+.animate-bloom-in {
+  animation: bloom-in 0.52s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-photo-print {
+  animation: photo-print 3.2s steps(24, end) both;
+}
+.animate-caret {
+  animation: caret 0.9s step-end infinite;
+}
+.animate-fab-pulse {
+  animation: fab-pulse 2.6s ease-in-out infinite;
+}
+.animate-spin-360 {
+  animation: spin-360 9s linear infinite;
+}
+
+/* ---------- Soft scrollbar for the letter ---------- */
+.letter-scroll::-webkit-scrollbar {
   width: 6px;
 }
-::-webkit-scrollbar-track {
-  background: #070608;
+.letter-scroll::-webkit-scrollbar-track {
+  background: transparent;
 }
-::-webkit-scrollbar-thumb {
-  background: #1f1b26;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #cda250;
+.letter-scroll::-webkit-scrollbar-thumb {
+  background: oklch(78% 0.03 60 / 0.35);
+  border-radius: 999px;
 }
 
+/* ====================================================================== */
+/*  SCRAPBOOK — 3D page-flip book (route: /scrapbook)                      */
+/*  Rebuilt 1:1 from the original: perspective stage, rotateY leaves,      */
+/*  --turn-progress driven face shading, polaroids, glass letter.          */
+/* ====================================================================== */
+
+.scrapbook-root {
+  --script-ink: oklch(100% 0 0);
+  --book-void: oklch(12% 0.03 20);
+  --page-paper: oklch(96% 0.012 80);
+  --page-paper-back: oklch(91% 0.016 75);
+  --page-turn-shadow: oklch(0% 0 0);
+  --page-turn-highlight: oklch(100% 0 0);
+}
+
+@property --turn-progress {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+/* ---------- the stage ---------- */
+.book-stage {
+  background-color: var(--book-void);
+  perspective: 2200px;
+  perspective-origin: 46%;
+  touch-action: pan-y;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* ---------- one turning leaf ---------- */
+.page-leaf {
+  transform-style: preserve-3d;
+  transform-origin: 0;
+  will-change: transform;
+  backface-visibility: hidden;
+  isolation: isolate;
+  position: absolute;
+  inset: 0;
+  transition:
+    transform 1180ms cubic-bezier(0.2, 0.74, 0.16, 1),
+    --turn-progress 1180ms cubic-bezier(0.2, 0.74, 0.16, 1);
+}
+.page-leaf.is-dragging {
+  transition: none;
+}
+
+.page-face {
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  box-shadow:
+    1px 0 2px var(--page-turn-shadow),
+    18px 0 54px var(--page-turn-shadow);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.page-face {
+  box-shadow:
+    1px 0 2px color-mix(in oklch, var(--page-turn-shadow) 12%, transparent),
+    18px 0 54px color-mix(in oklch, var(--page-turn-shadow) 34%, transparent);
+}
+.page-face {
+  contain: paint;
+}
+.page-face::after {
+  content: "";
+  z-index: 2;
+  pointer-events: none;
+  opacity: calc(0.76 * sin(var(--turn-progress) * 180deg));
+  background: linear-gradient(
+    90deg,
+    var(--page-turn-shadow) 0%,
+    transparent 16%,
+    transparent 68%,
+    var(--page-turn-highlight) 100%
+  );
+  position: absolute;
+  inset: 0;
+}
+
+.page-front {
+  transform: translateZ(0.15px) rotateY(0);
+}
+.page-front[data-active="true"] .page-foreground {
+  opacity: 1;
+}
+.page-back {
+  background-color: var(--page-paper-back);
+  transform: translateZ(-0.15px) rotateY(180deg);
+}
+.page-back::after {
+  background: linear-gradient(
+    270deg,
+    var(--page-turn-shadow) 0%,
+    transparent 18%,
+    transparent 72%,
+    var(--page-turn-highlight) 100%
+  );
+}
+.page-back::after {
+  background: linear-gradient(
+    270deg,
+    color-mix(in oklch, var(--page-turn-shadow) 34%, transparent) 0%,
+    transparent 18%,
+    transparent 72%,
+    color-mix(in oklch, var(--page-turn-highlight) 14%, transparent) 100%
+  );
+}
+
+/* ---------- page foregrounds fade in when their page becomes active ---------- */
+.page-foreground {
+  opacity: 0;
+  min-height: 100%;
+  transition: opacity 0.72s cubic-bezier(0.22, 0.72, 0.18, 1) 0.18s;
+}
+
+/* ---------- shared page shells ---------- */
+.cover-page,
+.first-page,
+.second-page,
+.third-page,
+.fifth-page,
+.final-page {
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+}
+.cover-page {
+  background-size: cover;
+}
+.final-page {
+  position: relative;
+}
+/* Every content page scrolls internally — the letter and the song list are
+   taller than the viewport, so the page shell must be the scroll container
+   (native pan-y scrolling is enabled by .book-stage touch-action). */
+.first-page,
+.second-page,
+.third-page,
+.fifth-page {
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  overflow-y: auto;
+}
+.first-page::-webkit-scrollbar,
+.second-page::-webkit-scrollbar,
+.third-page::-webkit-scrollbar,
+.fifth-page::-webkit-scrollbar {
+  display: none;
+}
+
+.first-page-heading {
+  z-index: 3;
+  text-align: center;
+  margin: 0;
+  padding: clamp(2.15rem, 6vw, 4rem) clamp(1rem, 5vw, 4rem) 0;
+  font-size: clamp(2.5rem, 11vw, 5rem);
+  font-weight: 400;
+  line-height: 1.25;
+  position: relative;
+}
+
+.font-script {
+  font-family: var(--font-great-vibes), var(--font-dancing-script),
+    "Great Vibes", "Dancing Script", cursive;
+}
+.text-script-ink {
+  color: var(--script-ink);
+}
+
+/* ---------- cover ---------- */
+@keyframes cover-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(-7%) scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.animate-cover-enter {
+  animation: 1.9s cubic-bezier(0.22, 0.61, 0.36, 1) both cover-enter;
+}
+
+/* ---------- polaroid memories ---------- */
+.polaroid-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(0.9rem, 3vw, 2rem) 0;
+  min-height: 100%;
+  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 5vw, 4rem) 7rem;
+}
+.polaroid {
+  transform-origin: 50% 0;
+  background-color: oklch(98.5% 0.006 80);
+  min-width: 0;
+  margin: 0;
+  padding: clamp(0.3rem, 1vw, 0.65rem) clamp(0.3rem, 1vw, 0.65rem)
+    clamp(0.8rem, 2.8vw, 1.8rem);
+  position: relative;
+  box-shadow:
+    0 2px 3px oklch(0% 0 0 / 0.18),
+    0 10px 24px oklch(0% 0 0 / 0.24);
+}
+.polaroid:nth-child(3n + 2),
+.polaroid:nth-child(3n + 3) {
+  margin-left: clamp(-0.95rem, -2.2vw, -0.4rem);
+}
+.polaroid:nth-child(n + 4) {
+  margin-top: clamp(-1.35rem, -3vw, -0.55rem);
+}
+.polaroid:nth-child(6n + 1) {
+  rotate: -4.4deg;
+}
+.polaroid:nth-child(6n + 2) {
+  rotate: 3.2deg;
+}
+.polaroid:nth-child(6n + 3) {
+  rotate: -2.3deg;
+}
+.polaroid:nth-child(6n + 4) {
+  rotate: 4.8deg;
+}
+.polaroid:nth-child(6n + 5) {
+  rotate: -3.6deg;
+}
+.polaroid:nth-child(6n + 6) {
+  rotate: 2.6deg;
+}
+.polaroid img {
+  aspect-ratio: 1;
+  object-fit: cover;
+  -webkit-user-select: none;
+  user-select: none;
+  width: 100%;
+  display: block;
+}
+.polaroid-pin {
+  z-index: 2;
+  aspect-ratio: 1;
+  background:
+    radial-gradient(circle at 34% 28%, oklch(100% 0 0 / 0.82) 0 10%, transparent 11%),
+    radial-gradient(circle at 42% 38%, oklch(68% 0.2 25) 0 42%, oklch(38% 0.14 25) 76%);
+  border-radius: 9999px;
+  width: clamp(0.62rem, 2vw, 0.9rem);
+  position: absolute;
+  top: -0.48rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.polaroid-pin::after {
+  content: "";
+  z-index: -1;
+  background-color: oklch(48% 0.015 60);
+  width: 1px;
+  height: 0.55rem;
+  position: absolute;
+  top: 72%;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+/* ---------- the letter ---------- */
+.letter-paper {
+  color: #fff;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  background-color: #fff5f01f;
+  border: 1px solid #ffffff2e;
+  border-radius: 4px;
+  width: min(88%, 38rem);
+  margin: clamp(2rem, 7vw, 4rem) auto 7rem;
+  padding: clamp(1.5rem, 5vw, 3rem);
+  font-size: clamp(1.25rem, 4.2vw, 1.85rem);
+  line-height: 1.45;
+  box-shadow: 0 12px 40px oklch(0% 0 0 / 0.35);
+}
+.letter-paper p {
+  margin: 0 0 1.1em;
+}
+.letter-paper p:last-child {
+  margin-bottom: 0;
+}
+.letter-line {
+  display: block;
+}
+/* Words bloom in like ink soaking into paper — blur → sharp, rise → settle.
+   inline-block so translate/filter apply; the trailing space lives OUTSIDE
+   the span (inline-block trims its own trailing whitespace). */
+.letter-word {
+  display: inline-block;
+  opacity: 0;
+  translate: 0 0.35em;
+  filter: blur(4px);
+  transition: opacity 0.55s ease,
+    translate 0.55s cubic-bezier(0.22, 0.72, 0.18, 1), filter 0.55s ease;
+}
+.letter-word[data-shown="true"] {
+  opacity: 1;
+  translate: 0 0;
+  filter: blur(0);
+}
+
+/* ---------- songs ---------- */
+.song-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: clamp(1rem, 3vw, 1.75rem);
+  width: min(92%, 60rem);
+  margin: clamp(1.25rem, 4vw, 2.25rem) auto 7rem;
+}
+.song-bubble {
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  background: #ffffff1f;
+  border: 1px solid #ffffff47;
+  border-radius: 1.75rem;
+  padding: 0.6rem;
+  overflow: hidden;
+  box-shadow:
+    0 10px 34px oklch(0% 0 0 / 0.3),
+    inset 0 1px #ffffff40;
+}
+.song-bubble iframe {
+  border: 0;
+  border-radius: 1.2rem;
+  width: 100%;
+  height: 152px;
+  display: block;
+}
+
+/* ---------- 10 things accordion ---------- */
+.love-list {
+  width: min(92%, 40rem);
+  font-family: var(--font-lora-sc), Georgia, "Times New Roman", serif;
+  gap: 0.85rem;
+  margin: clamp(1.25rem, 4vw, 2.25rem) auto 7rem;
+  display: grid;
+}
+.love-item {
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  color: #fff;
+  background: #ffffff1a;
+  border: 1px solid #ffffff3d;
+  border-radius: 1.1rem;
+  overflow: hidden;
+  box-shadow: 0 10px 30px oklch(0% 0 0 / 0.28);
+}
+.love-item > button {
+  text-align: left;
+  cursor: pointer;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  font-size: clamp(1.2rem, 4.2vw, 1.6rem);
+  display: flex;
+}
+.love-item .love-chevron {
+  flex-shrink: 0;
+  transition: rotate 0.52s cubic-bezier(0.22, 0.72, 0.18, 1), color 0.4s;
+}
+.love-item .love-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.56s cubic-bezier(0.22, 0.72, 0.18, 1);
+}
+.love-item .love-panel > div {
+  min-height: 0;
+  overflow: hidden;
+}
+.love-item .love-panel p {
+  opacity: 0;
+  padding: 0 1.25rem 1.1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  transition: opacity 0.42s 80ms;
+}
+.love-item[data-open="true"] .love-chevron {
+  rotate: 45deg;
+  color: oklch(80% 0.11 25);
+}
+.love-item[data-open="true"] .love-panel {
+  grid-template-rows: 1fr;
+}
+.love-item[data-open="true"] .love-panel p {
+  opacity: 0.92;
+}
+
+/* ---------- final page ---------- */
+@keyframes final-text-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(-7%) scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.final-text {
+  opacity: 0;
+}
+[data-active="true"] .final-text {
+  animation: 1.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both final-text-enter;
+}
+.final-back {
+  z-index: 50;
+  color: var(--script-ink);
+  letter-spacing: 0.08em;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  background-color: oklch(0% 0 0 / 0.22);
+  border: 1px solid oklch(100% 0 0 / 0.35);
+  border-radius: 9999px;
+  padding: 0.55rem 1.4rem;
+  font-size: 1rem;
+  transition: background-color 0.28s, transform 0.28s;
+  position: absolute;
+  bottom: 1.75rem;
+  right: 1.5rem;
+}
+.final-back:hover {
+  background-color: oklch(0% 0 0 / 0.38);
+  transform: translateY(-1px);
+}
+
+/* ---------- navigation affordances ---------- */
+.back-arrow {
+  z-index: 50;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--script-ink);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  -webkit-tap-highlight-color: transparent;
+  background-color: oklch(0% 0 0 / 0.18);
+  border-radius: 9999px;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.28s cubic-bezier(0.22, 0.72, 0.18, 1),
+    background-color 0.28s;
+  display: flex;
+  position: absolute;
+  bottom: 1.75rem;
+  left: 1.5rem;
+}
+.back-arrow:hover {
+  background-color: oklch(0% 0 0 / 0.3);
+  transform: translate(-2px);
+}
+.back-arrow svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.drag-hint {
+  z-index: 40;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  position: absolute;
+  inset: 0;
+}
+.drag-hint[data-hidden="true"] {
+  opacity: 0;
+}
+/* the original pulsing edge line, now a child so the container can fade */
+.drag-hint::before {
+  content: "";
+  background: linear-gradient(
+    transparent,
+    oklch(100% 0 0 / 0.4),
+    transparent
+  );
+  width: 3px;
+  animation: 2.6s ease-in-out infinite hint-pulse;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+@keyframes hint-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+/* glass pill with a chevron nudging left — “swipe this way” */
+.hint-pill {
+  color: oklch(100% 0 0 / 0.85);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  background-color: oklch(100% 0 0 / 0.12);
+  border: 1px solid oklch(100% 0 0 / 0.3);
+  border-radius: 9999px;
+  width: 2rem;
+  height: 2rem;
+  justify-content: center;
+  align-items: center;
+  animation: 2.1s ease-in-out infinite hint-nudge;
+  display: flex;
+  position: absolute;
+  top: calc(50% - 1rem);
+  right: 0.8rem;
+}
+.hint-pill svg {
+  width: 1rem;
+  height: 1rem;
+}
+@keyframes hint-nudge {
+  0%,
+  100% {
+    translate: 3px 0;
+    opacity: 0.55;
+  }
+  50% {
+    translate: -5px 0;
+    opacity: 1;
+  }
+}
+
+/* ====================================================================== */
+/*  SCRAPBOOK — signature effects ("inspired, not copied")                 */
+/*  Living light over the book, page vignette depth, cinematic cover,      */
+/*  ink-bloom letter, settling polaroids, rising finale hearts.            */
+/*  All transform/opacity only; fully disabled under reduced motion.       */
+/* ====================================================================== */
+
+/* ---------- page vignette: paper depth on every face ---------- */
+.page-face::before {
+  content: "";
+  z-index: 1;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 110px oklch(0% 0 0 / 0.32),
+    inset 0 0 28px oklch(0% 0 0 / 0.16);
+  position: absolute;
+  inset: 0;
+}
+
+/* ---------- cover: slow Ken Burns + one-time light sweep ---------- */
+.cover-page {
+  position: relative;
+  overflow: hidden;
+  background-color: oklch(16% 0.03 18);
+}
+.cover-zoom {
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  inset: -3.5%;
+  animation: 30s ease-in-out infinite alternate cover-kenburns;
+}
+@keyframes cover-kenburns {
+  from {
+    transform: scale(1) translate(0, 0);
+  }
+  to {
+    transform: scale(1.075) translate(-1.4%, 1%);
+  }
+}
+.cover-sheen {
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 42%,
+    oklch(100% 0 0 / 0.13) 50%,
+    transparent 58%
+  );
+  transform: translateX(-130%);
+  animation: 2.8s cubic-bezier(0.4, 0, 0.2, 1) 1.15s 1 both cover-sheen-sweep;
+  position: absolute;
+  inset: 0;
+}
+@keyframes cover-sheen-sweep {
+  to {
+    transform: translateX(130%);
+  }
+}
+
+/* ---------- shimmering ink for the big script titles ---------- */
+.shimmer-ink {
+  color: var(--script-ink);
+}
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .shimmer-ink {
+    background-image: linear-gradient(
+      115deg,
+      var(--script-ink) 42%,
+      oklch(90% 0.05 80) 50%,
+      var(--script-ink) 58%
+    );
+    background-size: 240% 100%;
+    background-position: 120% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: 7.5s ease-in-out infinite ink-shimmer;
+  }
+}
+@keyframes ink-shimmer {
+  0%,
+  55% {
+    background-position: 120% 0;
+  }
+  100% {
+    background-position: -60% 0;
+  }
+}
+
+/* ---------- polaroids: settle onto the page one by one, lift on hover ---------- */
+@keyframes polaroid-settle {
+  from {
+    opacity: 0;
+    translate: 0 -24px;
+  }
+  65% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+.page-front[data-active="true"] .polaroid {
+  animation: 0.6s cubic-bezier(0.22, 0.72, 0.18, 1) backwards polaroid-settle;
+  animation-delay: calc(120ms + var(--i, 0) * 70ms);
+}
+@media (hover: hover) {
+  .polaroid {
+    transition: translate 0.35s cubic-bezier(0.22, 0.72, 0.18, 1),
+      rotate 0.35s cubic-bezier(0.22, 0.72, 0.18, 1), box-shadow 0.35s;
+  }
+  .polaroid:hover {
+    translate: 0 -6px;
+    rotate: 0deg;
+    z-index: 2;
+    box-shadow:
+      0 6px 10px oklch(0% 0 0 / 0.2),
+      0 20px 38px oklch(0% 0 0 / 0.3);
+  }
+}
+
+/* ---------- songs + love items: gentle staggered arrival ---------- */
+@keyframes float-in-up {
+  from {
+    opacity: 0;
+    translate: 0 18px;
+    scale: 0.97;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+.page-front[data-active="true"] .song-bubble {
+  animation: 0.66s cubic-bezier(0.22, 0.72, 0.18, 1) backwards float-in-up;
+  animation-delay: calc(150ms + var(--i, 0) * 90ms);
+}
+.page-front[data-active="true"] .love-item {
+  animation: 0.6s cubic-bezier(0.22, 0.72, 0.18, 1) backwards float-in-up;
+  animation-delay: calc(120ms + var(--i, 0) * 55ms);
+}
+
+/* ---------- finale: hearts rising like embers ---------- */
+.finale-hearts {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.finale-hearts span {
+  color: oklch(84% 0.08 30 / 0.55);
+  text-shadow: 0 0 14px oklch(82% 0.1 30 / 0.5);
+  font-size: var(--sz);
+  opacity: 0;
+  rotate: var(--tilt);
+  position: absolute;
+  bottom: -4%;
+  left: var(--x);
+}
+.page-front[data-active="true"] .finale-hearts span {
+  animation: var(--dur) linear var(--del) infinite heart-rise;
+}
+@keyframes heart-rise {
+  0% {
+    opacity: 0;
+    translate: 0 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  50% {
+    translate: var(--sway) -46vh;
+  }
+  82% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+    translate: calc(var(--sway) * -0.6) -96vh;
+  }
+}
+
+/* ---------- living light: warm washes, dust motes, falling petals ---------- */
+.book-glows,
+.book-ambience {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+.book-glows {
+  z-index: 55;
+}
+.book-ambience {
+  z-index: 55;
+  overflow: hidden;
+}
+.glow {
+  border-radius: 50%;
+  position: absolute;
+}
+.glow-a {
+  width: 72vmax;
+  height: 72vmax;
+  left: -22%;
+  top: -26%;
+  background: radial-gradient(
+    circle,
+    oklch(52% 0.07 30 / 0.1),
+    transparent 64%
+  );
+  animation: 22s ease-in-out infinite alternate glow-drift;
+}
+.glow-b {
+  width: 62vmax;
+  height: 62vmax;
+  right: -20%;
+  bottom: -24%;
+  background: radial-gradient(
+    circle,
+    oklch(55% 0.06 45 / 0.08),
+    transparent 64%
+  );
+  animation: 27s ease-in-out -9s infinite alternate-reverse glow-drift;
+}
+@keyframes glow-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(4%, 3%, 0) scale(1.09);
+  }
+}
+.dust {
+  width: var(--sz);
+  height: var(--sz);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    oklch(98% 0.01 80 / var(--op)),
+    oklch(98% 0.01 80 / calc(var(--op) * 0.4)) 55%,
+    transparent 72%
+  );
+  opacity: 0;
+  animation: var(--dur) linear var(--del) infinite dust-rise;
+  position: absolute;
+  top: 0;
+  left: var(--x);
+}
+@keyframes dust-rise {
+  0% {
+    opacity: 0;
+    translate: 0 102vh;
+  }
+  8% {
+    opacity: var(--op);
+  }
+  50% {
+    translate: var(--sway) 46vh;
+  }
+  88% {
+    opacity: calc(var(--op) * 0.5);
+  }
+  100% {
+    opacity: 0;
+    translate: calc(var(--sway) * -0.7) -8vh;
+  }
+}
+.petal {
+  width: var(--sz);
+  height: calc(var(--sz) * 0.72);
+  border-radius: 62% 38% 55% 45% / 60% 55% 45% 40%;
+  background: linear-gradient(
+    135deg,
+    oklch(80% 0.08 30 / var(--op)),
+    oklch(66% 0.12 18 / calc(var(--op) * 0.7))
+  );
+  opacity: 0;
+  rotate: var(--tilt);
+  animation: var(--dur) linear var(--del) infinite petal-fall;
+  position: absolute;
+  top: 0;
+  left: var(--x);
+}
+@keyframes petal-fall {
+  0% {
+    opacity: 0;
+    translate: 0 -8vh;
+  }
+  10% {
+    opacity: var(--op);
+  }
+  38% {
+    translate: var(--sway) 32vh;
+    rotate: calc(var(--tilt) + var(--spin) * 0.4);
+  }
+  70% {
+    translate: calc(var(--sway) * -0.8) 70vh;
+  }
+  92% {
+    opacity: calc(var(--op) * 0.6);
+  }
+  100% {
+    opacity: 0;
+    translate: var(--sway) 106vh;
+    rotate: calc(var(--tilt) + var(--spin));
+  }
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .page-leaf {
+    transition-duration: 0.26s !important;
+  }
+  .page-face::after {
+    transition: none;
+  }
+  .page-foreground {
+    transition-duration: 0.16s;
+    transition-delay: 0s;
+  }
+  .book-ambience,
+  .book-glows,
+  .finale-hearts,
+  .cover-sheen {
+    display: none;
+  }
+  .cover-zoom,
+  .shimmer-ink,
+  .hint-pill,
+  .drag-hint::before {
+    animation: none;
+  }
+  .page-front[data-active="true"] .polaroid,
+  .page-front[data-active="true"] .song-bubble,
+  .page-front[data-active="true"] .love-item {
+    animation: none;
+  }
+  .letter-word {
+    transition: none;
+  }
+  .polaroid {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   BOYFRIENDSDAY — candy-daydream gift flow (route: /boyfriendsday)
+   Portrait stage · pink watercolor · sparkles · spring pop-ins
+   ========================================================================== */
+
+.bfd-fonts {
+  --bfd-ink: #800000;
+  --bfd-ink-deep: #4e1510;
+  --bfd-cream: #f4ecdb;
+  --bfd-rose: #ffd2dd;
+}
+
+.bfd-root {
+  --bfd-stage-w: min(100vw, calc(100dvh * 0.462));
+  --bfd-u: calc(var(--bfd-stage-w) / 100);
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #f3cdd7;
+  font-family: var(--font-shantell), "Comic Sans MS", cursive;
+}
+
+/* ---------- full-bleed backdrop (desktop frames the stage) ---------- */
+.bfd-backdrop {
+  position: absolute;
+  inset: 0;
+}
+.bfd-backdrop-img {
+  position: absolute;
+  inset: -4%;
+  background: url("/boyfriendsday/media/bg-pink-watercolor.jpg") center / cover no-repeat;
+  filter: blur(16px) saturate(1.06) brightness(0.97);
+  transform: scale(1.07);
+}
+.bfd-backdrop-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 6%, rgb(255 255 255 / 0.42), transparent 55%),
+    radial-gradient(95% 75% at 50% 102%, rgb(255 170 195 / 0.4), transparent 62%);
+}
+
+/* ---------- portrait stage ---------- */
+.bfd-stage {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  translate: -50% 0;
+  width: var(--bfd-stage-w);
+  overflow: hidden;
+  background: url("/boyfriendsday/media/bg-pink-watercolor.jpg") center / cover no-repeat;
+  box-shadow: 0 12px 70px rgb(150 55 90 / 0.35);
+}
+@media (min-width: 560px) {
+  .bfd-stage {
+    top: 3%;
+    bottom: 3%;
+    border-radius: 22px;
+    box-shadow:
+      0 24px 90px rgb(150 55 90 / 0.42),
+      0 0 0 6px rgb(255 255 255 / 0.35);
+  }
+}
+
+.bfd-page {
+  position: absolute;
+  inset: 0;
+}
+.bfd-page-enter[data-dir="forward"] {
+  animation: bfd-in-right 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.bfd-page-enter[data-dir="back"] {
+  animation: bfd-in-left 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes bfd-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(7%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes bfd-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-7%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.bfd-page-exit {
+  animation: bfd-out 340ms ease both;
+}
+@keyframes bfd-out {
+  to {
+    opacity: 0;
+    transform: translateX(-4.5%) scale(0.985);
+  }
+}
+
+.bfd-page-face {
+  position: absolute;
+  inset: 0;
+}
+
+.bfd-abs {
+  position: absolute;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ---------- entry primitives (transform + independent rotate compose) ---------- */
+.bfd-drop {
+  opacity: 0;
+  animation: bfd-drop 620ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--drop-delay, 0ms) forwards;
+}
+@keyframes bfd-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-24px) scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.bfd-pop {
+  opacity: 0;
+  animation: bfd-pop 520ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--pop-delay, 0ms) forwards;
+}
+@keyframes bfd-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.72) rotate(-4deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+.bfd-press {
+  opacity: 0;
+  animation: bfd-press 560ms cubic-bezier(0.22, 1.4, 0.36, 1) var(--drop-delay, 0ms) forwards;
+}
+@keyframes bfd-press {
+  0% {
+    opacity: 0;
+    transform: scale(1.7) rotate(12deg);
+  }
+  62% {
+    opacity: 1;
+    transform: scale(0.94) rotate(-5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* ---------- ambient sparkle + heart field ---------- */
+.bfd-sparkles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+}
+.bfd-star {
+  position: absolute;
+  opacity: 0;
+  animation: bfd-tw var(--tw-dur, 3s) ease-in-out var(--tw-delay, 0s) infinite;
+}
+@keyframes bfd-tw {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(0) scale(0.5) rotate(0deg);
+  }
+  50% {
+    opacity: var(--tw-op, 0.6);
+    transform: translateX(var(--tw-drift, 16px)) scale(1) rotate(20deg);
+  }
+}
+.bfd-heart {
+  position: absolute;
+  top: 102%;
+  opacity: 0;
+  animation: bfd-rise linear infinite;
+}
+@keyframes bfd-rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.8) rotate(-6deg);
+  }
+  12% {
+    opacity: 0.7;
+  }
+  80% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--sway, 12px), -112vh) scale(1.12) rotate(10deg);
+  }
+}
+
+/* ---------- ink bloom ---------- */
+.bfd-ink-word {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateY(0.3em);
+  animation: bfd-ink-in 640ms ease-out forwards;
+}
+@keyframes bfd-ink-in {
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+
+/* ---------- next >> pager ---------- */
+.bfd-next {
+  z-index: 20;
+  border: 0;
+  background: none;
+  padding: 0.4em 0.6em;
+  cursor: pointer;
+  font-family: var(--font-shantell), cursive;
+  font-weight: 600;
+  font-size: calc(var(--bfd-u) * 5.6);
+  color: #201919;
+  letter-spacing: 0.04em;
+  animation: bfd-next-pulse 2.6s ease-in-out infinite;
+  transition: scale 0.2s ease;
+}
+.bfd-next:hover {
+  scale: 1.12;
+  color: #7c1220;
+}
+@keyframes bfd-next-pulse {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 14px rgb(255 120 160 / 0.65);
+  }
+}
+
+/* ---------- tilt cards ---------- */
+.bfd-tilt {
+  transition: transform 160ms ease-out;
+  will-change: transform;
+  transform: perspective(700px);
+}
+
+/* ---------- shine sweep ---------- */
+.bfd-uno-shine,
+.bfd-coupon-shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgb(255 255 255 / 0.35) 45%,
+    rgb(255 255 255 / 0.6) 50%,
+    rgb(255 255 255 / 0.35) 55%,
+    transparent 68%
+  );
+  transform: translateX(-130%);
+  animation: bfd-shine 4.2s ease-in-out 1.4s infinite;
+}
+@keyframes bfd-shine {
+  0% {
+    transform: translateX(-130%);
+  }
+  55%,
+  100% {
+    transform: translateX(130%);
+  }
+}
+
+/* ==========================================================================
+   Page 1 — cover
+   ========================================================================== */
+.bfd-cover-badge {
+  left: 10%;
+  top: 34.5%;
+  width: 80%;
+  z-index: 2;
+  rotate: -1deg;
+  animation:
+    bfd-pop 640ms cubic-bezier(0.34, 1.56, 0.64, 1) 80ms forwards,
+    bfd-bob 4.6s ease-in-out 900ms infinite;
+  opacity: 0;
+}
+@keyframes bfd-bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -9px;
+  }
+}
+.bfd-next-cover {
+  left: 50%;
+  top: 71%;
+  translate: -50% 0;
+}
+
+/* ==========================================================================
+   Page 2 — best boyfriend
+   ========================================================================== */
+.bfd-best-petals {
+  left: 8%;
+  top: 66.5%;
+  width: 52%;
+  z-index: 1;
+  filter: drop-shadow(0 6px 14px rgb(180 90 110 / 0.25));
+}
+.bfd-best-paper {
+  left: 12%;
+  top: 70.5%;
+  width: 56%;
+  rotate: -3deg;
+  z-index: 2;
+  opacity: 0.9;
+}
+.bfd-best-title {
+  left: 17%;
+  top: 66.8%;
+  width: 30%;
+  z-index: 3;
+  rotate: -2deg;
+  --drop-delay: 60ms;
+}
+.bfd-best-polaroid {
+  left: 26%;
+  top: 73.5%;
+  width: 40%;
+  z-index: 4;
+  rotate: 2deg;
+  --drop-delay: 220ms;
+}
+.bfd-best-seal {
+  left: 57%;
+  top: 70%;
+  width: 13.5%;
+  z-index: 6;
+  rotate: -8deg;
+  --drop-delay: 460ms;
+  filter: drop-shadow(0 4px 8px rgb(90 20 20 / 0.35));
+}
+.bfd-next-best {
+  left: 79%;
+  top: 79%;
+}
+
+/* ==========================================================================
+   Page 3 — to my favourite person (photo strip + letter)
+   ========================================================================== */
+.bfd-strip {
+  left: 2%;
+  top: -1%;
+  width: 44%;
+  height: 25.5%;
+  display: flex;
+  gap: 3%;
+  rotate: -7deg;
+  z-index: 3;
+}
+.bfd-strip-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4.5%;
+  flex: 1;
+}
+.bfd-strip-col-right {
+  translate: 0 9%;
+}
+.bfd-strip-photo {
+  flex: 1;
+  background: #fff;
+  padding: 4% 4% 5%;
+  box-shadow: 0 3px 9px rgb(120 60 80 / 0.28);
+  rotate: var(--strip-tilt, 0deg);
+}
+.bfd-strip-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.bfd-fav-title {
+  left: 34%;
+  top: 1.2%;
+  width: 62%;
+  margin: 0;
+  z-index: 4;
+  font-family: var(--font-great-vibes), cursive;
+  font-weight: 400;
+  font-size: calc(var(--bfd-u) * 9.6);
+  line-height: 1.1;
+  color: var(--bfd-ink);
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.4);
+}
+.bfd-fav-body {
+  left: 44%;
+  top: 5.2%;
+  width: 50%;
+  z-index: 4;
+  font-size: calc(var(--bfd-u) * 3.35);
+  line-height: 1.5;
+  color: var(--bfd-ink);
+  font-weight: 500;
+}
+.bfd-fav-body p {
+  margin: 0 0 0.7em;
+}
+.bfd-fav-sign {
+  margin-top: 0.4em;
+}
+.bfd-next-fav {
+  left: 7%;
+  top: 20%;
+}
+
+/* ==========================================================================
+   Page 4 — gallery
+   ========================================================================== */
+.bfd-gal-sparkles {
+  left: 4%;
+  top: 37.5%;
+  width: 13%;
+  z-index: 2;
+  --pop-delay: 500ms;
+}
+.bfd-gal-polaroid {
+  width: 25%;
+  z-index: 3;
+  filter: drop-shadow(0 6px 16px rgb(140 70 95 / 0.3));
+}
+.bfd-gal-tl {
+  left: 14%;
+  top: 37.5%;
+  rotate: -5deg;
+  --drop-delay: 80ms;
+}
+.bfd-gal-bl {
+  left: 12.5%;
+  top: 47%;
+  rotate: -9deg;
+  --drop-delay: 240ms;
+}
+.bfd-gal-tr {
+  left: 65.5%;
+  top: 37.5%;
+  rotate: 6deg;
+  --drop-delay: 160ms;
+}
+.bfd-gal-br {
+  left: 66.5%;
+  top: 47%;
+  rotate: 8deg;
+  --drop-delay: 320ms;
+}
+.bfd-gal-title {
+  left: 39.5%;
+  top: 44%;
+  width: 27.5%;
+  z-index: 4;
+  --pop-delay: 400ms;
+  filter: drop-shadow(0 4px 10px rgb(140 70 95 / 0.28));
+}
+.bfd-next-gal {
+  left: 50%;
+  top: 57.2%;
+  translate: -50% 0;
+}
+
+/* ==========================================================================
+   Page 5 — letter 02 (collage + disco ball + scalloped letter panel)
+   ========================================================================== */
+.bfd-page-scroll {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.bfd-page-scroll::-webkit-scrollbar {
+  display: none;
+}
+.bfd-collage-zone {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 50%;
+  z-index: 3;
+}
+.bfd-l2-paper {
+  left: 50%;
+  top: 5.5%;
+  width: 26%;
+  rotate: 3deg;
+  z-index: 1;
+}
+.bfd-l2-polaroid-a {
+  left: 6%;
+  top: 5.5%;
+  width: 48%;
+  z-index: 2;
+  rotate: -7deg;
+  --drop-delay: 80ms;
+}
+.bfd-l2-polaroid-b {
+  left: 40.5%;
+  top: 22.5%;
+  width: 40%;
+  z-index: 4;
+  rotate: 4deg;
+  --drop-delay: 260ms;
+}
+.bfd-l2-disco {
+  left: 62%;
+  top: 0;
+  width: 26%;
+  z-index: 5;
+  transform-origin: 50% 0;
+  animation: bfd-sway 5.4s ease-in-out infinite;
+  filter: drop-shadow(0 6px 12px rgb(120 120 140 / 0.3));
+}
+@keyframes bfd-sway {
+  0%,
+  100% {
+    transform: rotate(2.2deg);
+  }
+  50% {
+    transform: rotate(-2.2deg);
+  }
+}
+.bfd-l2-seal {
+  left: 29.5%;
+  top: 27.5%;
+  width: 17%;
+  z-index: 6;
+  rotate: -10deg;
+  --drop-delay: 500ms;
+  filter: drop-shadow(0 4px 8px rgb(90 20 20 / 0.35));
+}
+.bfd-next-l2 {
+  left: 14%;
+  top: 43%;
+  z-index: 7;
+}
+.bfd-l2-panel {
+  left: 1.5%;
+  right: 1.5%;
+  top: 49.5%;
+  bottom: -1%;
+  z-index: 6;
+  background: url("/boyfriendsday/media/paper-scalloped.png") center / 100% 100% no-repeat;
+  padding: 7% 8% 6%;
+}
+.bfd-l2-panel-text {
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.bfd-l2-panel-text::-webkit-scrollbar {
+  display: none;
+}
+.bfd-l2-panel-text p {
+  margin: 0 0 0.85em;
+  font-size: calc(var(--bfd-u) * 4.7);
+  line-height: 1.62;
+  font-weight: 500;
+  color: var(--bfd-ink-deep);
+}
+
+/* ==========================================================================
+   Page 6 — last (taped polaroids + kraft quote)
+   ========================================================================== */
+.bfd-last-polaroid-a {
+  left: 4.5%;
+  top: 43.5%;
+  width: 27%;
+  z-index: 3;
+  rotate: -2deg;
+  --drop-delay: 100ms;
+}
+.bfd-last-polaroid-b {
+  left: 68.5%;
+  top: 43%;
+  width: 25.5%;
+  z-index: 3;
+  rotate: 2.5deg;
+  --drop-delay: 280ms;
+}
+.bfd-last-label-a {
+  left: 33%;
+  top: 45.8%;
+  width: 24%;
+  z-index: 4;
+  --pop-delay: 500ms;
+}
+.bfd-last-quote {
+  left: 31.5%;
+  top: 49.5%;
+  width: 37%;
+  z-index: 4;
+  --pop-delay: 660ms;
+  filter: drop-shadow(0 4px 10px rgb(150 110 60 / 0.3));
+}
+.bfd-last-label-b {
+  left: 47.5%;
+  top: 57.8%;
+  width: 20%;
+  z-index: 4;
+  --pop-delay: 820ms;
+}
+.bfd-next-last {
+  left: 50%;
+  top: 64.4%;
+  translate: -50% 0;
+}
+
+/* ==========================================================================
+   Page 7 — uno card
+   ========================================================================== */
+.bfd-uno-zone {
+  left: 23.5%;
+  top: 29.5%;
+  width: 53%;
+  z-index: 3;
+}
+.bfd-uno-card {
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+  box-shadow: 0 14px 34px rgb(150 60 90 / 0.35);
+  --drop-delay: 120ms;
+}
+.bfd-next-uno {
+  left: 50%;
+  top: 67%;
+  translate: -50% 0;
+}
+
+/* ==========================================================================
+   Page 8 — coupon + restart
+   ========================================================================== */
+.bfd-coupon-zone {
+  left: 8%;
+  top: 34.5%;
+  width: 84%;
+  z-index: 3;
+}
+.bfd-coupon-img {
+  width: 100%;
+  display: block;
+  filter: drop-shadow(0 10px 26px rgb(150 60 90 / 0.3));
+  --drop-delay: 120ms;
+}
+.bfd-next-coupon {
+  left: 50%;
+  top: 67.5%;
+  translate: -50% 0;
+}
+
+/* ==========================================================================
+   Desktop "candy desk scene" (>=1024px) — decorated surround that hugs the
+   portrait card: bokeh, twinkles, side polaroids, script notes, hearts,
+   washi tape. Hidden on <1024px so mobile/tablet stay untouched.
+   ========================================================================== */
+.bfd-scene {
+  position: absolute;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+@media (min-width: 1024px) {
+  .bfd-scene {
+    display: block;
+  }
+}
+
+/* depth vignette + grounding shade across the whole desk */
+.bfd-scene::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(140% 110% at 50% 42%, transparent 58%, rgb(126 32 64 / 0.16)),
+    linear-gradient(to top, rgb(122 32 60 / 0.14), transparent 22%);
+}
+
+.bfd-scene-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(46px);
+  opacity: 0.55;
+}
+.bfd-scene-blob-a {
+  left: 5vw;
+  top: 10vh;
+  width: 26vmin;
+  height: 26vmin;
+  background: radial-gradient(circle, rgb(255 255 255 / 0.9), rgb(255 214 226 / 0.5) 60%, transparent);
+  animation: bfd-blob-drift 16s ease-in-out infinite alternate;
+}
+.bfd-scene-blob-b {
+  right: 7vw;
+  top: 52vh;
+  width: 30vmin;
+  height: 30vmin;
+  background: radial-gradient(circle, rgb(255 236 243 / 0.85), rgb(255 189 210 / 0.45) 60%, transparent);
+  animation: bfd-blob-drift 20s ease-in-out -6s infinite alternate-reverse;
+}
+.bfd-scene-blob-c {
+  left: 38vw;
+  bottom: -12vh;
+  width: 36vmin;
+  height: 36vmin;
+  background: radial-gradient(circle, rgb(255 178 200 / 0.7), transparent 65%);
+  animation: bfd-blob-drift 24s ease-in-out -12s infinite alternate;
+}
+@keyframes bfd-blob-drift {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 3vmin -4vmin;
+  }
+}
+
+.bfd-scene-twinkle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.95);
+  box-shadow: 0 0 10px 2px rgb(255 244 248 / 0.9);
+  animation: bfd-twinkle 3.4s ease-in-out infinite;
+}
+@keyframes bfd-twinkle {
+  0%,
+  100% {
+    opacity: 0.15;
+    scale: 0.7;
+  }
+  50% {
+    opacity: 0.95;
+    scale: 1.15;
+  }
+}
+
+/* side polaroids — anchored to the card edges, never overlapping it */
+.bfd-scene-polaroid {
+  position: absolute;
+  width: clamp(118px, 10vw, 178px);
+  filter: drop-shadow(0 14px 26px rgb(140 45 80 / 0.35));
+  animation: bfd-scene-float 9s ease-in-out infinite alternate;
+}
+.bfd-scene-polaroid-left {
+  left: max(1.5vw, calc(50% - var(--bfd-stage-w) / 2 - 15vw));
+  top: 9vh;
+  rotate: -7deg;
+}
+.bfd-scene-polaroid-right {
+  right: max(1.5vw, calc(50% - var(--bfd-stage-w) / 2 - 14vw));
+  top: 14vh;
+  rotate: 5deg;
+  animation-delay: -3.2s;
+}
+@keyframes bfd-scene-float {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -14px;
+  }
+}
+
+.bfd-scene-flower {
+  position: absolute;
+  right: max(2vw, calc(50% - var(--bfd-stage-w) / 2 - 13vw));
+  bottom: 7vh;
+  width: clamp(120px, 12vw, 200px);
+  opacity: 0.92;
+  filter: drop-shadow(0 10px 22px rgb(140 45 80 / 0.28));
+  animation: bfd-scene-float 11s ease-in-out -5s infinite alternate-reverse;
+}
+
+/* script notes in Great Vibes */
+.bfd-scene-caption {
+  position: absolute;
+  margin: 0;
+  font-family: var(--font-great-vibes), cursive;
+  font-size: clamp(24px, 2.2vw, 40px);
+  line-height: 1.25;
+  color: #86152c;
+  text-shadow:
+    0 1px 0 rgb(255 255 255 / 0.65),
+    0 0 18px rgb(255 240 246 / 0.9);
+}
+.bfd-scene-caption-left {
+  left: max(2vw, calc(50% - var(--bfd-stage-w) / 2 - 15vw));
+  top: 36vh;
+  rotate: -4deg;
+  animation: bfd-scene-float 12s ease-in-out -2s infinite alternate;
+}
+.bfd-scene-caption-right {
+  left: calc(50% + var(--bfd-stage-w) / 2 + 3vw);
+  top: 36vh;
+  max-width: calc((100% - var(--bfd-stage-w)) / 2 - 5vw);
+  rotate: 3deg;
+  animation: bfd-scene-float 13s ease-in-out -7s infinite alternate-reverse;
+}
+/* side gaps get too narrow below 1280 — keep polaroids, drop the notes */
+@media (max-width: 1279.98px) {
+  .bfd-scene-caption {
+    display: none;
+  }
+}
+
+/* CSS hearts (no glyph dependency) */
+.bfd-scene-heart {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #ff90a8;
+  rotate: 45deg;
+  filter: drop-shadow(0 4px 8px rgb(150 55 90 / 0.35));
+  animation: bfd-heart-bob 5s ease-in-out infinite alternate;
+}
+.bfd-scene-heart::before,
+.bfd-scene-heart::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: inherit;
+}
+.bfd-scene-heart::before {
+  left: -9px;
+}
+.bfd-scene-heart::after {
+  top: -9px;
+}
+.bfd-scene-heart-l1 {
+  left: max(3.5vw, calc(50% - var(--bfd-stage-w) / 2 - 12vw));
+  top: 58vh;
+  scale: 0.8;
+}
+.bfd-scene-heart-l2 {
+  left: max(6vw, calc(50% - var(--bfd-stage-w) / 2 - 9.5vw));
+  top: 63vh;
+  scale: 0.55;
+  background: #ff7f9c;
+  animation-delay: -2.4s;
+}
+@keyframes bfd-heart-bob {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -10px;
+  }
+}
+
+/* washi tape straddling the card's top corners — card top sits at 3% */
+.bfd-scene-tape {
+  position: absolute;
+  top: calc(3% - 13px);
+  width: 96px;
+  height: 28px;
+  background:
+    repeating-linear-gradient(
+      105deg,
+      rgb(255 255 255 / 0.28) 0 6px,
+      transparent 6px 12px
+    ),
+    linear-gradient(105deg, rgb(255 205 221 / 0.82), rgb(255 232 240 / 0.82));
+  box-shadow: 0 3px 10px rgb(150 55 90 / 0.22);
+  z-index: 6;
+}
+.bfd-scene-tape-left {
+  left: calc(50% - var(--bfd-stage-w) / 2 + 26px);
+  rotate: -6deg;
+}
+.bfd-scene-tape-right {
+  right: calc(50% - var(--bfd-stage-w) / 2 + 26px);
+  rotate: 5deg;
+}
+
+/* ==========================================================================
+   reduced motion — land everything in final state, stop ambience
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .bfd-page-enter,
+  .bfd-page-exit {
+    animation: none;
+  }
+  .bfd-page-exit {
+    display: none;
+  }
+  .bfd-drop,
+  .bfd-pop,
+  .bfd-press,
+  .bfd-cover-badge {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .bfd-ink-word {
+    animation: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+  .bfd-star,
+  .bfd-heart,
+  .bfd-uno-shine,
+  .bfd-coupon-shine,
+  .bfd-next {
+    animation: none;
+  }
+  .bfd-star,
+  .bfd-heart {
+    display: none;
+  }
+  .bfd-l2-disco {
+    animation: none;
+  }
+  .bfd-next:hover {
+    scale: 1;
+  }
+  .bfd-scene-blob,
+  .bfd-scene-twinkle,
+  .bfd-scene-polaroid,
+  .bfd-scene-flower,
+  .bfd-scene-caption,
+  .bfd-scene-heart {
+    animation: none;
+  }
+}
+
+/* ---------- bfd hotfixes: flex overflow + nowrap ---------- */
+.bfd-next {
+  white-space: nowrap;
+}
+.bfd-strip {
+  overflow: visible;
+}
+.bfd-strip-col {
+  min-height: 0;
+}
+.bfd-strip-photo {
+  min-height: 0;
+  overflow: hidden;
+}
+.bfd-strip-photo img {
+  min-height: 0;
+}
+.bfd-fav-title {
+  width: 64%;
+  font-size: calc(var(--bfd-u) * 7.4);
+  white-space: nowrap;
+}
+.bfd-best-petals {
+  width: 58%;
+}
+
+/* ---------- bfd pass 2: fav-letter fine-tuning ---------- */
+.bfd-fav-title {
+  left: 35%;
+  width: 64%;
+  font-size: calc(var(--bfd-u) * 5.9);
+  top: 1.6%;
+}
+.bfd-strip {
+  width: 42%;
+  height: 24.5%;
+}
+.bfd-strip-col-left {
+  height: 86%;
+}
+.bfd-strip-col-right {
+  translate: 0 11%;
+}
+.bfd-fav-body {
+  left: 45%;
+  width: 49%;
+}
+.bfd-next-fav {
+  top: 21.5%;
+  z-index: 8;
+}
+
+/* ---------- bfd pass 3: next-best edge clip ---------- */
+.bfd-next-best {
+  left: auto;
+  right: 3.5%;
+  top: 78.5%;
+}
+
+/* ---------- bfd pass 4: fav next clearance ---------- */
+.bfd-strip {
+  top: -2%;
+}
+.bfd-next-fav {
+  top: 22.5%;
+  text-shadow: 0 0 10px rgb(255 240 244 / 0.9), 0 0 18px rgb(255 240 244 / 0.7);
+}
+
+/* ---------- bfd pass 5: last-page label layering ---------- */
+.bfd-last-label-a {
+  top: 43.6%;
+  width: 26%;
+  left: 32%;
+  z-index: 5;
+}
+.bfd-last-quote {
+  top: 50.4%;
+}
+.bfd-last-label-b {
+  top: 58.6%;
+  z-index: 5;
+}
+
+/* ==========================================================================
+   THE NEXT PAGE (/second) — blue-satin scroll keepsake
+   Extracted 1:1 from the original build; all colors are the source's oklch().
+   Scoped vars: --glass/--glass-border/--font-display are intentionally
+   overridden inside .second-page only (root values belong to other routes).
+   ========================================================================== */
+.second-page {
+  /* type */
+  --font-display: var(--font-italiana), Georgia, serif;
+  --font-body: var(--font-dm-sans), system-ui, sans-serif;
+  /* palette (dark blue satin world) */
+  --romance: oklch(92% 0.045 242);
+  --romance-soft: oklch(78% 0.06 248);
+  --paper: oklch(30% 0.055 258 / 0.84);
+  --paper-line: oklch(45% 0.06 250);
+  --glass: oklch(42% 0.07 252 / 0.32);
+  --glass-border: oklch(78% 0.07 240 / 0.38);
+  --ink-navy: oklch(24% 0.05 258);
+
+  isolation: isolate;
+  min-height: 100svh;
+  position: relative;
+  font-family: var(--font-body);
+}
+
+/* ---------- background parallax layer ---------- */
+.second-background {
+  z-index: -1;
+  background: oklch(25% 0.05 258);
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+.second-background__layer {
+  will-change: transform;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  position: absolute;
+  inset: 0 0 auto;
+}
+
+/* ---------- sections ---------- */
+.second-section {
+  min-height: 100svh;
+}
+.second-section--scrapbook {
+  touch-action: pan-y;
+  height: 100svh;
+  min-height: 36rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ---------- polaroids (draggable + flippable) ---------- */
+.scrapbook-polaroid {
+  aspect-ratio: 4 / 5;
+  width: clamp(8rem, 19vw, 13rem);
+  height: auto;
+  color: var(--romance);
+  cursor: grab;
+  touch-action: none;
+  perspective: 900px;
+  transform: rotate(var(--tilt));
+  transform-origin: 50%;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  white-space: normal;
+  background: 0 0;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  transition: filter 0.22s, transform 0.22s cubic-bezier(0.2, 0.75, 0.25, 1);
+  position: absolute;
+}
+.scrapbook-polaroid:hover,
+.scrapbook-polaroid:focus-visible {
+  background: 0 0;
+}
+.scrapbook-polaroid:focus-visible {
+  outline: 2px solid var(--romance);
+  outline-offset: 4px;
+}
+.scrapbook-polaroid--dragging {
+  cursor: grabbing;
+  filter: drop-shadow(0 1.25rem 1rem oklch(20% 0.06 258 / 0.5));
+  transform: rotate(var(--tilt)) scale(1.08);
+  transition-duration: 0.12s;
+}
+.scrapbook-polaroid__inner {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.2, 0.72, 0.25, 1);
+  display: block;
+  position: relative;
+}
+.scrapbook-polaroid__inner--flipped {
+  transform: rotateY(180deg);
+}
+.scrapbook-polaroid__face {
+  background: var(--card);
+  backface-visibility: hidden;
+  border: 1px solid oklch(80% 0.05 245);
+  padding: 0.55rem 0.55rem 1.55rem;
+  display: flex;
+  position: absolute;
+  inset: 0;
+  box-shadow: 0 0.35rem 0.65rem oklch(20% 0.05 258 / 0.35);
+}
+.scrapbook-polaroid__face--front img {
+  object-fit: cover;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.scrapbook-polaroid__face--back {
+  color: oklch(92% 0.045 242);
+  text-align: center;
+  background: oklch(30% 0.055 258);
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  overflow: hidden;
+  transform: rotateY(180deg);
+}
+.scrapbook-polaroid__face--back span {
+  max-width: 100%;
+  font-family: var(--font-display);
+  font-size: clamp(0.78rem, 1.55vw, 1.05rem);
+  line-height: 1.35;
+  display: block;
+}
+@media (width <= 640px) {
+  .scrapbook-polaroid {
+    width: clamp(5.75rem, 31vw, 7.5rem);
+  }
+  .scrapbook-polaroid__face {
+    padding: 0.35rem 0.35rem 1rem;
+  }
+  .scrapbook-polaroid__face--back {
+    padding: 0.65rem;
+  }
+}
+
+/* ---------- shared heading ---------- */
+.love-heading {
+  font-family: var(--font-display);
+  color: var(--romance);
+  text-align: center;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 14px oklch(22% 0.06 258 / 0.7), 0 0 32px oklch(60% 0.1 245 / 0.35);
+  margin-bottom: 2rem;
+  font-size: clamp(2.25rem, 6vw, 4rem);
+}
+
+/* ---------- love letter ---------- */
+.love-letter {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  height: 100svh;
+  padding: 2rem 1rem;
+  display: flex;
+}
+.love-letter__paper {
+  overscroll-behavior: contain;
+  background: var(--paper);
+  width: min(40rem, 100%);
+  max-height: 74svh;
+  color: var(--romance);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  backdrop-filter: blur(10px) saturate(130%);
+  border-radius: 0.25rem;
+  padding: clamp(1.75rem, 5vw, 3.25rem);
+  font-size: clamp(1rem, 1.6vw, 1.12rem);
+  line-height: 1.85;
+  overflow-y: auto;
+  box-shadow: 0 1px 2px oklch(20% 0.05 258 / 0.25), 0 18px 40px -12px oklch(20% 0.06 258 / 0.55);
+}
+.love-letter__paper p + p {
+  margin-top: 1.25em;
+}
+.love-letter__paper p:first-child,
+.love-letter__sign {
+  font-family: var(--font-display);
+  font-size: 1.3em;
+}
+.love-letter__sign + .love-letter__sign {
+  margin-top: 0.15em !important;
+}
+.love-letter__word {
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+.love-letter__word--shown {
+  opacity: 1;
+}
+.love-letter__hint {
+  font-family: var(--font-display);
+  color: var(--romance);
+  opacity: 0.7;
+  transition: opacity 0.4s;
+}
+.love-letter__hint--ready {
+  opacity: 1;
+  animation: 1.6s ease-in-out infinite hint-bob;
+}
+@keyframes hint-bob {
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+/* ---------- songs ---------- */
+.songs {
+  justify-content: center;
+  align-items: center;
+  min-height: 130svh;
+  padding: 4rem 1rem;
+  display: flex;
+}
+.songs__scrub {
+  transform-origin: 50%;
+  will-change: transform, opacity;
+  width: min(64rem, 100%);
+}
+.songs__reveal {
+  opacity: 0;
+  transition: opacity 0.9s, transform 0.9s cubic-bezier(0.2, 0.75, 0.25, 1);
+  transform: scale(0.85);
+}
+.songs--visible .songs__reveal {
+  opacity: 1;
+  transform: scale(1);
+}
+.songs__grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: 1.25rem;
+  display: grid;
+}
+.songs__bubble {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  border-radius: 1.75rem;
+  padding: 0.75rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: inset 0 1px 8px oklch(85% 0.05 240 / 0.25), 0 12px 30px -14px oklch(20% 0.07 258 / 0.55);
+}
+.songs__bubble:hover {
+  transform: translateY(-4px);
+}
+.songs__bubble iframe {
+  border: 0;
+  border-radius: 1rem;
+  width: 100%;
+  height: 152px;
+  display: block;
+}
+
+/* ---------- 10 things accordion ---------- */
+.things {
+  flex-direction: column;
+  align-items: center;
+  padding: 5rem 1rem;
+  display: flex;
+}
+.things__list {
+  flex-direction: column;
+  gap: 0.75rem;
+  width: min(44rem, 100%);
+  display: flex;
+}
+.things__item {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 10px 24px -16px oklch(20% 0.07 258 / 0.6);
+}
+.things__button {
+  text-align: left;
+  width: 100%;
+  color: var(--romance);
+  cursor: pointer;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  transition: background 0.25s;
+  display: flex;
+}
+.things__button:hover {
+  background: oklch(75% 0.07 240 / 0.18);
+}
+.things__button:focus-visible {
+  outline: 2px solid var(--romance);
+  outline-offset: -2px;
+}
+.things__number {
+  font-family: var(--font-display);
+  opacity: 0.6;
+  font-size: 1.4rem;
+}
+.things__title {
+  font-family: var(--font-display);
+  flex: 1;
+  font-size: clamp(1.1rem, 2.4vw, 1.35rem);
+}
+.things__chevron {
+  transition: transform 0.35s;
+}
+.things__item--open .things__chevron {
+  transform: rotate(180deg);
+}
+.things__panel {
+  opacity: 0;
+  max-height: 0;
+  transition: max-height 0.45s cubic-bezier(0.2, 0.75, 0.25, 1), opacity 0.35s;
+}
+.things__item--open .things__panel {
+  opacity: 1;
+  max-height: 16rem;
+}
+.things__panel p {
+  color: var(--romance-soft);
+  padding: 0 1.25rem 1.25rem 3.6rem;
+  line-height: 1.7;
+}
+
+/* ---------- finale ---------- */
+.finale {
+  justify-content: center;
+  align-items: center;
+  height: 100svh;
+  padding: 1rem;
+  display: flex;
+}
+.finale__text {
+  font-family: var(--font-display);
+  color: var(--romance);
+  text-align: center;
+  text-shadow: 0 2px 18px oklch(22% 0.06 258 / 0.7), 0 0 40px oklch(60% 0.1 245 / 0.4);
+  min-height: 1.2em;
+  font-size: clamp(2rem, 6vw, 4.5rem);
+}
+.finale__caret {
+  vertical-align: -0.1em;
+  opacity: 0;
+  background: currentColor;
+  width: 2px;
+  height: 0.9em;
+  margin-left: 0.1em;
+  display: inline-block;
+}
+.finale__caret--on {
+  animation: 1s step-end infinite caret-blink;
+}
+@keyframes caret-blink {
+  0%, 70%, to {
+    opacity: 1;
+  }
+  20%, 50% {
+    opacity: 0;
+  }
+}
+
+/* ---------- go-to-start FAB ---------- */
+.to-start {
+  z-index: 50;
+  background: var(--romance);
+  height: 2.75rem;
+  color: var(--ink-navy);
+  border-radius: 999px;
+  padding: 0 1.25rem;
+  transition: transform 0.25s, box-shadow 0.25s;
+  animation: 2.6s ease-in-out infinite fab-pulse;
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  box-shadow: 0 10px 24px -8px oklch(20% 0.08 258 / 0.65);
+}
+.to-start:hover {
+  background: var(--romance);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 30px -10px oklch(20% 0.08 258 / 0.7);
+}
+@keyframes fab-pulse {
+  50% {
+    box-shadow: 0 10px 24px -8px oklch(20% 0.08 258 / 0.65), 0 0 0 8px oklch(85% 0.06 242 / 0.16);
+  }
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .love-letter__word,
+  .songs__reveal {
+    transition-duration: 1ms;
+  }
+  .to-start,
+  .love-letter__hint--ready {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   THEVERTMENTHE — 3D gallery station (rebuild of thevertmenthe.dault-lafon.fr)
+   All rem values are the ORIGINAL site's: html font-size becomes
+   0.1098vh on these routes only (1rem ≈ 1px @ 900px-tall viewport).
+   ============================================================ */
+
+@font-face {
+  font-family: "Josefin Sans";
+  font-style: normal;
+  font-weight: 100 700;
+  font-display: swap;
+  src: url("/thevertmenthe/fonts/josefin-sans.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Josefin Sans";
+  font-style: italic;
+  font-weight: 100 700;
+  font-display: swap;
+  src: url("/thevertmenthe/fonts/josefin-sans-italic.woff2") format("woff2");
+}
+
+html:has(.tv-page) {
+  font-size: 0.10976948408342481vh;
+}
+
+.tv-page {
+  --tv-black: #000000;
+  --tv-white: #ffffff;
+  --tv-red: #f13343;
+  --tv-font: "Josefin Sans", sans-serif;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background-color: var(--tv-black);
+  color: var(--tv-black);
+  overflow: hidden;
+  font-family: var(--tv-font);
+  touch-action: none;
+}
+.tv-page * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.tv-page span {
+  display: inline-block;
+  overflow: hidden;
+  line-height: 1;
+  font-size: inherit;
+  font-family: inherit;
+  vertical-align: bottom;
+}
+.tv-webgl {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 0;
+  display: block;
+}
+.tv-viewport {
+  display: none;
+}
+
+/* ---- keyboard legend ---- */
+.tv-page .controls {
+  width: 500rem;
+  height: 80rem;
+  position: absolute;
+  bottom: 50rem;
+  left: 50%;
+  transform: translate(-50%);
+  background-image: url(/thevertmenthe/controls.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  mix-blend-mode: difference;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* ---- projected see-details links ---- */
+.tv-page .container {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+.tv-page .gallery_link {
+  width: 220rem;
+  height: 50rem;
+  font-size: 15rem;
+  font-family: var(--tv-font);
+  color: var(--tv-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  column-gap: 10rem;
+  pointer-events: none;
+  opacity: 0;
+}
+.tv-page .gallery_link div {
+  width: 20rem;
+  height: 20rem;
+  background-image: url(/thevertmenthe/enter.svg);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.tv-page .link_open {
+  pointer-events: all;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+.tv-page .big_link {
+  scale: 1.1;
+}
+.tv-page .link_open:hover {
+  opacity: 0.5;
+}
+
+/* ---- menu ---- */
+.tv-page .menu {
+  font-family: var(--tv-font);
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  -webkit-user-select: none;
+  user-select: none;
+  overflow: hidden;
+  z-index: 20;
+}
+.tv-page .menu_button {
+  position: absolute;
+  top: 50rem;
+  right: 50rem;
+  -webkit-user-select: none;
+  user-select: none;
+  z-index: 30;
+}
+.tv-page .menu_open button {
+  transition: opacity 0.3s ease-in-out;
+}
+.tv-page .menu_button button {
+  font-family: var(--tv-font);
+  font-size: 15rem;
+  mix-blend-mode: difference;
+  color: var(--tv-white);
+  text-transform: uppercase;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.tv-page .menu_button button:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+.tv-page .menu_button:hover,
+.tv-page .menu_button:hover button {
+  cursor: pointer;
+}
+.tv-page .menu_text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding: 50rem;
+  display: flex;
+  justify-content: center;
+  mix-blend-mode: difference;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.tv-page .search_bar {
+  position: absolute;
+  bottom: 50rem;
+  right: 50rem;
+  width: 200rem;
+  text-align: left;
+  display: flex;
+  column-gap: 5rem;
+  opacity: 0;
+}
+.tv-page .search_bar input {
+  background: none;
+  border: none;
+  font-family: var(--tv-font);
+  font-size: 15rem;
+  color: var(--tv-white);
+  pointer-events: none;
+  caret-color: var(--tv-white);
+}
+.tv-page .search_bar input::placeholder {
+  font-family: var(--tv-font);
+  color: var(--tv-white);
+}
+.tv-page .search_bar input:focus {
+  background-color: none;
+  border: none;
+  outline: none;
+}
+.tv-page .menu_main_links {
+  height: 100%;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  width: 120rem;
+  font-family: var(--tv-font);
+}
+.tv-page .menu_main_links span {
+  position: relative;
+  width: 100%;
+}
+.tv-page .menu_links {
+  height: 95%;
+  width: 200rem;
+  overflow-y: scroll;
+}
+.tv-page .menu_links ul li {
+  overflow: hidden;
+  position: relative;
+}
+.tv-page .menu_links ul li a {
+  color: var(--tv-white);
+  font-family: var(--tv-font);
+}
+.tv-page .menu_links::-webkit-scrollbar {
+  display: none;
+}
+.tv-page .menu_main_links a {
+  color: var(--tv-white);
+  font-weight: 350;
+}
+.tv-page .menu_main_links a {
+  font-size: 30rem;
+  display: inline-block;
+  margin-bottom: 0rem;
+  width: 100%;
+  padding-right: 5rem;
+  transition: opacity 0.2s ease-in-out;
+}
+.tv-page .menu_links a {
+  font-size: 15rem;
+  display: block;
+  margin-left: 5rem;
+  padding-bottom: 2rem;
+  color: var(--tv-white);
+}
+.tv-page .menu_links_hover {
+  position: absolute;
+  top: 0;
+  left: 0rem;
+  width: 100%;
+  height: 100%;
+  background-image: url(/thevertmenthe/hover_small.png);
+  background-repeat: no-repeat;
+  background-position: 0, 0;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  display: none;
+}
+.tv-page .menu_line {
+  height: 100%;
+  width: 1rem;
+  background-color: var(--tv-white);
+  margin-left: 30rem;
+  margin-right: 30rem;
+}
+.tv-page .menu_links ul li:hover .menu_links_hover {
+  display: block;
+}
+.tv-page .menu_main_links span a:hover {
+  opacity: 0.4;
+}
+.tv-page .menu_canvas_container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 80%;
+  padding: 50rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  opacity: 0;
+}
+.tv-page .menu_canvas_container img {
+  width: 100vh;
+  height: 100vh;
+  object-fit: cover;
+  object-position: 0rem 50rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.tv-page .menu_canvas_container video {
+  width: 100vh;
+  height: 100vh;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  position: absolute;
+  filter: saturate(0) invert(1);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.tv-page .menu_actif {
+  opacity: 0.2;
+}
+.tv-page .menu_contact,
+.tv-page .menu_insta {
+  position: absolute;
+  color: var(--tv-white);
+  bottom: 0;
+  right: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--tv-font);
+  font-size: 15rem;
+  text-align: right;
+  opacity: 0;
+  pointer-events: none;
+  margin-bottom: 50rem;
+  margin-right: 50rem;
+  transition: opacity 0.2s ease-in-out;
+  cursor: pointer;
+}
+.tv-page .tv-menu .menu_contact,
+.tv-page .tv-menu .menu_insta {
+  pointer-events: all;
+}
+.tv-page .menu_contact:after {
+  content: "";
+  position: absolute;
+  right: -12rem;
+  bottom: 2rem;
+  width: 10rem;
+  height: 17rem;
+  background-color: var(--tv-white);
+  animation: tv-clignote 1s infinite;
+}
+.tv-page .menu_contact:hover,
+.tv-page .menu_insta:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+.tv-page .menu_insta {
+  bottom: 25rem;
+  margin-right: 40rem;
+}
+@keyframes tv-clignote {
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---- loader ---- */
+.tv-page .tv-loader {
+  width: 100vw;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  color: var(--tv-white);
+  font-family: var(--tv-font);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 50rem;
+}
+.tv-page .tv-loader_inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+.tv-page .loader_line {
+  width: 0%;
+  height: 1rem;
+  background-color: var(--tv-white);
+  margin-top: 10rem;
+  margin-left: auto;
+  margin-bottom: 10rem;
+}
+.tv-page .loader_title {
+  color: var(--tv-white);
+  font-size: 40rem;
+  font-weight: 700;
+  text-transform: none;
+  text-align: right;
+}
+.tv-page .loader_sub {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 15rem;
+  letter-spacing: 10rem;
+}
+.tv-page .loader_subtitle {
+  transform: translate(10rem, 0);
+}
+
+/* ---- joystick (phone) ---- */
+.tv-joystick_container {
+  position: absolute;
+  bottom: 120rem;
+  left: 60rem;
+  z-index: 40;
+  display: none;
+  touch-action: none;
+}
+.tv-joystick_base {
+  width: 160rem;
+  height: 160rem;
+  border-radius: 50%;
+  background: rgba(128, 128, 128, 0.5);
+  border: 1rem solid rgba(0, 0, 0, 0.8);
+  position: relative;
+}
+.tv-joystick_handle {
+  width: 70rem;
+  height: 70rem;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.9);
+  border: 2rem solid rgba(0, 0, 0, 0.8);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -35rem;
+  margin-left: -35rem;
+}
+
+/* ---- article pages ---- */
+.tv-article {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  background-color: var(--tv-white);
+  font-family: var(--tv-font);
+  pointer-events: all;
+  overflow: hidden;
+}
+.tv-article .article_container {
+  width: 100vw;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  font-size: 15rem;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.tv-article .article_left,
+.tv-article .article_mid,
+.tv-article .article_right {
+  width: 100%;
+  font-family: var(--tv-font);
+}
+.tv-article .article_mid {
+  min-width: 720rem;
+  max-width: 720rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.tv-article .article_mid img {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+}
+.tv-article .article_mid h1 {
+  color: var(--tv-black);
+  font-size: 60rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 40rem;
+  text-align: center;
+}
+.tv-article .article_left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-left: 50rem;
+  padding-top: 50rem;
+  padding-bottom: 50rem;
+}
+.tv-article .article_left ul {
+  list-style: none;
+}
+.tv-article .data_top {
+  text-align: right;
+}
+.tv-article .data_top li {
+  margin-bottom: 2rem;
+}
+.tv-article .data_bottom li {
+  margin-top: 2rem;
+}
+.tv-article .article_right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-right: 50rem;
+  padding-top: 50rem;
+  padding-bottom: 50rem;
+  align-items: flex-end;
+}
+.tv-article .vendu {
+  color: var(--tv-red);
+  font-weight: 700;
+  margin-top: 10rem;
+}
+.tv-article .contact_button {
+  position: relative;
+  border: none;
+  background: transparent;
+  font-family: var(--tv-font);
+  font-size: 15rem;
+  text-align: right;
+  padding-right: 12rem;
+  margin-right: 100rem;
+  transition: opacity 0.2s ease-in-out;
+  opacity: 0.6;
+  pointer-events: all;
+  padding-top: 20rem;
+  padding-left: 20rem;
+  color: var(--tv-black);
+  cursor: pointer;
+}
+.tv-article .contact_button:after {
+  content: "";
+  position: absolute;
+  bottom: 2rem;
+  right: 0;
+  width: 10rem;
+  height: 17rem;
+  background-color: var(--tv-black);
+  animation: tv-clignote 1s infinite;
+}
+.tv-article .contact_button:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+.tv-article .article_back {
+  position: absolute;
+  top: 50rem;
+  left: 50rem;
+  font-size: 15rem;
+  color: var(--tv-black);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--tv-font);
+  opacity: 0.6;
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: all;
+  text-transform: uppercase;
+}
+.tv-article .article_back:hover {
+  opacity: 1;
+}
+.tv-article .article_arrows {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70vw;
+  height: 50rem;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: all;
+}
+.tv-article .article_arrows .arrowL,
+.tv-article .article_arrows .arrowR {
+  width: 50rem;
+  height: 50rem;
+}
+.tv-article .article_arrows .arrowL a,
+.tv-article .article_arrows .arrowR a {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  transition: opacity 0.2s ease-in-out;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 25rem;
+  cursor: pointer;
+}
+.tv-article .article_arrows .arrowL a {
+  background-image: url(/thevertmenthe/arrowL.svg);
+}
+.tv-article .article_arrows .arrowR a {
+  background-image: url(/thevertmenthe/arrowR.svg);
+}
+.tv-article .article_arrows .arrowL a:hover,
+.tv-article .article_arrows .arrowR a:hover {
+  opacity: 0.5;
+}
+
+/* ---- phone ---- */
+@media (max-width: 820px) {
+  .tv-page .menu_button {
+    position: absolute;
+    top: 30rem;
+    right: 30rem;
+  }
+  .tv-page .controls {
+    display: none;
+  }
+  .tv-joystick_container {
+    display: block;
+  }
+  .tv-page .menu_video,
+  .tv-page .menu_image {
+    display: none;
+  }
+  .tv-page .menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  .tv-page .menu_text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 80%;
+    padding: 30rem;
+  }
+  .tv-page .menu_main_links {
+    width: 95rem;
+  }
+  .tv-page .menu_button button {
+    mix-blend-mode: normal;
+    color: var(--tv-white);
+    font-size: 20rem;
+  }
+  .tv-page .menu_links {
+    height: 80%;
+  }
+  .tv-article .article_mid {
+    max-width: 0rem;
+    min-width: 0rem;
+  }
+  .tv-article .article_right {
+    padding-right: 30rem;
+    padding-top: 30rem;
+    padding-bottom: 30rem;
+  }
+  .tv-article .article_left {
+    padding-left: 30rem;
+    padding-top: 30rem;
+    padding-bottom: 30rem;
+  }
+  .tv-article .data_top {
+    text-align: left;
+    position: absolute;
+    top: 30rem;
+    left: 30rem;
+  }
+  .tv-article .data_bottom {
+    position: absolute;
+    bottom: 30rem;
+    left: 30rem;
+  }
+  .tv-article .contact_button {
+    position: absolute;
+    right: 30rem;
+    bottom: 30rem;
+    margin-right: 90rem;
+  }
+}
+
+.tv-hidden {
+  display: none !important;
+}
