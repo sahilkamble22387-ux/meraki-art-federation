@@ -846,27 +846,32 @@ export class TvEngine {
     if (!this.personnage) return
     const tex = foot === "left" ? this.items.footprintL : this.items.footprintR
     if (!tex) return
-    const boneName = foot === "left" ? "footL" : "footR"
+    const boneName = foot === "left" ? "pied_L" : "pied_R"
     const bone = this.personnage.getObjectByName(boneName)
     const pos = new THREE.Vector3()
+    const lateral = new THREE.Vector3(1, 0, 0).applyQuaternion(this.personnage.quaternion)
+    const sideOffset = foot === "left" ? -0.042 : 0.042
+
     if (bone) {
       bone.getWorldPosition(pos)
+      // Ensure two clear, distinct leg tracks
+      pos.addScaledVector(lateral, sideOffset * 0.45)
     } else {
       pos.copy(this.personnage.position)
+      pos.addScaledVector(lateral, sideOffset)
     }
-    pos.y = 0.004
+    pos.y = 0.003
+
     const mat = new THREE.MeshBasicMaterial({
       map: tex,
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.45,
       depthWrite: false,
     })
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(0.14, 0.2), mat)
-    m.rotation.x = -Math.PI * 0.5
-    m.rotation.z = Math.atan2(
-      this.personnage.quaternion.x,
-      this.personnage.quaternion.w,
-    ) * 0 // keep upright; the room is axis-aligned
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(0.08, 0.128), mat)
+    m.quaternion.copy(this.personnage.quaternion)
+    m.rotateX(-Math.PI * 0.5)
+    m.rotateZ(Math.PI)
     m.position.copy(pos)
     this.scene.add(m)
     const fp = { mesh: m, life: 0 }
