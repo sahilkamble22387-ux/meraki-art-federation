@@ -24,7 +24,6 @@ import {
   createBonsaiBench,
   createTokonomaAlcove,
   createSakuraParticles,
-  createArtistSatchel,
 } from "./tv-japanese-theme"
 
 const ASSET_BASE = "/thevertmenthe"
@@ -81,7 +80,7 @@ const STATIC_ASSETS = {
 }
 
 const STATIC_PATHS: Record<string, string> = {
-  personnage: `${ASSET_BASE}/models/personnage_opti.glb`,
+  personnage: `${ASSET_BASE}/models/meraki_curator.glb`,
   cadre: `${ASSET_BASE}/models/cadre.glb`,
   galerie: `${ASSET_BASE}/models/galerie.glb`,
   footprintL: `${ASSET_BASE}/textures/footprintL2.png`,
@@ -356,18 +355,13 @@ export class TvEngine {
 
     p.traverse((o: any) => {
       if (o.isMesh) {
-        o.material = meshMap[o.name] ?? coatMat
+        if (meshMap[o.name]) {
+          o.material = meshMap[o.name]
+        }
         o.castShadow = true
         o.receiveShadow = true
       }
     })
-
-    // Handcrafted Meraki Artist Leather Satchel with Japanese Art Scrolls attached to spine
-    const torse = p.getObjectByName("torse")
-    if (torse) {
-      const satchel = createArtistSatchel()
-      torse.add(satchel)
-    }
 
     p.scale.set(0.08, 0.08, 0.08)
     this.personnage = p
