@@ -487,7 +487,7 @@ Kind regards,
       <div ref={containerRef} className="container" style={{ display: isArticle ? "none" : "block" }} />
 
       {/* Floating Japanese countdown banner */}
-      {ready && !isArticle && (
+      {!isArticle && (
         <MerakiCountdownBanner
           onOpenAbout={() => setActiveModalTab("about")}
           onOpenTeam={() => setActiveModalTab("team")}
