@@ -136,7 +136,11 @@ export class TvEngine {
   private homeRoot: THREE.Group | null = null
   private galleryRoot: THREE.Group | null = null
   private cadres: Cadre[] = []
+  private homeCadres: Cadre[] = []
+  private galleryCadres: Cadre[] = []
   private buttons: FloorButton[] = []
+  private homeButtons: FloorButton[] = []
+  private galleryButtons: FloorButton[] = []
   private links: LinkProj[] = []
   private spotLights: THREE.SpotLight[] = []
   private homeSize = { x: 1.4, zMin: -10.9, zMax: 3 }
@@ -481,22 +485,24 @@ export class TvEngine {
 
     // 8 framed artworks on the anchors
     const uids = HOME_SLOTS.map((s) => HOME_MAP[s])
-    this.cadres = []
-    this.buttons = []
+    this.homeCadres = []
+    this.homeButtons = []
     anchors.forEach((anchor, n) => {
       const uid = uids[n % uids.length]
       const article = TV_ARTICLES.find((a) => a.uid === uid)
       const tex = this.items[uid]
-      const cadre = this.buildCadre(anchor, 2, tex, article)
-      this.cadres.push(cadre)
-      this.buttons.push(this.buildFloorButton(cadre, "home", n))
+      const cadre = this.buildCadre(g, anchor, 2, tex, article)
+      this.homeCadres.push(cadre)
+      this.homeButtons.push(this.buildFloorButton(g, cadre, "home", n))
     })
+    this.cadres = this.homeCadres
+    this.buttons = this.homeButtons
 
     this.homeRoot = g
     this.scene.add(g)
   }
 
-  private buildCadre(anchor: THREE.Object3D, scale: number, tex: any, article: TvArticle | undefined): Cadre {
+  private buildCadre(parentGroup: THREE.Group, anchor: THREE.Object3D, scale: number, tex: any, article: TvArticle | undefined): Cadre {
     const src = this.items.cadre?.scene as THREE.Object3D | undefined
     const instance = src ? src.clone(true) : new THREE.Group()
     const wp = new THREE.Vector3()
@@ -531,11 +537,11 @@ export class TvEngine {
         color: new THREE.Color(0.9058823529411765 * 2, 0.8901960784313725 * 2, 0.8627450980392157 * 2),
       })
     }
-    this.scene.add(instance)
+    parentGroup.add(instance)
     return { instance, draw, article: article ?? TV_ARTICLES[0] }
   }
 
-  private buildFloorButton(cadre: Cadre, world: "home" | "gallery", index: number): FloorButton {
+  private buildFloorButton(parentGroup: THREE.Group, cadre: Cadre, world: "home" | "gallery", index: number): FloorButton {
     const group = new THREE.Group()
     const mk = () => {
       const m = new THREE.Mesh(
@@ -563,7 +569,7 @@ export class TvEngine {
       group.position.z += 0.5
     }
     group.position.y = 0.01
-    this.scene.add(group)
+    parentGroup.add(group)
     return { group, r2, isOpen: false, cadreIndex: index }
   }
 
@@ -605,6 +611,7 @@ export class TvEngine {
       map: platreColor,
       normalMap: platreNormal,
       roughnessMap: platreRough,
+      side: THREE.DoubleSide,
     })
     const wall = new THREE.Mesh(
       new THREE.PlaneGeometry(4 + size, 10),
@@ -614,25 +621,32 @@ export class TvEngine {
     wall.receiveShadow = true
     g.add(wall)
 
+    // end walls to enclose the gallery hall
+    const endWallGeo = new THREE.PlaneGeometry(4, 10)
+    const endWallLeft = new THREE.Mesh(endWallGeo, wallMat)
+    endWallLeft.rotation.y = Math.PI * 0.5
+    endWallLeft.position.set(-2, 5, 1)
+    g.add(endWallLeft)
+
+    const endWallRight = new THREE.Mesh(endWallGeo, wallMat)
+    endWallRight.rotation.y = -Math.PI * 0.5
+    endWallRight.position.set(size + 2, 5, 1)
+    g.add(endWallRight)
+
     // ceiling strip with skylight glow (matches the room's white ceiling look)
     const ceil = new THREE.Mesh(
       new THREE.PlaneGeometry(4 + size, 4),
-      new THREE.MeshStandardMaterial({ color: "#e8e6e2" }),
+      new THREE.MeshStandardMaterial({ color: "#e8e6e2", side: THREE.DoubleSide }),
     )
     ceil.rotation.x = Math.PI * 0.5
     ceil.position.set((4 + size) / 2 - 2, 10, 1)
     g.add(ceil)
 
-    const amb = new THREE.AmbientLight("#ffffff", 0.75)
-    const dir = new THREE.DirectionalLight("#ffffff", 1.1)
-    dir.position.set(2, 8, 4)
-    dir.castShadow = true
-    dir.shadow.mapSize.set(1024, 1024)
-    dir.shadow.camera.left = -20
-    dir.shadow.camera.right = 20
-    dir.shadow.camera.near = 0.1
-    dir.shadow.camera.far = 40
-    g.add(amb, dir)
+    const amb = new THREE.AmbientLight("#ffffff", 0.85)
+    const dir = new THREE.DirectionalLight("#ffffff", 0.9)
+    dir.position.set((4 + size) / 2 - 2, 8, 4)
+    dir.target.position.set((4 + size) / 2 - 2, 0, -0.5)
+    g.add(amb, dir, dir.target)
 
     // wall signs at both ends (Gallery / Home arrows)
     const addSign = (texName: string, x: number) => {
@@ -655,17 +669,19 @@ export class TvEngine {
     addSign("panneau_homeR", size - 10.6 + 0.7)
 
     // all 44 artworks in a long wall row
-    this.cadres = []
-    this.buttons = []
+    this.galleryCadres = []
+    this.galleryButtons = []
     TV_ARTICLES.forEach((a, n) => {
       const tex = this.items[a.uid]
       const anchor = new THREE.Object3D()
-      anchor.position.set(1.2 + n * 1.2, 0.99 + (n % 2) * 0.99, -0.5)
+      anchor.position.set(1.2 + n * 1.2, 0.99 + (n % 2) * 0.99, -0.48)
       anchor.updateMatrixWorld(true)
-      const cadre = this.buildCadre(anchor, 1.5, tex, a)
-      this.cadres.push(cadre)
-      this.buttons.push(this.buildFloorButton(cadre, "gallery", n))
+      const cadre = this.buildCadre(g, anchor, 1.5, tex, a)
+      this.galleryCadres.push(cadre)
+      this.galleryButtons.push(this.buildFloorButton(g, cadre, "gallery", n))
     })
+    this.cadres = this.galleryCadres
+    this.buttons = this.galleryButtons
 
     this.galleryRoot = g
     this.scene.add(g)
@@ -786,35 +802,52 @@ export class TvEngine {
   }
 
   private applyRoute() {
-    // tear down previous world's dynamic bits
     this.links.forEach((l) => l.el.remove())
     this.links = []
-    this.buttons.forEach((b) => {
-      this.scene.remove(b.group)
-      b.group.traverse((o: any) => {
-        if (o.isMesh) {
-          o.geometry.dispose()
-          o.material.dispose()
-        }
-      })
-    })
-    this.buttons = []
+    this.autoNavFired = false
+
     if (this.homeRoot) this.homeRoot.visible = false
     if (this.galleryRoot) this.galleryRoot.visible = false
-    this.autoNavFired = false
 
     if (this.route === "home") {
       if (!this.homeRoot) this.buildHome()
       if (this.homeRoot) this.homeRoot.visible = true
+      this.cadres = this.homeCadres
+      this.buttons = this.homeButtons
+      this.buttons.forEach((b) => {
+        b.isOpen = false
+        b.r2.position.y = 0
+      })
       this.rebuildLinks()
-      if (this.personnage) this.personnage.position.set(0, 0, 0)
+      if (this.personnage) {
+        this.personnage.position.set(0, 0, 0)
+        this.camPosTarget.set(0, 1, 3)
+        this.camTarget.set(0, 0.6, -0.5)
+        this.camera.position.copy(this.camPosTarget)
+        if (this.smoothedTarget) this.smoothedTarget.copy(this.camTarget)
+        this.camera.lookAt(this.camTarget)
+      }
       this.controlsEnabled = true
       this.onControlsVisible(true)
     } else if (this.route === "gallery") {
       if (!this.galleryRoot) this.buildGallery()
       if (this.galleryRoot) this.galleryRoot.visible = true
+      this.cadres = this.galleryCadres
+      this.buttons = this.galleryButtons
+      this.buttons.forEach((b) => {
+        b.isOpen = false
+        b.r2.position.y = 0
+      })
       this.rebuildLinks()
-      if (this.personnage) this.personnage.position.set(this.lastGalleryX, 0, 0)
+      if (this.personnage) {
+        const gx = Math.max(0, this.lastGalleryX)
+        this.personnage.position.set(gx, 0, 0.4)
+        this.camPosTarget.set(gx, 1, 3.4)
+        this.camTarget.set(gx, 0.6, -0.1)
+        this.camera.position.copy(this.camPosTarget)
+        if (this.smoothedTarget) this.smoothedTarget.copy(this.camTarget)
+        this.camera.lookAt(this.camTarget)
+      }
       this.controlsEnabled = true
       this.onControlsVisible(true)
     } else {
@@ -910,8 +943,8 @@ export class TvEngine {
           this.navigate("/gallery")
         }
       } else if (this.route === "gallery") {
-        this.personnage.position.z = Math.max(-1.4, Math.min(1.4, this.personnage.position.z))
-        this.personnage.position.x = Math.max(-1.4, Math.min(this.gallerySize - 9.6, this.personnage.position.x))
+        this.personnage.position.z = Math.max(-0.1, Math.min(1.4, this.personnage.position.z))
+        this.personnage.position.x = Math.max(0, Math.min(this.gallerySize - 9.6, this.personnage.position.x))
         if (this.personnage.position.x > this.gallerySize - 10.6 + 1 && !this.autoNavFired) {
           this.autoNavFired = true
           this.onControlsVisible(false)
@@ -958,7 +991,7 @@ export class TvEngine {
     const { x, y, z } = this.personnage.position
     const anyOpen = this.buttons.some((b) => b.isOpen)
     if (!anyOpen) {
-      this.camPosTarget.set(-x, y + 1, z + 3)
+      this.camPosTarget.set(x, y + 1, z + 3)
       this.camTarget.set(x, y + 0.6, z - 0.5)
     } else {
       const btn = this.buttons.find((b) => b.isOpen)
@@ -972,9 +1005,9 @@ export class TvEngine {
         this.camTarget.copy(cadre.instance.position)
       }
     }
-    this.camera.position.lerp(this.camPosTarget, this.isPhone ? 0.1 : 0.03)
+    this.camera.position.lerp(this.camPosTarget, this.isPhone ? 0.1 : 0.05)
     if (!this.smoothedTarget) this.smoothedTarget = new THREE.Vector3()
-    this.smoothedTarget.lerp(this.camTarget, this.isPhone ? 0.1 : 0.03)
+    this.smoothedTarget.lerp(this.camTarget, this.isPhone ? 0.1 : 0.05)
     this.camera.lookAt(this.smoothedTarget)
   }
 
