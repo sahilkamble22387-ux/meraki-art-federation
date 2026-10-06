@@ -720,53 +720,6 @@ export function createTokonomaAlcove(
   return group
 }
 
-/**
- * Creates traditional post-and-beam (Shintuka) timber lintels & pillars for the long gallery wall:
- * - Upper lintel beam (Nageshi) above paintings at y = 2.45
- * - Lower lintel beam (Habaki) beneath paintings at y = 0.38
- * - Vertical cedar pillars (Hashira) dividing every 4 artworks
- */
-export function createGalleryLintels(totalLength: number, numPaintings: number = 44): THREE.Group {
-  const group = new THREE.Group()
-
-  const woodMat = new THREE.MeshStandardMaterial({
-    color: "#22170f", // dark smoked cedar timber
-    roughness: 0.75,
-    metalness: 0.08,
-  })
-
-  // 1. Lower horizontal lintel beam running entire wall length
-  const lowerBeam = new THREE.Mesh(
-    new THREE.BoxGeometry(totalLength, 0.05, 0.04),
-    woodMat,
-  )
-  lowerBeam.position.set(totalLength / 2 - 2, 0.38, -0.47)
-  lowerBeam.receiveShadow = true
-  group.add(lowerBeam)
-
-  // 2. Upper horizontal lintel beam running entire wall length
-  const upperBeam = new THREE.Mesh(
-    new THREE.BoxGeometry(totalLength, 0.07, 0.04),
-    woodMat,
-  )
-  upperBeam.position.set(totalLength / 2 - 2, 2.45, -0.47)
-  upperBeam.receiveShadow = true
-  group.add(upperBeam)
-
-  // 3. Vertical cedar pillars (Hashira) spaced every 4 artworks (~4.8m)
-  const pillarHeight = 2.45 - 0.38
-  const pillarGeo = new THREE.BoxGeometry(0.06, pillarHeight, 0.035)
-  for (let n = 0; n <= numPaintings; n += 4) {
-    const px = 0.6 + n * 1.2
-    const pillar = new THREE.Mesh(pillarGeo, woodMat)
-    pillar.position.set(px, 0.38 + pillarHeight * 0.5, -0.472)
-    pillar.receiveShadow = true
-    group.add(pillar)
-  }
-
-  return group
-}
-
 export type ParticleBounds = {
   xMin: number
   xMax: number

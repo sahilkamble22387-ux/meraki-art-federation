@@ -22,7 +22,6 @@ import {
   createAndonLantern,
   createTokonomaAlcove,
   createSakuraParticles,
-  createGalleryLintels,
 } from "./tv-japanese-theme"
 
 const ASSET_BASE = "/thevertmenthe"
@@ -721,11 +720,7 @@ export class TvEngine {
     wall.receiveShadow = true
     g.add(wall)
 
-    // 4. Traditional Post-and-Beam Timber Lintels & Pillars (Shintuka)
-    const lintels = createGalleryLintels(totalLength, TV_ARTICLES.length)
-    g.add(lintels)
-
-    // 5. End walls enclosing the gallery hall
+    // 4. End walls enclosing the gallery hall
     const endWallGeo = new THREE.PlaneGeometry(4, 10)
     const endWallLeft = new THREE.Mesh(endWallGeo, wallMat)
     endWallLeft.rotation.y = Math.PI * 0.5
