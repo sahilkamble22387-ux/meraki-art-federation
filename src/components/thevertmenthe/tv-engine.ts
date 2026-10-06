@@ -22,7 +22,6 @@ import {
   createJapaneseSignTexture,
   createAndonLantern,
   createBonsaiBench,
-  createSakuraBranchMesh,
   createTokonomaAlcove,
   createSakuraParticles,
 } from "./tv-japanese-theme"
@@ -311,6 +310,8 @@ export class TvEngine {
     const gltf = this.items.personnage
     if (!gltf) return
     const p = gltf.scene
+
+    // Pure ink silhouette character
     const mat = new THREE.MeshBasicMaterial({ color: "black" })
     p.traverse((o: any) => {
       if (o.isMesh) {
@@ -363,39 +364,46 @@ export class TvEngine {
     const barriere = galerie.getObjectByName("barriere")
     const vitre = galerie.getObjectByName("vitre")
 
-    // 1. Dark Smoked Ebony Timber Floor
+    // 1. Pale Natural Woven Tatami Matting covering the main floor (high contrast with black character)
     if (floor) {
       floor.receiveShadow = true
+      const floorTatami = tatamiTex.clone()
+      floorTatami.repeat.set(4, 16)
+      floorTatami.needsUpdate = true
       const m = new THREE.MeshStandardMaterial({
-        map: hinoki.colorMap,
-        roughnessMap: hinoki.roughnessMap,
-        roughness: 0.55,
-        metalness: 0.05,
+        map: floorTatami,
+        roughness: 0.9,
+        metalness: 0.0,
       })
       const old: any[] = []
       floor.traverse((o: any) => o.isMesh && old.push(o.material))
       floor.traverse((o: any) => {
-        if (o.isMesh) o.material = m
+        if (o.isMesh) {
+          o.material = m
+          o.receiveShadow = true
+        }
       })
       old.forEach((x) => x?.dispose?.())
     }
 
-    // 2. Pale Natural Woven Tatami Mat bays flanking the walkway
-    const tatamiMat = new THREE.MeshStandardMaterial({
-      map: tatamiTex,
-      roughness: 0.88,
+    // 2. Dark Smoked Timber Engawa Veranda borders along the outer boundaries beneath the railings
+    const engawaMat = new THREE.MeshStandardMaterial({
+      map: hinoki.colorMap,
+      roughnessMap: hinoki.roughnessMap,
+      roughness: 0.6,
+      metalness: 0.05,
     })
-    const tatamiL = new THREE.Mesh(new THREE.PlaneGeometry(0.82, 9.6), tatamiMat)
-    tatamiL.rotation.x = -Math.PI * 0.5
-    tatamiL.position.set(-1.58, 0.005, -5.0)
-    tatamiL.receiveShadow = true
-    g.add(tatamiL)
+    const engawaL = new THREE.Mesh(new THREE.PlaneGeometry(0.55, 19), engawaMat)
+    engawaL.rotation.x = -Math.PI * 0.5
+    engawaL.position.set(-1.72, 0.003, -2.5)
+    engawaL.receiveShadow = true
+    g.add(engawaL)
 
-    const tatamiR = new THREE.Mesh(new THREE.PlaneGeometry(0.82, 9.6), tatamiMat)
-    tatamiR.rotation.x = -Math.PI * 0.5
-    tatamiR.position.set(1.58, 0.005, -5.0)
-    tatamiR.receiveShadow = true
-    g.add(tatamiR)
+    const engawaR = new THREE.Mesh(new THREE.PlaneGeometry(0.55, 19), engawaMat)
+    engawaR.rotation.x = -Math.PI * 0.5
+    engawaR.position.set(1.72, 0.003, -2.5)
+    engawaR.receiveShadow = true
+    g.add(engawaR)
 
     // 3. Textured pale cream Washi plaster walls with soft diagonal sunlight shadows
     if (roof) {
@@ -499,32 +507,24 @@ export class TvEngine {
       })
     }
 
-    // 6. Andon Floor Paper Lanterns with gentle soft neutral illumination (subtle, no orange)
+    // 6. Andon Floor Paper Lanterns with gentle soft neutral illumination (along side borders)
     const lanternCoords: Array<[number, number]> = [
-      [-1.12, -1.4],
-      [1.12, -1.4],
-      [-1.12, -5.0],
-      [1.12, -5.0],
-      [-1.12, -8.6],
-      [1.12, -8.6],
-      [0.85, 0.8],
+      [-1.48, -1.4],
+      [1.48, -1.4],
+      [-1.48, -5.0],
+      [1.48, -5.0],
+      [-1.48, -8.6],
+      [1.48, -8.6],
+      [1.48, 0.8],
     ]
     lanternCoords.forEach(([lx, lz]) => {
       const lantern = createAndonLantern(lx, lz, 0.35)
       g.add(lantern)
     })
 
-    // 7. Low Dark Timber Bench with Bonsai Pine on the Left (exact match to photo)
-    const bonsaiBench = createBonsaiBench(-1.42, -1.8)
+    // 7. Low Dark Timber Bench with Bonsai Pine on the Left
+    const bonsaiBench = createBonsaiBench(-1.35, -0.6)
     g.add(bonsaiBench)
-
-    // 8. Botanical Sakura Cherry Blossom Tree Branch (Upper Right corner, matching photo)
-    const sakuraBranch1 = createSakuraBranchMesh(0.85, 2.05, -0.6, 1.45)
-    g.add(sakuraBranch1)
-
-    const sakuraBranch2 = createSakuraBranchMesh(-0.85, 2.15, -4.8, 1.25)
-    sakuraBranch2.rotation.y = Math.PI
-    g.add(sakuraBranch2)
 
     // 9. Tokonoma Alcove with raised platform & Kakejiku hanging scroll
     const tokonoma = createTokonomaAlcove(-10.8, kakejikuTex, tatamiTex)
@@ -684,14 +684,16 @@ export class TvEngine {
     const shojiTex = createShojiLatticeTexture()
     shojiTex.repeat.set(totalLength / 4, 1.2)
 
-    // 1. Dark Smoked Ebony Timber Flooring
+    // 1. Gallery Main Flooring - Pale Natural Woven Tatami Mats (high contrast with black character)
+    const galleryTatami = tatamiTex.clone()
+    galleryTatami.repeat.set(totalLength / 2.2, 2.5)
+    galleryTatami.needsUpdate = true
     const floor = new THREE.Mesh(
       new THREE.PlaneGeometry(totalLength, 4),
       new THREE.MeshStandardMaterial({
-        map: hinoki.colorMap,
-        roughnessMap: hinoki.roughnessMap,
-        roughness: 0.55,
-        metalness: 0.05,
+        map: galleryTatami,
+        roughness: 0.9,
+        metalness: 0.0,
       }),
     )
     floor.rotation.x = -Math.PI * 0.5
@@ -699,18 +701,30 @@ export class TvEngine {
     floor.receiveShadow = true
     g.add(floor)
 
-    // 2. Continuous Pale Tatami Mat Gallery Runner beneath the 44 artworks
-    const tatamiRunner = new THREE.Mesh(
-      new THREE.PlaneGeometry(totalLength, 0.88),
-      new THREE.MeshStandardMaterial({
-        map: tatamiTex,
-        roughness: 0.88,
-      }),
+    // 2. Dark Smoked Timber Engawa Veranda borders along the sides
+    const engawaGalleryMat = new THREE.MeshStandardMaterial({
+      map: hinoki.colorMap,
+      roughnessMap: hinoki.roughnessMap,
+      roughness: 0.6,
+      metalness: 0.05,
+    })
+    const engawaGalleryWall = new THREE.Mesh(
+      new THREE.PlaneGeometry(totalLength, 0.4),
+      engawaGalleryMat,
     )
-    tatamiRunner.rotation.x = -Math.PI * 0.5
-    tatamiRunner.position.set(totalLength / 2 - 2, 0.005, -0.06)
-    tatamiRunner.receiveShadow = true
-    g.add(tatamiRunner)
+    engawaGalleryWall.rotation.x = -Math.PI * 0.5
+    engawaGalleryWall.position.set(totalLength / 2 - 2, 0.003, -0.3)
+    engawaGalleryWall.receiveShadow = true
+    g.add(engawaGalleryWall)
+
+    const engawaGalleryOuter = new THREE.Mesh(
+      new THREE.PlaneGeometry(totalLength, 0.4),
+      engawaGalleryMat,
+    )
+    engawaGalleryOuter.rotation.x = -Math.PI * 0.5
+    engawaGalleryOuter.position.set(totalLength / 2 - 2, 0.003, 2.8)
+    engawaGalleryOuter.receiveShadow = true
+    g.add(engawaGalleryOuter)
 
     // 3. Textured pale cream Washi plaster walls with soft diagonal sunlight shadows
     const wallMat = new THREE.MeshStandardMaterial({
@@ -770,17 +784,7 @@ export class TvEngine {
     const bonsaiBench = createBonsaiBench(0.2, 0.35)
     g.add(bonsaiBench)
 
-    // 9. Botanical Sakura Tree Branches framing the gallery corridor
-    const branch1 = createSakuraBranchMesh(1.4, 2.3, 0.1, 1.35)
-    g.add(branch1)
-
-    const branch2 = createSakuraBranchMesh(size * 0.5, 2.3, 0.1, 1.35)
-    g.add(branch2)
-
-    const branch3 = createSakuraBranchMesh(size - 9.2, 2.3, 0.1, 1.35)
-    g.add(branch3)
-
-    // 10. Floating Sakura Petals in Gallery
+    // 9. Floating Sakura Petals in Gallery
     const gallerySakura = createSakuraParticles(48, {
       xMin: -1,
       xMax: size + 1,
