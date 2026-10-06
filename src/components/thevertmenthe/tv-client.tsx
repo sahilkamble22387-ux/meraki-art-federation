@@ -20,6 +20,8 @@ import {
   getTvEngine,
 } from "./tv-engine"
 import { TV_ARTICLES } from "@/lib/thevertmenthe-articles"
+import { MerakiCountdownBanner } from "@/components/meraki/meraki-countdown-banner"
+import { MerakiModalPanels, MerakiPanelTab } from "@/components/meraki/meraki-modal-panels"
 
 const BASE = ""
 
@@ -193,6 +195,7 @@ export function TvClient({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [activeIdx, setActiveIdx] = useState(-1)
+  const [activeModalTab, setActiveModalTab] = useState<MerakiPanelTab>(null)
 
   const router = useRouter()
   const pathname = usePathname()
@@ -483,6 +486,22 @@ Kind regards,
       {/* projected "See details" links live here */}
       <div ref={containerRef} className="container" style={{ display: isArticle ? "none" : "block" }} />
 
+      {/* Floating Japanese countdown banner */}
+      {ready && !isArticle && (
+        <MerakiCountdownBanner
+          onOpenAbout={() => setActiveModalTab("about")}
+          onOpenTeam={() => setActiveModalTab("team")}
+          onOpenEvents={() => setActiveModalTab("events")}
+        />
+      )}
+
+      {/* Japanese modal panels for About, Team, Events */}
+      <MerakiModalPanels
+        activeTab={activeModalTab}
+        onClose={() => setActiveModalTab(null)}
+        onSelectTab={(tab) => setActiveModalTab(tab)}
+      />
+
       {/* keyboard legend */}
       <div
         className="controls tv-controls"
@@ -545,6 +564,45 @@ Kind regards,
               >
                 Gallery
               </a>{" "}
+              &gt;
+            </span>
+            <span>
+              <button
+                type="button"
+                className="hover:text-[#faefe0] text-[#c2b4a3] transition-colors"
+                onClick={() => {
+                  setMenuOpen(false)
+                  setActiveModalTab("about")
+                }}
+              >
+                About
+              </button>{" "}
+              &gt;
+            </span>
+            <span>
+              <button
+                type="button"
+                className="hover:text-[#faefe0] text-[#c2b4a3] transition-colors"
+                onClick={() => {
+                  setMenuOpen(false)
+                  setActiveModalTab("team")
+                }}
+              >
+                Team
+              </button>{" "}
+              &gt;
+            </span>
+            <span>
+              <button
+                type="button"
+                className="hover:text-[#faefe0] text-[#d4af72] transition-colors flex items-center gap-1 inline-flex"
+                onClick={() => {
+                  setMenuOpen(false)
+                  setActiveModalTab("events")
+                }}
+              >
+                Events
+              </button>{" "}
               &gt;
             </span>
           </div>
