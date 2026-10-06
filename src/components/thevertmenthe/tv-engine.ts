@@ -386,25 +386,6 @@ export class TvEngine {
       old.forEach((x) => x?.dispose?.())
     }
 
-    // 2. Dark Smoked Timber Engawa Veranda borders along the outer boundaries beneath the railings
-    const engawaMat = new THREE.MeshStandardMaterial({
-      map: hinoki.colorMap,
-      roughnessMap: hinoki.roughnessMap,
-      roughness: 0.6,
-      metalness: 0.05,
-    })
-    const engawaL = new THREE.Mesh(new THREE.PlaneGeometry(0.55, 19), engawaMat)
-    engawaL.rotation.x = -Math.PI * 0.5
-    engawaL.position.set(-1.72, 0.003, -2.5)
-    engawaL.receiveShadow = true
-    g.add(engawaL)
-
-    const engawaR = new THREE.Mesh(new THREE.PlaneGeometry(0.55, 19), engawaMat)
-    engawaR.rotation.x = -Math.PI * 0.5
-    engawaR.position.set(1.72, 0.003, -2.5)
-    engawaR.receiveShadow = true
-    g.add(engawaR)
-
     // 3. Textured pale cream Washi plaster walls with soft diagonal sunlight shadows
     if (roof) {
       roof.receiveShadow = true
@@ -637,7 +618,7 @@ export class TvEngine {
     const mk = () => {
       const m = new THREE.Mesh(
         new THREE.RingGeometry(0.23, 0.238, 64, 1),
-        new THREE.MeshBasicMaterial({ color: "#161311", side: THREE.DoubleSide }),
+        new THREE.MeshBasicMaterial({ color: "#c0b29c", side: THREE.DoubleSide }),
       )
       m.rotation.x = -Math.PI * 0.5
       return m
@@ -701,32 +682,7 @@ export class TvEngine {
     floor.receiveShadow = true
     g.add(floor)
 
-    // 2. Dark Smoked Timber Engawa Veranda borders along the sides
-    const engawaGalleryMat = new THREE.MeshStandardMaterial({
-      map: hinoki.colorMap,
-      roughnessMap: hinoki.roughnessMap,
-      roughness: 0.6,
-      metalness: 0.05,
-    })
-    const engawaGalleryWall = new THREE.Mesh(
-      new THREE.PlaneGeometry(totalLength, 0.4),
-      engawaGalleryMat,
-    )
-    engawaGalleryWall.rotation.x = -Math.PI * 0.5
-    engawaGalleryWall.position.set(totalLength / 2 - 2, 0.003, -0.3)
-    engawaGalleryWall.receiveShadow = true
-    g.add(engawaGalleryWall)
-
-    const engawaGalleryOuter = new THREE.Mesh(
-      new THREE.PlaneGeometry(totalLength, 0.4),
-      engawaGalleryMat,
-    )
-    engawaGalleryOuter.rotation.x = -Math.PI * 0.5
-    engawaGalleryOuter.position.set(totalLength / 2 - 2, 0.003, 2.8)
-    engawaGalleryOuter.receiveShadow = true
-    g.add(engawaGalleryOuter)
-
-    // 3. Textured pale cream Washi plaster walls with soft diagonal sunlight shadows
+    // 2. Textured pale cream Washi plaster walls with soft diagonal sunlight shadows
     const wallMat = new THREE.MeshStandardMaterial({
       map: washiPlaster,
       roughness: 0.95,

@@ -106,8 +106,8 @@ export function createHinokiWoodTextures(): {
 }
 
 /**
- * Creates authentic pale dried rush straw (Igusa) Tatami mat texture with cloth borders.
- * Matches the exact pale woven straw and crisp black borders from the reference image.
+ * Creates authentic borderless Ryukyu Tatami (縁無し畳) mat texture.
+ * Completely free of any dark/black borders; continuous natural pale rush straw weave.
  */
 export function createTatamiTexture(): THREE.CanvasTexture {
   const size = 1024
@@ -115,21 +115,21 @@ export function createTatamiTexture(): THREE.CanvasTexture {
   canvas.width = canvas.height = size
   const ctx = canvas.getContext("2d")!
 
-  // Pale neutral dried rush straw base tone (exact match to reference photo)
-  ctx.fillStyle = "#d0cabf"
+  // Warm, natural pale dried rush straw base (clean, bright, zero black)
+  ctx.fillStyle = "#ded8cb"
   ctx.fillRect(0, 0, size, size)
 
-  // Woven Igusa weave cords
+  // Natural subtle woven Igusa cords in soft organic straw tones
   const cords = 128
   const cordHeight = size / cords
   for (let c = 0; c < cords; c++) {
     const y = c * cordHeight
-    const tone = c % 2 === 0 ? "rgba(165, 158, 146, 0.35)" : "rgba(235, 230, 222, 0.32)"
+    const tone = c % 2 === 0 ? "rgba(185, 178, 166, 0.22)" : "rgba(248, 245, 239, 0.35)"
     ctx.fillStyle = tone
     ctx.fillRect(0, y, size, cordHeight * 0.5)
 
-    // Micro-stitches along the cords
-    ctx.fillStyle = "rgba(90, 85, 78, 0.12)"
+    // Delicate micro-weave fiber variations in soft warm straw tones
+    ctx.fillStyle = "rgba(170, 162, 150, 0.12)"
     for (let x = 0; x < size; x += 16) {
       if ((x / 16 + c) % 2 === 0) {
         ctx.fillRect(x, y, 8, cordHeight)
@@ -137,26 +137,12 @@ export function createTatamiTexture(): THREE.CanvasTexture {
     }
   }
 
-  // Dark charcoal-black cloth border ribbons (Heri - 縁) along left & right edges
-  const heriWidth = 84
-  const drawHeri = (xStart: number) => {
-    // Deep midnight-charcoal cloth
-    ctx.fillStyle = "#141312"
-    ctx.fillRect(xStart, 0, heriWidth, size)
-
-    // Subtle dark seam line
-    ctx.fillStyle = "rgba(75, 70, 65, 0.4)"
-    ctx.fillRect(xStart === 0 ? heriWidth - 3 : xStart, 0, 3, size)
-
-    // Subtle woven weave texture on cloth
-    ctx.fillStyle = "rgba(45, 42, 38, 0.5)"
-    for (let y = 0; y < size; y += 4) {
-      ctx.fillRect(xStart, y, heriWidth, 1)
-    }
-  }
-
-  drawHeri(0)
-  drawHeri(size - heriWidth)
+  // Soft natural mat seam crease along edges (warm muted straw tone, zero black)
+  ctx.fillStyle = "rgba(165, 156, 142, 0.22)"
+  ctx.fillRect(0, 0, 3, size)
+  ctx.fillRect(size - 3, 0, 3, size)
+  ctx.fillStyle = "rgba(255, 252, 246, 0.3)"
+  ctx.fillRect(3, 0, 2, size)
 
   const texture = new THREE.CanvasTexture(canvas)
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping
