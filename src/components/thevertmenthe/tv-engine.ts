@@ -311,53 +311,9 @@ export class TvEngine {
     if (!gltf) return
     const p = gltf.scene
 
-    // Bespoke Japanese Art Curator materials for Meraki Art Federation
-    const hairMat = new THREE.MeshStandardMaterial({
-      color: "#141210", // Sumi-e velvety ink curls
-      roughness: 0.88,
-      metalness: 0.05,
-    })
-
-    const coatMat = new THREE.MeshStandardMaterial({
-      color: "#1e232a", // Tailored Japanese Midnight-Indigo Coat (Aizome)
-      roughness: 0.68,
-      metalness: 0.06,
-    })
-
-    const armMat = new THREE.MeshStandardMaterial({
-      color: "#1e232a", // Matching coat sleeves
-      roughness: 0.68,
-      metalness: 0.06,
-    })
-
-    const pantsMat = new THREE.MeshStandardMaterial({
-      color: "#171618", // Tailored charcoal trousers
-      roughness: 0.82,
-      metalness: 0.04,
-    })
-
-    const shoeMat = new THREE.MeshStandardMaterial({
-      color: "#0f0e0d", // Dark leather curator shoes with satin sheen
-      roughness: 0.38,
-      metalness: 0.15,
-    })
-
-    const meshMap: Record<string, THREE.MeshStandardMaterial> = {
-      head: hairMat,
-      body: coatMat,
-      armL: armMat,
-      armR: armMat,
-      legL: pantsMat,
-      legR: pantsMat,
-      footL: shoeMat,
-      footR: shoeMat,
-    }
-
+    // Sculpted Japanese Clay Figurine for Meraki Art Federation
     p.traverse((o: any) => {
       if (o.isMesh) {
-        if (meshMap[o.name]) {
-          o.material = meshMap[o.name]
-        }
         o.castShadow = true
         o.receiveShadow = true
       }
@@ -366,16 +322,17 @@ export class TvEngine {
     p.scale.set(0.08, 0.08, 0.08)
     this.personnage = p
 
-    // Dedicated subtle key & rim studio lighting moving with the character to reveal 3D clothing depth
-    const charKey = new THREE.DirectionalLight("#faf7f0", 1.25)
-    charKey.position.set(0, 10, 8)
-    charKey.target.position.set(0, 2.5, 0)
-    p.add(charKey, charKey.target)
+    // Warm museum studio lighting to showcase the smooth clay/ceramic tactile depth
+    const clayKey = new THREE.DirectionalLight("#fff8f0", 1.35)
+    clayKey.position.set(0, 10, 7)
+    clayKey.target.position.set(0, 2.5, 0)
+    p.add(clayKey, clayKey.target)
 
-    const charRim = new THREE.DirectionalLight("#fff4e6", 0.75)
-    charRim.position.set(0, 8, -6)
-    charRim.target.position.set(0, 2.5, 0)
-    p.add(charRim, charRim.target)
+    const clayRim = new THREE.DirectionalLight("#faede0", 0.85)
+    clayRim.position.set(0, 8, -6)
+    clayRim.target.position.set(0, 2.5, 0)
+    p.add(clayRim, clayRim.target)
+
     this.mixer = new THREE.AnimationMixer(p)
     const clips: THREE.AnimationClip[] = gltf.animations
     const findClip = (n: string) =>
