@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" width="1600" height="1200">
+  <defs>
+    <!-- Petal soft white-pink gradient -->
+    <linearGradient id="petalGrad" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#fff0f4" />
+      <stop offset="45%" stop-color="#ffffff" />
+      <stop offset="85%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f8bbd0" />
+    </linearGradient>
+    <linearGradient id="centerGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ad1457" />
+      <stop offset="100%" stop-color="#6a0d33" />
+    </linearGradient>
+    <linearGradient id="budGrad" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#ec407a" />
+      <stop offset="100%" stop-color="#fce4ec" />
+    </linearGradient>
+    <linearGradient id="barkGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#18120d" />
+      <stop offset="50%" stop-color="#2a1f17" />
+      <stop offset="100%" stop-color="#140f0a" />
+    </linearGradient>
+    
+    <g id="petal">
+      <path d="M 0 0 C -14 -30 -22 -65 -12 -90 C -6 -105 0 -98 0 -94 C 0 -98 6 -105 12 -90 C 22 -65 14 -30 0 0 Z" 
+            fill="url(#petalGrad)" stroke="rgba(216, 27, 96, 0.18)" stroke-width="0.8" />
+    </g>
+    <g id="petalSide">
+      <path d="M 0 0 C -12 -28 -18 -60 -8 -82 C -4 -90 2 -88 4 -82 C 12 -60 8 -28 0 0 Z" 
+            fill="url(#petalGrad)" stroke="rgba(216, 27, 96, 0.18)" stroke-width="0.8" />
+    </g>
+    <g id="bud">
+      <path d="M 0 0 C -8 -15 -10 -35 0 -48 C 10 -35 8 -15 0 0 Z" fill="url(#budGrad)" />
+      <path d="M -6 -5 C -8 -18 -4 -28 0 -35 C 4 -28 8 -18 6 -5 Z" fill="#2e2015" opacity="0.7" />
+    </g>
+    <g id="flower">
+      <!-- 5 petals arranged in a circle with natural slight angle variation -->
+      <use href="#petal" transform="rotate(0)" />
+      <use href="#petal" transform="rotate(72)" />
+      <use href="#petal" transform="rotate(144)" />
+      <use href="#petal" transform="rotate(216)" />
+      <use href="#petal" transform="rotate(288)" />
+      <!-- Flower center / calyx star -->
+      <circle cx="0" cy="0" r="14" fill="url(#centerGrad)" />
+      <path d="M 0 -18 L 4 -6 L 16 -6 L 7 2 L 10 14 L 0 7 L -10 14 L -7 2 L -16 -6 L -4 -6 Z" fill="#880e4f" opacity="0.85" />
+      <!-- Stamens radiating outward -->
+      <g stroke="#ad1457" stroke-width="1.2">
+        <line x1="0" y1="0" x2="0" y2="-28" />
+        <line x1="0" y1="0" x2="16" y2="-24" />
+        <line x1="0" y1="0" x2="26" y2="-10" />
+        <line x1="0" y1="0" x2="27" y2="10" />
+        <line x1="0" y1="0" x2="16" y2="24" />
+        <line x1="0" y1="0" x2="0" y2="28" />
+        <line x1="0" y1="0" x2="-16" y2="24" />
+        <line x1="0" y1="0" x2="-26" y2="10" />
+        <line x1="0" y1="0" x2="-27" y2="-10" />
+        <line x1="0" y1="0" x2="-16" y2="-24" />
+      </g>
+      <!-- Golden anther dots on stamen tips -->
+      <g fill="#ffb300">
+        <circle cx="0" cy="-28" r="2.4" />
+        <circle cx="16" cy="-24" r="2.4" />
+        <circle cx="26" cy="-10" r="2.4" />
+        <circle cx="27" cy="10" r="2.4" />
+        <circle cx="16" cy="24" r="2.4" />
+        <circle cx="0" cy="28" r="2.4" />
+        <circle cx="-16" cy="24" r="2.4" />
+        <circle cx="-26" cy="10" r="2.4" />
+        <circle cx="-27" cy="-10" r="2.4" />
+        <circle cx="-16" cy="-24" r="2.4" />
+      </g>
+    </g>
+    <g id="flowerSmall">
+      <use href="#flower" transform="scale(0.72)" />
+    </g>
+    <g id="flowerSide">
+      <path d="M -12 8 C -8 18 8 18 12 8 C 8 2 -8 2 -12 8 Z" fill="#2d1f14" />
+      <use href="#petalSide" transform="rotate(-35) translate(0, -6)" />
+      <use href="#petalSide" transform="rotate(-10) translate(0, -8)" />
+      <use href="#petalSide" transform="rotate(15) translate(0, -8)" />
+      <use href="#petalSide" transform="rotate(40) translate(0, -6)" />
+      <circle cx="0" cy="-6" r="8" fill="#ad1457" />
+    </g>
+    <g id="fallingPetal">
+      <path d="M 0 0 C -8 -18 -12 -38 -6 -52 C -2 -60 2 -58 4 -52 C 12 -38 8 -18 0 0 Z" 
+            fill="url(#petalGrad)" stroke="rgba(216, 27, 96, 0.2)" stroke-width="0.6" />
+    </g>
+  
+  </defs>
+
+  <!-- 1. MAIN BARK BRANCHES (coming from top-right down and left across the frame) -->
+  <g id="branches" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Main thick trunk branch entering from (1650, -40) -->
+    <path d="M 1620 -30 Q 1480 80 1340 140 T 1100 240 Q 950 280 820 360 T 620 450" 
+          stroke="url(#barkGrad)" stroke-width="46" />
+    <path d="M 1620 -30 Q 1480 80 1340 140 T 1100 240 Q 950 280 820 360 T 620 450" 
+          stroke="#3d2c20" stroke-width="14" opacity="0.3" stroke-dasharray="8 16" />
+
+    <!-- Upper branch sweeping left across the top -->
+    <path d="M 1340 140 Q 1200 110 1020 90 T 780 110 Q 640 130 520 200 T 380 260" 
+          stroke="url(#barkGrad)" stroke-width="32" />
+
+    <!-- Sub-branch 1: dipping downward-left -->
+    <path d="M 1100 240 Q 1020 340 920 440 T 780 560 Q 680 640 560 700" 
+          stroke="url(#barkGrad)" stroke-width="26" />
+
+    <!-- Sub-branch 2: mid branch curving forward -->
+    <path d="M 820 360 Q 740 440 680 520 T 540 620" 
+          stroke="url(#barkGrad)" stroke-width="20" />
+
+    <!-- Fine twigs spreading off upper branch -->
+    <path d="M 1020 90 Q 960 40 880 20 T 740 30" stroke="url(#barkGrad)" stroke-width="14" />
+    <path d="M 780 110 Q 720 70 640 60" stroke="url(#barkGrad)" stroke-width="12" />
+    <path d="M 520 200 Q 440 170 380 180" stroke="url(#barkGrad)" stroke-width="11" />
+    <path d="M 380 260 Q 300 280 220 330" stroke="url(#barkGrad)" stroke-width="8" />
+
+    <!-- Fine twigs spreading off mid branch -->
+    <path d="M 620 450 Q 520 480 440 540 T 340 600" stroke="url(#barkGrad)" stroke-width="12" />
+    <path d="M 920 440 Q 860 490 820 560" stroke="url(#barkGrad)" stroke-width="14" />
+    <path d="M 780 560 Q 740 640 680 720 T 620 800" stroke="url(#barkGrad)" stroke-width="11" />
+    <path d="M 560 700 Q 480 740 420 800" stroke="url(#barkGrad)" stroke-width="8" />
+
+    <!-- Upper right foliage twigs -->
+    <path d="M 1480 80 Q 1440 30 1380 10" stroke="url(#barkGrad)" stroke-width="16" />
+    <path d="M 1240 180 Q 1200 240 1160 300" stroke="url(#barkGrad)" stroke-width="14" />
+  </g>
+
+  <!-- 2. BUDS ON TWIG ENDS -->
+  <g id="buds">
+    <use href="#bud" transform="translate(740, 30) rotate(-45) scale(0.7)" />
+    <use href="#bud" transform="translate(640, 60) rotate(-25) scale(0.65)" />
+    <use href="#bud" transform="translate(220, 330) rotate(-65) scale(0.6)" />
+    <use href="#bud" transform="translate(340, 600) rotate(15) scale(0.65)" />
+    <use href="#bud" transform="translate(420, 800) rotate(35) scale(0.6)" />
+    <use href="#bud" transform="translate(620, 800) rotate(55) scale(0.6)" />
+    <use href="#bud" transform="translate(1380, 10) rotate(-30) scale(0.75)" />
+    <use href="#bud" transform="translate(1160, 300) rotate(45) scale(0.7)" />
+  </g>
+
+  <!-- 3. BLOOMING SAKURA FLOWERS (rich organic arrangement) -->
+  <g id="blossoms">
+    <!-- Top-Right dense cluster -->
+    <use href="#flower" transform="translate(1490, 70) rotate(12) scale(0.95)" />
+    <use href="#flower" transform="translate(1420, 50) rotate(-24) scale(0.88)" />
+    <use href="#flowerSide" transform="translate(1370, 20) rotate(40) scale(0.85)" />
+    <use href="#flower" transform="translate(1450, 120) rotate(45) scale(0.9)" />
+    <use href="#flowerSmall" transform="translate(1520, 130) rotate(-15)" />
+
+    <!-- Main Fork Cluster at (1340, 140) -->
+    <use href="#flower" transform="translate(1350, 130) rotate(-8) scale(1.05)" />
+    <use href="#flower" transform="translate(1310, 170) rotate(32) scale(0.92)" />
+    <use href="#flowerSide" transform="translate(1280, 120) rotate(-50) scale(0.85)" />
+    <use href="#flower" transform="translate(1390, 160) rotate(80) scale(0.82)" />
+    <use href="#flowerSmall" transform="translate(1330, 200) rotate(15)" />
+
+    <!-- Upper Branch Cluster along (1020, 90) to (780, 110) -->
+    <use href="#flower" transform="translate(1210, 100) rotate(18) scale(0.92)" />
+    <use href="#flowerSide" transform="translate(1160, 85) rotate(-20) scale(0.8)" />
+    <use href="#flower" transform="translate(1080, 80) rotate(45) scale(0.96)" />
+    <use href="#flower" transform="translate(1020, 95) rotate(-35) scale(1.0)" />
+    <use href="#flowerSide" transform="translate(970, 60) rotate(60) scale(0.82)" />
+    <use href="#flowerSmall" transform="translate(930, 40) rotate(-10)" />
+    <use href="#flower" transform="translate(890, 105) rotate(22) scale(0.9)" />
+    <use href="#flower" transform="translate(820, 100) rotate(-40) scale(0.88)" />
+    <use href="#flowerSide" transform="translate(760, 90) rotate(15) scale(0.85)" />
+
+    <!-- Far Left Upper Cluster (520, 200) to (380, 260) -->
+    <use href="#flower" transform="translate(680, 140) rotate(50) scale(0.95)" />
+    <use href="#flower" transform="translate(620, 170) rotate(-15) scale(0.9)" />
+    <use href="#flowerSide" transform="translate(560, 185) rotate(-45) scale(0.82)" />
+    <use href="#flower" transform="translate(490, 210) rotate(28) scale(0.92)" />
+    <use href="#flower" transform="translate(430, 240) rotate(-60) scale(0.86)" />
+    <use href="#flowerSmall" transform="translate(370, 270) rotate(10)" />
+    <use href="#flowerSide" transform="translate(290, 310) rotate(35) scale(0.75)" />
+
+    <!-- Mid Fork Cluster at (1100, 240) -->
+    <use href="#flower" transform="translate(1120, 230) rotate(-25) scale(1.08)" />
+    <use href="#flower" transform="translate(1070, 260) rotate(40) scale(0.95)" />
+    <use href="#flowerSide" transform="translate(1140, 290) rotate(-70) scale(0.85)" />
+    <use href="#flowerSmall" transform="translate(1050, 310) rotate(15)" />
+
+    <!-- Diagonal Dipping Branch (920, 440) to (780, 560) -->
+    <use href="#flower" transform="translate(990, 370) rotate(15) scale(0.96)" />
+    <use href="#flowerSide" transform="translate(940, 410) rotate(-30) scale(0.88)" />
+    <use href="#flower" transform="translate(910, 450) rotate(55) scale(1.02)" />
+    <use href="#flower" transform="translate(860, 480) rotate(-18) scale(0.9)" />
+    <use href="#flowerSide" transform="translate(840, 530) rotate(75) scale(0.84)" />
+    <use href="#flower" transform="translate(790, 550) rotate(32) scale(0.95)" />
+    <use href="#flowerSmall" transform="translate(740, 590) rotate(-45)" />
+
+    <!-- Lower Twig Clusters (680, 520) to (540, 620) and (560, 700) -->
+    <use href="#flower" transform="translate(810, 350) rotate(-55) scale(1.0)" />
+    <use href="#flowerSide" transform="translate(760, 380) rotate(25) scale(0.85)" />
+    <use href="#flower" transform="translate(720, 430) rotate(70) scale(0.92)" />
+    <use href="#flower" transform="translate(670, 490) rotate(-12) scale(0.98)" />
+    <use href="#flowerSide" transform="translate(630, 530) rotate(-50) scale(0.86)" />
+    <use href="#flower" transform="translate(580, 590) rotate(40) scale(0.9)" />
+    <use href="#flowerSmall" transform="translate(520, 640) rotate(-20)" />
+
+    <use href="#flower" transform="translate(710, 670) rotate(-35) scale(0.88)" />
+    <use href="#flowerSide" transform="translate(660, 730) rotate(45) scale(0.82)" />
+    <use href="#flowerSmall" transform="translate(580, 720) rotate(12)" />
+    <use href="#flowerSide" transform="translate(490, 770) rotate(-25) scale(0.78)" />
+  </g>
+
+  <!-- 4. FLOATING SAKURA PETALS DRIFTING IN THE AIR -->
+  <g id="driftingPetals" opacity="0.88">
+    <use href="#fallingPetal" transform="translate(950, 220) rotate(35) scale(0.8)" />
+    <use href="#fallingPetal" transform="translate(830, 270) rotate(-45) scale(0.75)" />
+    <use href="#fallingPetal" transform="translate(690, 320) rotate(60) scale(0.85)" />
+    <use href="#fallingPetal" transform="translate(580, 380) rotate(-15) scale(0.7)" />
+    <use href="#fallingPetal" transform="translate(480, 460) rotate(75) scale(0.82)" />
+    <use href="#fallingPetal" transform="translate(390, 530) rotate(-30) scale(0.78)" />
+    <use href="#fallingPetal" transform="translate(880, 620) rotate(50) scale(0.85)" />
+    <use href="#fallingPetal" transform="translate(750, 710) rotate(-65) scale(0.72)" />
+    <use href="#fallingPetal" transform="translate(620, 830) rotate(20) scale(0.8)" />
+    <use href="#fallingPetal" transform="translate(480, 890) rotate(-40) scale(0.75)" />
+    <use href="#fallingPetal" transform="translate(350, 960) rotate(55) scale(0.7)" />
+    <use href="#fallingPetal" transform="translate(240, 1020) rotate(-25) scale(0.68)" />
+  </g>
+</svg>

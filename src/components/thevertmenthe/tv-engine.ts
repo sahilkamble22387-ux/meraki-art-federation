@@ -16,10 +16,13 @@ import { TV_DRAW_FRAGMENT, TV_DRAW_VERTEX } from "./tv-shaders"
 import {
   createHinokiWoodTextures,
   createTatamiTexture,
+  createWashiPlasterTexture,
   createShojiLatticeTexture,
   createKakejikuTexture,
   createJapaneseSignTexture,
   createAndonLantern,
+  createBonsaiBench,
+  createSakuraBranchMesh,
   createTokonomaAlcove,
   createSakuraParticles,
 } from "./tv-japanese-theme"
@@ -348,9 +351,10 @@ export class TvEngine {
     if (!galerie) return
     galerie.position.y = -0.001
 
-    // Generate Japanese procedural architectural textures
+    // Generate Japanese procedural architectural textures (sepia-washi palette)
     const hinoki = createHinokiWoodTextures()
     const tatamiTex = createTatamiTexture()
+    const washiPlaster = createWashiPlasterTexture()
     const shojiTex = createShojiLatticeTexture()
     const kakejikuTex = createKakejikuTexture()
 
@@ -359,14 +363,14 @@ export class TvEngine {
     const barriere = galerie.getObjectByName("barriere")
     const vitre = galerie.getObjectByName("vitre")
 
-    // 1. Rich Hinoki / Cedar Wood Plank Flooring
+    // 1. Dark Smoked Ebony Timber Floor
     if (floor) {
       floor.receiveShadow = true
       const m = new THREE.MeshStandardMaterial({
         map: hinoki.colorMap,
         roughnessMap: hinoki.roughnessMap,
-        roughness: 0.45,
-        metalness: 0.04,
+        roughness: 0.55,
+        metalness: 0.05,
       })
       const old: any[] = []
       floor.traverse((o: any) => o.isMesh && old.push(o.material))
@@ -376,10 +380,10 @@ export class TvEngine {
       old.forEach((x) => x?.dispose?.())
     }
 
-    // 2. Traditional Tatami Mat bays flanking the walkway beneath the artworks
+    // 2. Pale Natural Woven Tatami Mat bays flanking the walkway
     const tatamiMat = new THREE.MeshStandardMaterial({
       map: tatamiTex,
-      roughness: 0.85,
+      roughness: 0.88,
     })
     const tatamiL = new THREE.Mesh(new THREE.PlaneGeometry(0.82, 9.6), tatamiMat)
     tatamiL.rotation.x = -Math.PI * 0.5
@@ -393,28 +397,26 @@ export class TvEngine {
     tatamiR.receiveShadow = true
     g.add(tatamiR)
 
-    // 3. Warm earthen Juraku plaster walls
+    // 3. Textured pale cream Washi plaster walls with soft diagonal sunlight shadows
     if (roof) {
       roof.receiveShadow = true
       const m = new THREE.MeshStandardMaterial({
-        color: "#ded4c1",
-        map: this.items.platre_color,
-        normalMap: this.items.platre_normal,
-        roughnessMap: this.items.platre_roughness,
-        roughness: 0.9,
+        map: washiPlaster,
+        roughness: 0.95,
+        metalness: 0.02,
       })
       roof.traverse((o: any) => {
         if (o.isMesh) o.material = m
       })
     }
 
-    // 4. Shoji & Kumiko Wood Lattice Skylight & Dark Timber Framing
+    // 4. Shoji & Kumiko Wood Lattice Skylight (soft neutral daylight, no orange glow)
     if (vitre) {
       const shojiMat = new THREE.MeshStandardMaterial({
         map: shojiTex,
-        roughness: 0.65,
-        emissive: "#fff3db",
-        emissiveIntensity: 0.35,
+        roughness: 0.7,
+        emissive: "#faf7f2",
+        emissiveIntensity: 0.08,
       })
       vitre.traverse((o: any) => {
         if (o.isMesh) o.material = shojiMat
@@ -423,14 +425,14 @@ export class TvEngine {
 
     const cadreNode = galerie.getObjectByName("vitre_cadre")
     if (cadreNode) {
-      const darkWood = new THREE.MeshStandardMaterial({ color: "#1c130c", roughness: 0.8 })
+      const darkWood = new THREE.MeshStandardMaterial({ color: "#161311", roughness: 0.8 })
       cadreNode.traverse((o: any) => {
         if (o.isMesh) o.material = darkWood
       })
     }
 
     if (barriere) {
-      const darkWood = new THREE.MeshStandardMaterial({ color: "#22170f", roughness: 0.75 })
+      const darkWood = new THREE.MeshStandardMaterial({ color: "#1a1613", roughness: 0.75 })
       barriere.traverse((o: any) => {
         if (o.isMesh) {
           o.material = darkWood
@@ -449,9 +451,9 @@ export class TvEngine {
     galerie.scale.set(0.08, 0.08, 0.08)
     g.add(galerie)
 
-    // 5. Warm Japanese Sukiya Lighting (In Praise of Shadows)
-    const amb = new THREE.AmbientLight("#ffe7cf", 0.55)
-    const dir = new THREE.DirectionalLight("#fff1da", 1.05)
+    // 5. Clean, Natural Museum Daylight (Neutral & Crisp, matching reference image)
+    const amb = new THREE.AmbientLight("#f2ede4", 0.78)
+    const dir = new THREE.DirectionalLight("#faf7f0", 1.15)
     dir.position.set(0.9, 2.6, 0)
     dir.target.position.set(-1.2, 0, -0.8)
     dir.shadow.mapSize.width = 1024
@@ -464,7 +466,7 @@ export class TvEngine {
     dir.shadow.camera.far = 20
     dir.castShadow = true
 
-    const dir2 = new THREE.DirectionalLight("#fedeb3", 1.35)
+    const dir2 = new THREE.DirectionalLight("#eae6de", 0.5)
     dir2.position.set(-0.9, 2.6, 0)
     dir2.target.position.set(1.2, 0, 0)
     dir2.shadow.mapSize.width = 1024
@@ -480,7 +482,7 @@ export class TvEngine {
 
     if (!this.isPhone) {
       lightMeshes.forEach((lm, i) => {
-        const spot = new THREE.SpotLight("#fff3dd", 4.8, 6, Math.PI / 6, 0.45, 1)
+        const spot = new THREE.SpotLight("#fcf9f2", 3.8, 6, Math.PI / 6, 0.45, 1)
         const pos = new THREE.Vector3()
         lm.getWorldPosition(pos)
         spot.position.copy(pos)
@@ -497,7 +499,7 @@ export class TvEngine {
       })
     }
 
-    // 6. Andon (行灯) Floor-Standing Paper Lanterns with warm PointLights
+    // 6. Andon Floor Paper Lanterns with gentle soft neutral illumination (subtle, no orange)
     const lanternCoords: Array<[number, number]> = [
       [-1.12, -1.4],
       [1.12, -1.4],
@@ -505,18 +507,30 @@ export class TvEngine {
       [1.12, -5.0],
       [-1.12, -8.6],
       [1.12, -8.6],
-      [0.85, 0.8], // entrance greeting lantern
+      [0.85, 0.8],
     ]
     lanternCoords.forEach(([lx, lz]) => {
-      const lantern = createAndonLantern(lx, lz, 1.4)
+      const lantern = createAndonLantern(lx, lz, 0.35)
       g.add(lantern)
     })
 
-    // 7. Tokonoma (床の間) Alcove with raised lacquer platform & Kakejiku hanging scroll
+    // 7. Low Dark Timber Bench with Bonsai Pine on the Left (exact match to photo)
+    const bonsaiBench = createBonsaiBench(-1.42, -1.8)
+    g.add(bonsaiBench)
+
+    // 8. Botanical Sakura Cherry Blossom Tree Branch (Upper Right corner, matching photo)
+    const sakuraBranch1 = createSakuraBranchMesh(0.85, 2.05, -0.6, 1.45)
+    g.add(sakuraBranch1)
+
+    const sakuraBranch2 = createSakuraBranchMesh(-0.85, 2.15, -4.8, 1.25)
+    sakuraBranch2.rotation.y = Math.PI
+    g.add(sakuraBranch2)
+
+    // 9. Tokonoma Alcove with raised platform & Kakejiku hanging scroll
     const tokonoma = createTokonomaAlcove(-10.8, kakejikuTex, tatamiTex)
     g.add(tokonoma)
 
-    // 8. Traditional Hinoki Wood Directional Signs
+    // 10. Traditional Dark Timber Directional Signs
     const signLTex = createJapaneseSignTexture("回廊", "Gallery", "left")
     const signRTex = createJapaneseSignTexture("回廊", "Gallery", "right")
     const signList: Array<[string, number, THREE.CanvasTexture]> = [
@@ -543,12 +557,12 @@ export class TvEngine {
       g.add(plane)
     }
 
-    // 9. Floating Sakura & Zen Motes Particle System
-    const sakura = createSakuraParticles(32)
+    // 11. Floating Sakura Petals Particle System
+    const sakura = createSakuraParticles(36)
     this.sakuraParticleSystem = sakura
     g.add(sakura.group)
 
-    // 10. Framed Artworks on the Anchors
+    // 12. Framed Artworks on the Anchors
     const uids = HOME_SLOTS.map((s) => HOME_MAP[s])
     this.homeCadres = []
     this.homeButtons = []
@@ -579,13 +593,13 @@ export class TvEngine {
     instance.quaternion.copy(wq)
     instance.scale.set(0.12 * scale, 0.12 * scale, 0.12 * scale)
 
-    // Dark Hinoki outer frame moulding
+    // Dark smoked ebony outer frame moulding
     instance.traverse((o: any) => {
       if (o.isMesh && o.name !== "draw" && o.name !== "marieLouise") {
         o.material = new THREE.MeshStandardMaterial({
-          color: "#22170f",
-          roughness: 0.6,
-          metalness: 0.1,
+          color: "#161311",
+          roughness: 0.65,
+          metalness: 0.08,
         })
       }
     })
@@ -610,8 +624,8 @@ export class TvEngine {
     const ml = instance.getObjectByName("marieLouise") as THREE.Mesh | null
     if (ml) {
       ml.material = new THREE.MeshStandardMaterial({
-        color: "#f6efe3", // warm washi paper matting
-        roughness: 0.9,
+        color: "#f6f3eb", // pale off-white washi paper matting
+        roughness: 0.95,
       })
     }
     parentGroup.add(instance)
@@ -622,8 +636,8 @@ export class TvEngine {
     const group = new THREE.Group()
     const mk = () => {
       const m = new THREE.Mesh(
-        new THREE.RingGeometry(0.2, 0.21, 40, 1),
-        new THREE.MeshBasicMaterial({ color: "black" }),
+        new THREE.RingGeometry(0.23, 0.238, 64, 1),
+        new THREE.MeshBasicMaterial({ color: "#161311", side: THREE.DoubleSide }),
       )
       m.rotation.x = -Math.PI * 0.5
       return m
@@ -656,7 +670,7 @@ export class TvEngine {
     const size = this.gallerySize
     const totalLength = 4 + size
 
-    // Generate Japanese procedural architectural textures
+    // Generate Japanese procedural architectural textures (sepia-washi palette)
     const hinoki = createHinokiWoodTextures()
     hinoki.colorMap.repeat.set(totalLength / 3, 2.5)
     hinoki.roughnessMap.repeat.set(totalLength / 3, 2.5)
@@ -664,17 +678,20 @@ export class TvEngine {
     const tatamiTex = createTatamiTexture()
     tatamiTex.repeat.set(totalLength / 2.2, 1)
 
+    const washiPlaster = createWashiPlasterTexture()
+    washiPlaster.repeat.set(totalLength / 5, 2)
+
     const shojiTex = createShojiLatticeTexture()
     shojiTex.repeat.set(totalLength / 4, 1.2)
 
-    // 1. Rich Hinoki / Cedar Wood Plank Flooring
+    // 1. Dark Smoked Ebony Timber Flooring
     const floor = new THREE.Mesh(
       new THREE.PlaneGeometry(totalLength, 4),
       new THREE.MeshStandardMaterial({
         map: hinoki.colorMap,
         roughnessMap: hinoki.roughnessMap,
-        roughness: 0.45,
-        metalness: 0.04,
+        roughness: 0.55,
+        metalness: 0.05,
       }),
     )
     floor.rotation.x = -Math.PI * 0.5
@@ -682,12 +699,12 @@ export class TvEngine {
     floor.receiveShadow = true
     g.add(floor)
 
-    // 2. Continuous Tatami Mat Gallery Runner beneath the 44 artworks
+    // 2. Continuous Pale Tatami Mat Gallery Runner beneath the 44 artworks
     const tatamiRunner = new THREE.Mesh(
       new THREE.PlaneGeometry(totalLength, 0.88),
       new THREE.MeshStandardMaterial({
         map: tatamiTex,
-        roughness: 0.85,
+        roughness: 0.88,
       }),
     )
     tatamiRunner.rotation.x = -Math.PI * 0.5
@@ -695,21 +712,10 @@ export class TvEngine {
     tatamiRunner.receiveShadow = true
     g.add(tatamiRunner)
 
-    // 3. Warm earthen Juraku plaster walls
-    const platreColor = (this.items.platre_color as THREE.Texture).clone()
-    const platreNormal = (this.items.platre_normal as THREE.Texture).clone()
-    const platreRough = (this.items.platre_roughness as THREE.Texture).clone()
-    ;[platreColor, platreNormal, platreRough].forEach((t) => {
-      t.wrapS = t.wrapT = THREE.RepeatWrapping
-      t.repeat.set(totalLength / 5, 2)
-      t.needsUpdate = true
-    })
+    // 3. Textured pale cream Washi plaster walls with soft diagonal sunlight shadows
     const wallMat = new THREE.MeshStandardMaterial({
-      color: "#ded4c1",
-      map: platreColor,
-      normalMap: platreNormal,
-      roughnessMap: platreRough,
-      roughness: 0.9,
+      map: washiPlaster,
+      roughness: 0.95,
       side: THREE.DoubleSide,
     })
     const wall = new THREE.Mesh(
@@ -732,14 +738,14 @@ export class TvEngine {
     endWallRight.position.set(size + 2, 5, 1)
     g.add(endWallRight)
 
-    // 6. Shoji & Kumiko Wood Lattice Skylight Ceiling
+    // 5. Shoji & Kumiko Wood Lattice Skylight Ceiling (soft neutral daylight, no orange glow)
     const ceil = new THREE.Mesh(
       new THREE.PlaneGeometry(totalLength, 4),
       new THREE.MeshStandardMaterial({
         map: shojiTex,
-        roughness: 0.65,
-        emissive: "#fff3db",
-        emissiveIntensity: 0.35,
+        roughness: 0.7,
+        emissive: "#faf7f2",
+        emissiveIntensity: 0.08,
         side: THREE.DoubleSide,
       }),
     )
@@ -747,20 +753,34 @@ export class TvEngine {
     ceil.position.set(totalLength / 2 - 2, 10, 1)
     g.add(ceil)
 
-    // 7. Warm Japanese Lighting (In Praise of Shadows)
-    const amb = new THREE.AmbientLight("#ffe7cf", 0.65)
-    const dir = new THREE.DirectionalLight("#fff1da", 1.05)
+    // 6. Clean, Natural Museum Daylight (Neutral & Crisp, matching reference image)
+    const amb = new THREE.AmbientLight("#f2ede4", 0.78)
+    const dir = new THREE.DirectionalLight("#faf7f0", 1.1)
     dir.position.set(totalLength / 2 - 2, 8, 4)
     dir.target.position.set(totalLength / 2 - 2, 0, -0.5)
     g.add(amb, dir, dir.target)
 
-    // 8. Procession of Andon Floor Paper Lanterns along the walkway
+    // 7. Procession of Andon Floor Paper Lanterns along the walkway (subtle illumination)
     for (let lx = 1.2; lx <= size - 8; lx += 6.0) {
-      const lantern = createAndonLantern(lx, 1.35, 1.3)
+      const lantern = createAndonLantern(lx, 1.35, 0.3)
       g.add(lantern)
     }
 
-    // 9. Floating Sakura & Zen Motes in Gallery
+    // 8. Low Dark Timber Bench with Bonsai Pine at Gallery Entrance
+    const bonsaiBench = createBonsaiBench(0.2, 0.35)
+    g.add(bonsaiBench)
+
+    // 9. Botanical Sakura Tree Branches framing the gallery corridor
+    const branch1 = createSakuraBranchMesh(1.4, 2.3, 0.1, 1.35)
+    g.add(branch1)
+
+    const branch2 = createSakuraBranchMesh(size * 0.5, 2.3, 0.1, 1.35)
+    g.add(branch2)
+
+    const branch3 = createSakuraBranchMesh(size - 9.2, 2.3, 0.1, 1.35)
+    g.add(branch3)
+
+    // 10. Floating Sakura Petals in Gallery
     const gallerySakura = createSakuraParticles(48, {
       xMin: -1,
       xMax: size + 1,
@@ -772,7 +792,7 @@ export class TvEngine {
     this.gallerySakuraSystem = gallerySakura
     g.add(gallerySakura.group)
 
-    // 10. Japanese Hinoki Carved Directional Signs at both ends
+    // 11. Japanese Dark Timber Directional Signs at both ends
     const signEntranceTex = createJapaneseSignTexture("回廊", "Exhibition Corridor", "right")
     const signExitTex = createJapaneseSignTexture("本館", "Main Pavilion", "left")
 
@@ -791,7 +811,7 @@ export class TvEngine {
     addSign(signEntranceTex, 0)
     addSign(signExitTex, size - 10.6)
 
-    // 11. All 44 artworks in a long wall row
+    // 12. All 44 artworks in a long wall row (unobstructed by any beams)
     this.galleryCadres = []
     this.galleryButtons = []
     TV_ARTICLES.forEach((a, n) => {

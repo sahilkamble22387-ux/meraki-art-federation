@@ -4,13 +4,14 @@ import * as THREE from "three"
 
 /**
  * Japanese Sukiya Tea-House & Zen Art Pavilion Theme Generator.
- * Provides procedural canvas textures and 3D architectural elements:
- * - Rich Hinoki / Cedar Wood Plank Flooring
- * - Traditional Woven Tatami Mats with Midnight-Indigo Heri Cloth Borders
- * - Authentic Shoji & Kumiko Wood Lattice Screens
- * - Tokonoma (床の間) Alcove with Traditional Kakejiku (掛け軸) Hanging Scroll
- * - Andon (行灯) Floor-Standing Paper Lanterns with Warm Point Lights
- * - Serene Floating Sakura / Zen Light Motes Particle System
+ * Faithful reproduction of the serene, monochromatic Japanese pavilion aesthetic:
+ * - Pale natural rush straw Tatami mats with midnight-charcoal Heri cloth borders
+ * - Deep smoked ebony / Yakisugi timber floorboards & framing
+ * - Textured pale cream Washi plaster with soft slanting diagonal sunlight (Komorebi)
+ * - Beautiful botanical Sakura cherry blossom tree branches with detailed SVGs
+ * - Low dark timber bench with sculpted miniature Bonsai pine tree
+ * - Traditional Tokonoma alcove with Sumi-e mountain hanging scroll
+ * - Muted, serene natural museum lighting (zero harsh yellow/orange emissive glow)
  */
 
 // ============================================================================
@@ -18,7 +19,8 @@ import * as THREE from "three"
 // ============================================================================
 
 /**
- * Creates rich polished Hinoki / Cedar timber floor textures.
+ * Creates deep smoked ebony / Yakisugi timber floor textures.
+ * Matches the dark wood borders and floorboards in the reference photograph.
  */
 export function createHinokiWoodTextures(): {
   colorMap: THREE.CanvasTexture
@@ -29,23 +31,23 @@ export function createHinokiWoodTextures(): {
   canvas.width = canvas.height = size
   const ctx = canvas.getContext("2d")!
 
-  // Warm amber cedar base
-  ctx.fillStyle = "#8d5d36"
+  // Deep dark charcoal-brown smoked timber base
+  ctx.fillStyle = "#1a1613"
   ctx.fillRect(0, 0, size, size)
 
   const numPlanks = 8
   const plankWidth = size / numPlanks
 
-  // Plank base tones (subtle natural variation)
+  // Subtle tonal variations between smoked cedar planks
   const plankShades = [
-    "#9e683c",
-    "#8f5e34",
-    "#a57041",
-    "#8a5930",
-    "#976337",
-    "#a97444",
-    "#936035",
-    "#a26d3e",
+    "#1e1916",
+    "#181512",
+    "#221d19",
+    "#171411",
+    "#201b17",
+    "#191512",
+    "#1d1815",
+    "#161310",
   ]
 
   for (let p = 0; p < numPlanks; p++) {
@@ -53,32 +55,31 @@ export function createHinokiWoodTextures(): {
     ctx.fillStyle = plankShades[p % plankShades.length]
     ctx.fillRect(px, 0, plankWidth, size)
 
-    // Fine wood grain rings (longitudinal curves)
+    // Longitudinal fine timber grain
     ctx.save()
     ctx.beginPath()
     ctx.rect(px, 0, plankWidth, size)
     ctx.clip()
 
-    for (let g = 0; g < 40; g++) {
-      const gy = (g / 40) * size
-      const alpha = 0.04 + Math.sin(p + g * 0.4) * 0.025
-      ctx.strokeStyle = g % 2 === 0 ? `rgba(50, 25, 10, ${alpha})` : `rgba(215, 165, 110, ${alpha})`
+    for (let g = 0; g < 36; g++) {
+      const alpha = 0.04 + Math.sin(p + g * 0.5) * 0.02
+      ctx.strokeStyle = g % 2 === 0 ? `rgba(10, 8, 6, ${alpha})` : `rgba(70, 60, 52, ${alpha})`
       ctx.lineWidth = 1 + (g % 3)
 
       ctx.beginPath()
       ctx.moveTo(px, 0)
       for (let y = 0; y <= size; y += 40) {
-        const offset = Math.sin((y + p * 120) * 0.012) * (14 + (p % 3) * 6)
+        const offset = Math.sin((y + p * 120) * 0.012) * (12 + (p % 3) * 5)
         ctx.lineTo(px + plankWidth * 0.5 + offset, y)
       }
       ctx.stroke()
     }
     ctx.restore()
 
-    // Dark seam line between planks
-    ctx.fillStyle = "#26150b"
+    // Clean dark seam groove between planks
+    ctx.fillStyle = "#0c0a08"
     ctx.fillRect(px, 0, 2, size)
-    ctx.fillStyle = "rgba(235, 190, 140, 0.15)"
+    ctx.fillStyle = "rgba(80, 70, 60, 0.12)"
     ctx.fillRect(px + 2, 0, 1, size)
   }
 
@@ -87,14 +88,14 @@ export function createHinokiWoodTextures(): {
   colorMap.colorSpace = THREE.SRGBColorSpace
   colorMap.repeat.set(1.5, 4)
 
-  // Roughness Map (satin wood finish with slightly rougher seams)
+  // Roughness Map (subtle satin sheen with matte seams)
   const rCanvas = document.createElement("canvas")
   rCanvas.width = rCanvas.height = size
   const rCtx = rCanvas.getContext("2d")!
-  rCtx.fillStyle = "#666666" // satin finish
+  rCtx.fillStyle = "#707070" // smooth satin timber
   rCtx.fillRect(0, 0, size, size)
   for (let p = 0; p < numPlanks; p++) {
-    rCtx.fillStyle = "#dddddd" // rough seams
+    rCtx.fillStyle = "#c0c0c0" // rough seams
     rCtx.fillRect(p * plankWidth, 0, 3, size)
   }
   const roughnessMap = new THREE.CanvasTexture(rCanvas)
@@ -105,7 +106,8 @@ export function createHinokiWoodTextures(): {
 }
 
 /**
- * Creates authentic woven rush grass (Igusa) Tatami mat texture with cloth borders.
+ * Creates authentic pale dried rush straw (Igusa) Tatami mat texture with cloth borders.
+ * Matches the exact pale woven straw and crisp black borders from the reference image.
  */
 export function createTatamiTexture(): THREE.CanvasTexture {
   const size = 1024
@@ -113,8 +115,8 @@ export function createTatamiTexture(): THREE.CanvasTexture {
   canvas.width = canvas.height = size
   const ctx = canvas.getContext("2d")!
 
-  // Golden-green dried rush grass base tone
-  ctx.fillStyle = "#a8966c"
+  // Pale neutral dried rush straw base tone (exact match to reference photo)
+  ctx.fillStyle = "#d0cabf"
   ctx.fillRect(0, 0, size, size)
 
   // Woven Igusa weave cords
@@ -122,12 +124,12 @@ export function createTatamiTexture(): THREE.CanvasTexture {
   const cordHeight = size / cords
   for (let c = 0; c < cords; c++) {
     const y = c * cordHeight
-    const tone = c % 2 === 0 ? "rgba(120, 105, 70, 0.35)" : "rgba(205, 190, 145, 0.28)"
+    const tone = c % 2 === 0 ? "rgba(165, 158, 146, 0.35)" : "rgba(235, 230, 222, 0.32)"
     ctx.fillStyle = tone
     ctx.fillRect(0, y, size, cordHeight * 0.5)
 
     // Micro-stitches along the cords
-    ctx.fillStyle = "rgba(60, 50, 30, 0.12)"
+    ctx.fillStyle = "rgba(90, 85, 78, 0.12)"
     for (let x = 0; x < size; x += 16) {
       if ((x / 16 + c) % 2 === 0) {
         ctx.fillRect(x, y, 8, cordHeight)
@@ -135,28 +137,21 @@ export function createTatamiTexture(): THREE.CanvasTexture {
     }
   }
 
-  // Dark cloth border ribbons (Heri - 縁) along left & right edges
+  // Dark charcoal-black cloth border ribbons (Heri - 縁) along left & right edges
   const heriWidth = 84
   const drawHeri = (xStart: number) => {
-    // Deep midnight-indigo silk cloth
-    ctx.fillStyle = "#14151b"
+    // Deep midnight-charcoal cloth
+    ctx.fillStyle = "#141312"
     ctx.fillRect(xStart, 0, heriWidth, size)
 
-    // Inner gold woven seam
-    ctx.fillStyle = "#9d824d"
-    ctx.fillRect(xStart === 0 ? heriWidth - 4 : xStart, 0, 4, size)
+    // Subtle dark seam line
+    ctx.fillStyle = "rgba(75, 70, 65, 0.4)"
+    ctx.fillRect(xStart === 0 ? heriWidth - 3 : xStart, 0, 3, size)
 
-    // Repeating traditional Japanese Mon crest diamonds in gold
-    for (let y = 30; y < size; y += 64) {
-      const cx = xStart + heriWidth * 0.5
-      ctx.fillStyle = "rgba(175, 145, 85, 0.65)"
-      ctx.beginPath()
-      ctx.moveTo(cx, y - 10)
-      ctx.lineTo(cx + 10, y)
-      ctx.lineTo(cx, y + 10)
-      ctx.lineTo(cx - 10, y)
-      ctx.closePath()
-      ctx.fill()
+    // Subtle woven weave texture on cloth
+    ctx.fillStyle = "rgba(45, 42, 38, 0.5)"
+    for (let y = 0; y < size; y += 4) {
+      ctx.fillRect(xStart, y, heriWidth, 1)
     }
   }
 
@@ -170,7 +165,63 @@ export function createTatamiTexture(): THREE.CanvasTexture {
 }
 
 /**
- * Creates Shoji & Kumiko wood lattice grid texture with translucent washi paper.
+ * Creates textured pale cream Washi plaster with soft diagonal slanting sunlight shadows (Komorebi).
+ * Directly recreates the natural light streaks and shadows on the wall in the reference photo.
+ */
+export function createWashiPlasterTexture(): THREE.CanvasTexture {
+  const size = 1024
+  const canvas = document.createElement("canvas")
+  canvas.width = canvas.height = size
+  const ctx = canvas.getContext("2d")!
+
+  // 1. Soft neutral washi cream plaster base (matches reference photo #ece7de)
+  ctx.fillStyle = "#ece7de"
+  ctx.fillRect(0, 0, size, size)
+
+  // 2. Micro paper fibers (Unryu-shi)
+  ctx.fillStyle = "rgba(100, 90, 80, 0.05)"
+  for (let i = 0; i < 900; i++) {
+    const rx = Math.random() * size
+    const ry = Math.random() * size
+    const rw = 4 + Math.random() * 22
+    const rh = 1 + Math.random() * 2
+    ctx.fillRect(rx, ry, rw, rh)
+  }
+
+  // 3. Diagonal sunlight streaks (Komorebi / 木漏れ日) angled across the plaster
+  ctx.save()
+  ctx.translate(size / 2, size / 2)
+  ctx.rotate(-0.55) // ~32 degrees diagonal sunlight angle
+  ctx.translate(-size, -size)
+
+  // Soft light and shadow bands
+  for (let x = -size; x < size * 3; x += 150) {
+    // Soft diagonal light streak
+    const grad = ctx.createLinearGradient(x, 0, x + 85, 0)
+    grad.addColorStop(0, "rgba(255, 255, 255, 0)")
+    grad.addColorStop(0.5, "rgba(255, 255, 255, 0.16)")
+    grad.addColorStop(1, "rgba(255, 255, 255, 0)")
+    ctx.fillStyle = grad
+    ctx.fillRect(x, -size, 85, size * 4)
+
+    // Subtle soft diagonal shadow streak
+    const sGrad = ctx.createLinearGradient(x + 85, 0, x + 150, 0)
+    sGrad.addColorStop(0, "rgba(40, 35, 30, 0)")
+    sGrad.addColorStop(0.5, "rgba(40, 35, 30, 0.04)")
+    sGrad.addColorStop(1, "rgba(40, 35, 30, 0)")
+    ctx.fillStyle = sGrad
+    ctx.fillRect(x + 85, -size, 65, size * 4)
+  }
+  ctx.restore()
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+  texture.colorSpace = THREE.SRGBColorSpace
+  return texture
+}
+
+/**
+ * Creates clean, neutral Shoji & Kumiko wood lattice grid texture.
  */
 export function createShojiLatticeTexture(): THREE.CanvasTexture {
   const size = 1024
@@ -178,12 +229,12 @@ export function createShojiLatticeTexture(): THREE.CanvasTexture {
   canvas.width = canvas.height = size
   const ctx = canvas.getContext("2d")!
 
-  // Warm Washi paper background with organic warmth
-  ctx.fillStyle = "#faf4e8"
+  // Clean neutral Washi paper background
+  ctx.fillStyle = "#f6f3ec"
   ctx.fillRect(0, 0, size, size)
 
-  // Subtle washi paper cloud fibers (Unryu-shi)
-  ctx.fillStyle = "rgba(220, 205, 185, 0.15)"
+  // Paper cloud fibers
+  ctx.fillStyle = "rgba(180, 170, 155, 0.12)"
   for (let i = 0; i < 400; i++) {
     const rx = Math.random() * size
     const ry = Math.random() * size
@@ -192,19 +243,19 @@ export function createShojiLatticeTexture(): THREE.CanvasTexture {
     ctx.fillRect(rx, ry, rw, rh)
   }
 
-  // Slender dark cedar Kumiko grid bars
+  // Slender dark ebony Kumiko grid bars
   const cols = 6
   const rows = 12
   const colW = size / cols
   const rowH = size / rows
 
-  ctx.strokeStyle = "#25170f"
+  ctx.strokeStyle = "#1b1714"
   ctx.lineWidth = 14
 
   // Outer framing
   ctx.strokeRect(0, 0, size, size)
 
-  // Vertical wood struts
+  // Vertical struts
   for (let c = 1; c < cols; c++) {
     ctx.beginPath()
     ctx.moveTo(c * colW, 0)
@@ -212,27 +263,13 @@ export function createShojiLatticeTexture(): THREE.CanvasTexture {
     ctx.stroke()
   }
 
-  // Horizontal wood struts
+  // Horizontal struts
   ctx.lineWidth = 10
   for (let r = 1; r < rows; r++) {
     ctx.beginPath()
     ctx.moveTo(0, r * rowH)
     ctx.lineTo(size, r * rowH)
     ctx.stroke()
-  }
-
-  // Delicate diagonal Kumiko accents in alternate cells
-  ctx.strokeStyle = "rgba(37, 23, 15, 0.45)"
-  ctx.lineWidth = 4
-  for (let c = 0; c < cols; c++) {
-    for (let r = 0; r < rows; r++) {
-      if ((c + r) % 4 === 0) {
-        ctx.beginPath()
-        ctx.moveTo(c * colW, r * rowH)
-        ctx.lineTo((c + 1) * colW, (r + 1) * rowH)
-        ctx.stroke()
-      }
-    }
   }
 
   const texture = new THREE.CanvasTexture(canvas)
@@ -243,12 +280,7 @@ export function createShojiLatticeTexture(): THREE.CanvasTexture {
 }
 
 /**
- * Creates high-resolution traditional Kakejiku (掛け軸) hanging scroll artwork:
- * - Silk brocade top and bottom borders (Ten / Chi) in deep sumi-indigo
- * - Side pillars (Chūberi) in sage brocade with gold thread piping
- * - Authentic Sumi-e ink painting: misty Japanese mountain ridges & pine
- * - Flowing Japanese calligraphy: 美・魂・創 (Beauty · Soul · Creation)
- * - Vermilion red Hanko seal of Meraki Art Federation
+ * Creates traditional Kakejiku (掛け軸) hanging scroll artwork with ink-wash mountain painting.
  */
 export function createKakejikuTexture(): THREE.CanvasTexture {
   const w = 1024
@@ -259,11 +291,11 @@ export function createKakejikuTexture(): THREE.CanvasTexture {
   const ctx = canvas.getContext("2d")!
 
   // 1. Brocade Silk Mounting Background (Deep indigo Ten & Chi)
-  ctx.fillStyle = "#181e28"
+  ctx.fillStyle = "#181a1f"
   ctx.fillRect(0, 0, w, h)
 
-  // Gold brocade woven diamond pattern
-  ctx.fillStyle = "rgba(180, 150, 95, 0.2)"
+  // Subtle woven diamond texture
+  ctx.fillStyle = "rgba(140, 130, 115, 0.15)"
   for (let y = 0; y < h; y += 32) {
     for (let x = 0; x < w; x += 32) {
       if ((x + y) % 64 === 0) {
@@ -272,7 +304,7 @@ export function createKakejikuTexture(): THREE.CanvasTexture {
     }
   }
 
-  // 2. Middle pillars (Chūberi) framing the inner painting
+  // 2. Middle pillars (Chūberi)
   const marginX = 96
   const topTenH = 340
   const bottomChiH = 360
@@ -281,32 +313,31 @@ export function createKakejikuTexture(): THREE.CanvasTexture {
   const artW = w - marginX * 2
   const artH = h - topTenH - bottomChiH
 
-  // Sage-olive silk border for Chūberi
-  ctx.fillStyle = "#273024"
+  // Dark slate-grey silk border
+  ctx.fillStyle = "#222528"
   ctx.fillRect(marginX - 20, topTenH - 24, artW + 40, artH + 48)
 
-  // Gold piping ribbon (Ichimonji - 一文字)
-  ctx.fillStyle = "#bfa365"
-  ctx.fillRect(marginX - 20, topTenH - 24, artW + 40, 10)
-  ctx.fillRect(marginX - 20, topTenH + artH + 14, artW + 40, 10)
+  // Subtle ribbon strip (Ichimonji)
+  ctx.fillStyle = "#8a7a60"
+  ctx.fillRect(marginX - 20, topTenH - 24, artW + 40, 8)
+  ctx.fillRect(marginX - 20, topTenH + artH + 16, artW + 40, 8)
 
-  // 3. Central Artwork Field (Honji - 本紙)
-  // Aged warm rice paper parchment
+  // 3. Central Artwork Field (Honji) - Aged parchment
   const artGrad = ctx.createLinearGradient(0, artY, 0, artY + artH)
-  artGrad.addColorStop(0, "#f9f5ec")
-  artGrad.addColorStop(0.65, "#f4eee0")
-  artGrad.addColorStop(1, "#ebdcb9")
+  artGrad.addColorStop(0, "#f8f5ed")
+  artGrad.addColorStop(0.7, "#f2eee4")
+  artGrad.addColorStop(1, "#e8e1d2")
   ctx.fillStyle = artGrad
   ctx.fillRect(artX, artY, artW, artH)
 
-  // 4. Sumi-e Japanese Ink Wash Painting (Misty mountain landscape)
+  // 4. Sumi-e Japanese Ink Wash Painting
   ctx.save()
   ctx.beginPath()
   ctx.rect(artX, artY, artW, artH)
   ctx.clip()
 
   // Distant mountain ridge (pale ink wash)
-  ctx.fillStyle = "rgba(95, 105, 115, 0.25)"
+  ctx.fillStyle = "rgba(80, 85, 90, 0.22)"
   ctx.beginPath()
   ctx.moveTo(artX, artY + artH * 0.55)
   ctx.bezierCurveTo(
@@ -323,7 +354,7 @@ export function createKakejikuTexture(): THREE.CanvasTexture {
   ctx.fill()
 
   // Midground mountain peaks (deeper sumi ink)
-  ctx.fillStyle = "rgba(45, 55, 60, 0.48)"
+  ctx.fillStyle = "rgba(40, 45, 50, 0.45)"
   ctx.beginPath()
   ctx.moveTo(artX, artY + artH * 0.68)
   ctx.bezierCurveTo(
@@ -339,8 +370,8 @@ export function createKakejikuTexture(): THREE.CanvasTexture {
   ctx.closePath()
   ctx.fill()
 
-  // Foreground crag & ancient pine tree silhouette (dark sumi ink)
-  ctx.fillStyle = "rgba(20, 24, 25, 0.88)"
+  // Foreground pine silhouette (dark sumi ink)
+  ctx.fillStyle = "rgba(18, 20, 22, 0.88)"
   ctx.beginPath()
   ctx.moveTo(artX, artY + artH * 0.85)
   ctx.quadraticCurveTo(artX + artW * 0.35, artY + artH * 0.72, artX + artW * 0.5, artY + artH)
@@ -348,9 +379,9 @@ export function createKakejikuTexture(): THREE.CanvasTexture {
   ctx.closePath()
   ctx.fill()
 
-  // Pine tree trunk and needles on the left
+  // Pine tree trunk
   ctx.lineWidth = 14
-  ctx.strokeStyle = "rgba(20, 24, 25, 0.85)"
+  ctx.strokeStyle = "rgba(18, 20, 22, 0.85)"
   ctx.beginPath()
   ctx.moveTo(artX + 50, artY + artH * 0.82)
   ctx.bezierCurveTo(
@@ -363,8 +394,8 @@ export function createKakejikuTexture(): THREE.CanvasTexture {
   )
   ctx.stroke()
 
-  // Pine needle tufts
-  ctx.fillStyle = "rgba(25, 30, 28, 0.8)"
+  // Pine needles
+  ctx.fillStyle = "rgba(22, 26, 24, 0.8)"
   const drawNeedles = (cx: number, cy: number, r: number) => {
     ctx.beginPath()
     ctx.arc(cx, cy, r, Math.PI * 0.8, Math.PI * 1.9)
@@ -374,24 +405,23 @@ export function createKakejikuTexture(): THREE.CanvasTexture {
   drawNeedles(artX + 220, artY + artH * 0.56, 46)
   drawNeedles(artX + 270, artY + artH * 0.53, 34)
 
-  // Floating red sun / moon disk in the mist
-  ctx.fillStyle = "rgba(195, 60, 50, 0.35)"
+  // Moon disc in the mist
+  ctx.fillStyle = "rgba(160, 150, 140, 0.28)"
   ctx.beginPath()
   ctx.arc(artX + artW * 0.72, artY + artH * 0.32, 54, 0, Math.PI * 2)
   ctx.fill()
 
-  // 5. Japanese Calligraphy (Shodō - 書道)
-  ctx.fillStyle = "rgba(18, 18, 22, 0.92)"
+  // 5. Japanese Calligraphy (Shodō)
+  ctx.fillStyle = "rgba(15, 15, 18, 0.92)"
   ctx.font = "bold 68px 'Hiragino Mincho ProN', 'Yu Mincho', serif"
   ctx.textAlign = "center"
 
-  // Vertical Kanji: 美 (Beauty), 魂 (Soul), 創 (Creation)
   const textX = artX + artW * 0.72
   ctx.fillText("美", textX, artY + artH * 0.48)
   ctx.fillText("魂", textX, artY + artH * 0.55)
   ctx.fillText("創", textX, artY + artH * 0.62)
 
-  // Secondary vertical inscription
+  // Secondary inscription
   ctx.font = "32px 'Hiragino Mincho ProN', 'Yu Mincho', serif"
   const subX = artX + artW * 0.82
   ctx.fillText("和", subX, artY + artH * 0.48)
@@ -401,13 +431,13 @@ export function createKakejikuTexture(): THREE.CanvasTexture {
 
   // English subtitling beneath
   ctx.font = "italic 22px 'Times New Roman', serif"
-  ctx.fillStyle = "rgba(60, 50, 45, 0.75)"
+  ctx.fillStyle = "rgba(50, 45, 40, 0.75)"
   ctx.fillText("MERAKI ART FEDERATION", artX + artW * 0.5, artY + artH * 0.92)
 
-  // 6. Vermilion Red Hanko Seal Stamp (判子)
+  // 6. Vermilion Red Hanko Seal Stamp
   const sealX = subX - 18
   const sealY = artY + artH * 0.68
-  ctx.fillStyle = "#c5221f"
+  ctx.fillStyle = "#b71c1c"
   ctx.fillRect(sealX, sealY, 36, 36)
   ctx.strokeStyle = "#ffffff"
   ctx.lineWidth = 2
@@ -418,15 +448,10 @@ export function createKakejikuTexture(): THREE.CanvasTexture {
 
   ctx.restore()
 
-  // 7. Hanging Ribbons (Fūtai - 風帯) hanging from the top
-  ctx.fillStyle = "#161b24"
+  // Hanging ribbons (Fūtai)
+  ctx.fillStyle = "#181a1f"
   ctx.fillRect(artX + artW * 0.22, 0, 24, topTenH + 60)
   ctx.fillRect(artX + artW * 0.78, 0, 24, topTenH + 60)
-
-  // Gold tassels on the ribbon ends
-  ctx.fillStyle = "#bfa365"
-  ctx.fillRect(artX + artW * 0.22, topTenH + 60, 24, 8)
-  ctx.fillRect(artX + artW * 0.78, topTenH + 60, 24, 8)
 
   const texture = new THREE.CanvasTexture(canvas)
   texture.colorSpace = THREE.SRGBColorSpace
@@ -448,46 +473,46 @@ export function createJapaneseSignTexture(
   canvas.height = h
   const ctx = canvas.getContext("2d")!
 
-  // Hinoki wood plaque background
-  ctx.fillStyle = "#c49a68"
+  // Deep dark timber plaque background
+  ctx.fillStyle = "#1c1815"
   ctx.fillRect(0, 0, w, h)
 
   // Wood grain
-  ctx.fillStyle = "rgba(60, 30, 10, 0.08)"
+  ctx.fillStyle = "rgba(40, 35, 30, 0.4)"
   for (let y = 0; y < h; y += 12) {
     ctx.fillRect(0, y, w, 4)
   }
 
-  // Dark timber border frame
-  ctx.strokeStyle = "#2b1a0e"
-  ctx.lineWidth = 12
+  // Border frame
+  ctx.strokeStyle = "#0e0c0a"
+  ctx.lineWidth = 10
   ctx.strokeRect(0, 0, w, h)
 
-  // Inner gold hairline
-  ctx.strokeStyle = "rgba(220, 180, 110, 0.6)"
-  ctx.lineWidth = 2
-  ctx.strokeRect(14, 14, w - 28, h - 28)
+  // Inner subtle hairline
+  ctx.strokeStyle = "rgba(160, 150, 135, 0.35)"
+  ctx.lineWidth = 1.5
+  ctx.strokeRect(12, 12, w - 24, h - 24)
 
   // Calligraphy
-  ctx.fillStyle = "#1e130a"
+  ctx.fillStyle = "#f2ede4"
   ctx.font = "bold 64px 'Hiragino Mincho ProN', 'Yu Mincho', serif"
   ctx.textAlign = "center"
   ctx.fillText(kanji, w * 0.5, 105)
 
   // English subtitle
   ctx.font = "bold 24px -apple-system, BlinkMacSystemFont, sans-serif"
-  ctx.fillStyle = "#3d2716"
+  ctx.fillStyle = "#cfc9be"
   let subText = english.toUpperCase()
   if (arrow === "left") subText = `◀  ${subText}`
   if (arrow === "right") subText = `${subText}  ▶`
   ctx.fillText(subText, w * 0.5, 160)
 
   // Red seal stamp in the corner
-  ctx.fillStyle = "#b5201d"
-  ctx.fillRect(w - 70, h - 70, 36, 36)
+  ctx.fillStyle = "#b71c1c"
+  ctx.fillRect(w - 68, h - 68, 34, 34)
   ctx.fillStyle = "#ffffff"
   ctx.font = "bold 14px serif"
-  ctx.fillText("美", w - 52, h - 46)
+  ctx.fillText("美", w - 51, h - 45)
 
   const texture = new THREE.CanvasTexture(canvas)
   texture.colorSpace = THREE.SRGBColorSpace
@@ -500,31 +525,31 @@ export function createJapaneseSignTexture(
 
 /**
  * Creates an authentic Andon (行灯) floor-standing wooden paper lantern.
- * Includes dark timber framing, glowing Washi paper core, and a warm PointLight.
+ * Muted, serene natural lighting (no harsh orange glow).
  */
-export function createAndonLantern(x: number, z: number, intensity: number = 1.6): THREE.Group {
+export function createAndonLantern(x: number, z: number, intensity: number = 0.4): THREE.Group {
   const group = new THREE.Group()
   group.position.set(x, 0, z)
 
-  // Materials
+  // Deep dark smoked timber material
   const woodMat = new THREE.MeshStandardMaterial({
-    color: "#1c1209",
-    roughness: 0.8,
-    metalness: 0.1,
+    color: "#161311",
+    roughness: 0.75,
+    metalness: 0.08,
   })
 
+  // Soft neutral Washi paper (subtle gentle glow, no orange)
   const washiMat = new THREE.MeshStandardMaterial({
-    color: "#fff3db",
-    emissive: "#ffaa45",
-    emissiveIntensity: 0.45,
-    roughness: 0.85,
+    color: "#f6f3ea",
+    emissive: "#fcf8f0",
+    emissiveIntensity: 0.12,
+    roughness: 0.9,
     metalness: 0,
   })
 
   // 1. Base platform
   const base = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.04, 0.26), woodMat)
   base.position.y = 0.02
-  base.castShadow = true
   base.receiveShadow = true
   group.add(base)
 
@@ -540,16 +565,15 @@ export function createAndonLantern(x: number, z: number, intensity: number = 1.6
   offsets.forEach(([px, pz]) => {
     const post = new THREE.Mesh(postGeo, woodMat)
     post.position.set(px, 0.04 + postH * 0.5, pz)
-    post.castShadow = true
     group.add(post)
   })
 
-  // 3. Glowing Washi paper inner cube
+  // 3. Washi paper core
   const washiCube = new THREE.Mesh(new THREE.BoxGeometry(0.2, postH - 0.04, 0.2), washiMat)
   washiCube.position.y = 0.04 + postH * 0.5
   group.add(washiCube)
 
-  // 4. Horizontal Kumiko lattice struts around the 4 sides
+  // 4. Horizontal struts
   const strutGeoX = new THREE.BoxGeometry(0.22, 0.012, 0.01)
   const strutGeoZ = new THREE.BoxGeometry(0.01, 0.012, 0.22)
   for (let s = 1; s <= 3; s++) {
@@ -568,7 +592,6 @@ export function createAndonLantern(x: number, z: number, intensity: number = 1.6
   // 5. Wooden top cap with handle
   const topCap = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.03, 0.28), woodMat)
   topCap.position.y = 0.04 + postH + 0.015
-  topCap.castShadow = true
   group.add(topCap)
 
   const handle = new THREE.Mesh(new THREE.TorusGeometry(0.04, 0.008, 8, 16), woodMat)
@@ -576,20 +599,128 @@ export function createAndonLantern(x: number, z: number, intensity: number = 1.6
   handle.position.y = 0.04 + postH + 0.05
   group.add(handle)
 
-  // 6. Warm amber PointLight casting cozy light on the floor and surroundings
-  const light = new THREE.PointLight("#ffaa48", intensity, 3.8, 1.8)
+  // 6. Gentle soft neutral-warm point light (subtle, NOT orange)
+  const light = new THREE.PointLight("#fff8ed", intensity, 2.5, 2.0)
   light.position.set(0, 0.35, 0)
-  light.castShadow = false // keep lightweight
   group.add(light)
 
   return group
 }
 
 /**
+ * Creates the low dark timber bench with sculpted miniature Bonsai pine tree on the left.
+ * Exactly recreates the left bench and bonsai composition from the reference image.
+ */
+export function createBonsaiBench(x: number, z: number): THREE.Group {
+  const group = new THREE.Group()
+  group.position.set(x, 0, z)
+
+  const timberMat = new THREE.MeshStandardMaterial({
+    color: "#181411", // dark smoked timber
+    roughness: 0.65,
+    metalness: 0.08,
+  })
+
+  // 1. Low bench top
+  const benchTop = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.045, 0.28), timberMat)
+  benchTop.position.y = 0.12
+  benchTop.castShadow = true
+  benchTop.receiveShadow = true
+  group.add(benchTop)
+
+  // 2. Bench legs (two low block supports)
+  const leg1 = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.10, 0.26), timberMat)
+  leg1.position.set(-0.28, 0.05, 0)
+  const leg2 = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.10, 0.26), timberMat)
+  leg2.position.set(0.28, 0.05, 0)
+  group.add(leg1, leg2)
+
+  // 3. Ceramic pot (Bonsai-bachi)
+  const potMat = new THREE.MeshStandardMaterial({
+    color: "#28231f", // dark matte ceramic glaze
+    roughness: 0.5,
+    metalness: 0.1,
+  })
+  const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.07, 0.06, 24), potMat)
+  pot.position.set(-0.06, 0.17, 0)
+  pot.castShadow = true
+  group.add(pot)
+
+  // Soil inside pot
+  const soil = new THREE.Mesh(
+    new THREE.CircleGeometry(0.085, 16),
+    new THREE.MeshStandardMaterial({ color: "#14100c", roughness: 0.95 }),
+  )
+  soil.rotation.x = -Math.PI * 0.5
+  soil.position.set(-0.06, 0.201, 0)
+  group.add(soil)
+
+  // 4. Bonsai trunk leaning toward center (matching reference photo)
+  const barkMat = new THREE.MeshStandardMaterial({ color: "#221912", roughness: 0.85 })
+  const trunkBase = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.026, 0.16, 8), barkMat)
+  trunkBase.position.set(-0.06, 0.27, 0)
+  trunkBase.rotation.z = -0.45 // leaning right toward center
+  trunkBase.castShadow = true
+  group.add(trunkBase)
+
+  const trunkMid = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.018, 0.14, 8), barkMat)
+  trunkMid.position.set(-0.01, 0.38, 0)
+  trunkMid.rotation.z = 0.35 // graceful S-curve
+  trunkMid.castShadow = true
+  group.add(trunkMid)
+
+  const trunkBranch = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.012, 0.12, 8), barkMat)
+  trunkBranch.position.set(0.05, 0.44, 0)
+  trunkBranch.rotation.z = -0.55
+  group.add(trunkBranch)
+
+  // 5. Tiered cloud foliage pads in deep pine green
+  const foliageMat = new THREE.MeshStandardMaterial({
+    color: "#18231a", // deep sumi pine green
+    roughness: 0.85,
+  })
+  const addCloud = (cx: number, cy: number, cz: number, rx: number, rz: number) => {
+    const cloud = new THREE.Mesh(new THREE.SphereGeometry(rx, 10, 8), foliageMat)
+    cloud.scale.set(1.4, 0.5, rz)
+    cloud.position.set(cx, cy, cz)
+    cloud.castShadow = true
+    group.add(cloud)
+  }
+  addCloud(-0.12, 0.36, 0.02, 0.065, 1.2)
+  addCloud(0.02, 0.45, -0.01, 0.08, 1.3)
+  addCloud(0.12, 0.41, 0.01, 0.07, 1.2)
+  addCloud(0.06, 0.49, 0, 0.06, 1.1)
+
+  return group
+}
+
+/**
+ * Creates the high-resolution botanical Sakura (cherry blossom) tree branch mesh in the upper corner.
+ * Directly recreates the graceful blossoming cherry branch hanging in the upper-right corner in the reference image.
+ */
+export function createSakuraBranchMesh(x: number, y: number, z: number, scale: number = 1.0): THREE.Mesh {
+  const loader = new THREE.TextureLoader()
+  const tex = loader.load("/thevertmenthe/textures/sakura_branch.svg")
+  tex.colorSpace = THREE.SRGBColorSpace
+
+  const mat = new THREE.MeshBasicMaterial({
+    map: tex,
+    transparent: true,
+    opacity: 0.98,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+  })
+
+  // 1600x1200 aspect ratio = 4:3
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2.4 * scale, 1.8 * scale), mat)
+  mesh.position.set(x, y, z)
+  return mesh
+}
+
+/**
  * Creates the traditional Tokonoma (床の間) Alcove at the back wall:
  * - Raised dark lacquer platform (Toko-kamachi) with inlaid Tatami surface
  * - Traditional Kakejiku hanging scroll with top rod & bottom roller
- * - Minimalist Zen Ikebana / Bonsai silhouette stand
  */
 export function createTokonomaAlcove(
   backWallZ: number = -11.2,
@@ -598,16 +729,16 @@ export function createTokonomaAlcove(
 ): THREE.Group {
   const group = new THREE.Group()
 
-  // 1. Raised Wooden Platform (Toko-kamachi - 床框)
+  // 1. Raised Wooden Platform (Toko-kamachi)
   const platformW = 2.8
   const platformH = 0.09
   const platformD = 1.3
   const platformZ = backWallZ + platformD * 0.5
 
   const lacquerMat = new THREE.MeshStandardMaterial({
-    color: "#150f0b",
-    roughness: 0.25,
-    metalness: 0.15,
+    color: "#161310",
+    roughness: 0.35,
+    metalness: 0.1,
   })
 
   const platform = new THREE.Mesh(
@@ -616,7 +747,6 @@ export function createTokonomaAlcove(
   )
   platform.position.set(0, platformH * 0.5, platformZ)
   platform.receiveShadow = true
-  platform.castShadow = true
   group.add(platform)
 
   // Inlaid Tatami mat on top of the platform
@@ -641,7 +771,7 @@ export function createTokonomaAlcove(
   // Scroll canvas plane
   const scrollMat = new THREE.MeshStandardMaterial({
     map: kakejikuTex,
-    roughness: 0.8,
+    roughness: 0.85,
     side: THREE.FrontSide,
   })
   const scrollMesh = new THREE.Mesh(new THREE.PlaneGeometry(scrollW, scrollH), scrollMat)
@@ -650,7 +780,7 @@ export function createTokonomaAlcove(
   group.add(scrollMesh)
 
   // Top suspension rod (Hyōmoku)
-  const topRodMat = new THREE.MeshStandardMaterial({ color: "#1c140d", roughness: 0.6 })
+  const topRodMat = new THREE.MeshStandardMaterial({ color: "#161310", roughness: 0.6 })
   const topRod = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, scrollW + 0.12, 16), topRodMat)
   topRod.rotation.z = Math.PI * 0.5
   topRod.position.set(0, scrollY + scrollH * 0.5 + 0.01, scrollZ + 0.01)
@@ -659,60 +789,14 @@ export function createTokonomaAlcove(
   // Bottom cylindrical roller (Jiku-gi)
   const bottomRod = new THREE.Mesh(
     new THREE.CylinderGeometry(0.026, 0.026, scrollW + 0.18, 16),
-    new THREE.MeshStandardMaterial({ color: "#120d09", roughness: 0.35 }),
+    new THREE.MeshStandardMaterial({ color: "#100d0a", roughness: 0.4 }),
   )
   bottomRod.rotation.z = Math.PI * 0.5
   bottomRod.position.set(0, scrollY - scrollH * 0.5 - 0.01, scrollZ + 0.018)
   group.add(bottomRod)
 
-  // 3. Zen Bonsai Display Stand on the side of the platform
-  const standGroup = new THREE.Group()
-  standGroup.position.set(0.85, platformH + 0.002, platformZ)
-
-  // Low curved stand
-  const standBase = new THREE.Mesh(
-    new THREE.BoxGeometry(0.48, 0.04, 0.32),
-    new THREE.MeshStandardMaterial({ color: "#22160d", roughness: 0.4 }),
-  )
-  standBase.position.y = 0.02
-  standGroup.add(standBase)
-
-  // Ceramic shallow pot
-  const pot = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.12, 0.09, 0.05, 16),
-    new THREE.MeshStandardMaterial({ color: "#2f3833", roughness: 0.7 }),
-  )
-  pot.position.y = 0.065
-  standGroup.add(pot)
-
-  // Bonsai trunk & foliage
-  const trunkMat = new THREE.MeshStandardMaterial({ color: "#2b1c13", roughness: 0.9 })
-  const trunk1 = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.035, 0.22, 8), trunkMat)
-  trunk1.position.set(0, 0.16, 0)
-  trunk1.rotation.z = -0.35
-  standGroup.add(trunk1)
-
-  const trunk2 = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.025, 0.18, 8), trunkMat)
-  trunk2.position.set(-0.06, 0.29, 0)
-  trunk2.rotation.z = 0.45
-  standGroup.add(trunk2)
-
-  // Cloud foliage tufts (deep pine green)
-  const foliageMat = new THREE.MeshStandardMaterial({ color: "#1a2c1f", roughness: 0.85 })
-  const addTuft = (fx: number, fy: number, fz: number, r: number) => {
-    const tuft = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 8), foliageMat)
-    tuft.scale.set(1.4, 0.6, 1.2)
-    tuft.position.set(fx, fy, fz)
-    standGroup.add(tuft)
-  }
-  addTuft(-0.14, 0.32, 0, 0.08)
-  addTuft(0.02, 0.39, 0.02, 0.095)
-  addTuft(0.12, 0.34, -0.02, 0.075)
-
-  group.add(standGroup)
-
-  // 4. Dedicated soft Tokonoma warm accent spotlight
-  const alcoveLight = new THREE.SpotLight("#fff1d6", 3.2, 5.5, Math.PI / 4, 0.6, 1.2)
+  // 3. Dedicated soft Tokonoma natural accent spotlight
+  const alcoveLight = new THREE.SpotLight("#faf7f0", 2.4, 5.5, Math.PI / 4, 0.6, 1.2)
   alcoveLight.position.set(0, platformH + 3.2, platformZ + 1.2)
   alcoveLight.target.position.set(0, scrollY, scrollZ)
   group.add(alcoveLight, alcoveLight.target)
@@ -730,7 +814,7 @@ export type ParticleBounds = {
 }
 
 /**
- * Creates a serene particle system of floating Sakura (cherry blossom) petals and warm Zen motes.
+ * Creates a serene particle system of floating Sakura (cherry blossom) petals.
  */
 export function createSakuraParticles(
   count: number = 36,
@@ -750,17 +834,17 @@ export function createSakuraParticles(
 
   const geo = new THREE.PlaneGeometry(0.045, 0.065)
   const petalMat = new THREE.MeshBasicMaterial({
-    color: "#ffc9d6",
+    color: "#fff0f4",
     transparent: true,
-    opacity: 0.65,
+    opacity: 0.85,
     side: THREE.DoubleSide,
     depthWrite: false,
   })
 
   const moteMat = new THREE.MeshBasicMaterial({
-    color: "#ffe5b4",
+    color: "#f6ede8",
     transparent: true,
-    opacity: 0.5,
+    opacity: 0.45,
     side: THREE.DoubleSide,
     depthWrite: false,
   })
