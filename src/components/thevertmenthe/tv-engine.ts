@@ -22,6 +22,7 @@ import {
   createAndonLantern,
   createTokonomaAlcove,
   createSakuraParticles,
+  createGalleryLintels,
 } from "./tv-japanese-theme"
 
 const ASSET_BASE = "/thevertmenthe"
@@ -158,6 +159,7 @@ export class TvEngine {
   private autoNavFired = false
   lastGalleryX = 0
   private sakuraParticleSystem: { group: THREE.Group; update: (delta: number) => void } | null = null
+  private gallerySakuraSystem: { group: THREE.Group; update: (delta: number) => void } | null = null
 
   // ---------- character ----------
   private personnage: THREE.Object3D | null = null
@@ -653,51 +655,77 @@ export class TvEngine {
   private buildGallery() {
     const g = new THREE.Group()
     const size = this.gallerySize
+    const totalLength = 4 + size
 
-    const marbleColor = (this.items.marble_color as THREE.Texture).clone()
-    const marbleNormal = (this.items.marble_normal as THREE.Texture).clone()
-    const marbleRough = (this.items.marble_roughness as THREE.Texture).clone()
-    ;[marbleColor, marbleNormal, marbleRough].forEach((t) => {
-      t.wrapS = t.wrapT = THREE.RepeatWrapping
-      t.repeat.set(4 + size, 4)
-      t.needsUpdate = true
-    })
+    // Generate Japanese procedural architectural textures
+    const hinoki = createHinokiWoodTextures()
+    hinoki.colorMap.repeat.set(totalLength / 3, 2.5)
+    hinoki.roughnessMap.repeat.set(totalLength / 3, 2.5)
+
+    const tatamiTex = createTatamiTexture()
+    tatamiTex.repeat.set(totalLength / 2.2, 1)
+
+    const shojiTex = createShojiLatticeTexture()
+    shojiTex.repeat.set(totalLength / 4, 1.2)
+
+    // 1. Rich Hinoki / Cedar Wood Plank Flooring
     const floor = new THREE.Mesh(
-      new THREE.PlaneGeometry(4 + size, 4),
+      new THREE.PlaneGeometry(totalLength, 4),
       new THREE.MeshStandardMaterial({
-        map: marbleColor,
-        normalMap: marbleNormal,
-        roughnessMap: marbleRough,
+        map: hinoki.colorMap,
+        roughnessMap: hinoki.roughnessMap,
+        roughness: 0.45,
+        metalness: 0.04,
       }),
     )
     floor.rotation.x = -Math.PI * 0.5
-    floor.position.set((4 + size) / 2 - 2, 0, 1)
+    floor.position.set(totalLength / 2 - 2, 0, 1)
     floor.receiveShadow = true
     g.add(floor)
 
+    // 2. Continuous Tatami Mat Gallery Runner beneath the 44 artworks
+    const tatamiRunner = new THREE.Mesh(
+      new THREE.PlaneGeometry(totalLength, 0.88),
+      new THREE.MeshStandardMaterial({
+        map: tatamiTex,
+        roughness: 0.85,
+      }),
+    )
+    tatamiRunner.rotation.x = -Math.PI * 0.5
+    tatamiRunner.position.set(totalLength / 2 - 2, 0.005, -0.06)
+    tatamiRunner.receiveShadow = true
+    g.add(tatamiRunner)
+
+    // 3. Warm earthen Juraku plaster walls
     const platreColor = (this.items.platre_color as THREE.Texture).clone()
     const platreNormal = (this.items.platre_normal as THREE.Texture).clone()
     const platreRough = (this.items.platre_roughness as THREE.Texture).clone()
     ;[platreColor, platreNormal, platreRough].forEach((t) => {
       t.wrapS = t.wrapT = THREE.RepeatWrapping
-      t.repeat.set((2 + size) / 5, 2)
+      t.repeat.set(totalLength / 5, 2)
       t.needsUpdate = true
     })
     const wallMat = new THREE.MeshStandardMaterial({
+      color: "#ded4c1",
       map: platreColor,
       normalMap: platreNormal,
       roughnessMap: platreRough,
+      roughness: 0.9,
       side: THREE.DoubleSide,
     })
     const wall = new THREE.Mesh(
-      new THREE.PlaneGeometry(4 + size, 10),
+      new THREE.PlaneGeometry(totalLength, 10),
       wallMat,
     )
-    wall.position.set((4 + size) / 2 - 2, 5, -0.5)
+    wall.position.set(totalLength / 2 - 2, 5, -0.5)
     wall.receiveShadow = true
     g.add(wall)
 
-    // end walls to enclose the gallery hall
+    // 4. Traditional Post-and-Beam Timber Lintels & Pillars (Shintuka)
+    const lintels = createGalleryLintels(totalLength, TV_ARTICLES.length)
+    g.add(lintels)
+
+    // 5. End walls enclosing the gallery hall
     const endWallGeo = new THREE.PlaneGeometry(4, 10)
     const endWallLeft = new THREE.Mesh(endWallGeo, wallMat)
     endWallLeft.rotation.y = Math.PI * 0.5
@@ -709,42 +737,66 @@ export class TvEngine {
     endWallRight.position.set(size + 2, 5, 1)
     g.add(endWallRight)
 
-    // ceiling strip with skylight glow (matches the room's white ceiling look)
+    // 6. Shoji & Kumiko Wood Lattice Skylight Ceiling
     const ceil = new THREE.Mesh(
-      new THREE.PlaneGeometry(4 + size, 4),
-      new THREE.MeshStandardMaterial({ color: "#e8e6e2", side: THREE.DoubleSide }),
+      new THREE.PlaneGeometry(totalLength, 4),
+      new THREE.MeshStandardMaterial({
+        map: shojiTex,
+        roughness: 0.65,
+        emissive: "#fff3db",
+        emissiveIntensity: 0.35,
+        side: THREE.DoubleSide,
+      }),
     )
     ceil.rotation.x = Math.PI * 0.5
-    ceil.position.set((4 + size) / 2 - 2, 10, 1)
+    ceil.position.set(totalLength / 2 - 2, 10, 1)
     g.add(ceil)
 
-    const amb = new THREE.AmbientLight("#ffffff", 0.85)
-    const dir = new THREE.DirectionalLight("#ffffff", 0.9)
-    dir.position.set((4 + size) / 2 - 2, 8, 4)
-    dir.target.position.set((4 + size) / 2 - 2, 0, -0.5)
+    // 7. Warm Japanese Lighting (In Praise of Shadows)
+    const amb = new THREE.AmbientLight("#ffe7cf", 0.65)
+    const dir = new THREE.DirectionalLight("#fff1da", 1.05)
+    dir.position.set(totalLength / 2 - 2, 8, 4)
+    dir.target.position.set(totalLength / 2 - 2, 0, -0.5)
     g.add(amb, dir, dir.target)
 
-    // wall signs at both ends (Gallery / Home arrows)
-    const addSign = (texName: string, x: number) => {
-      const tex = this.items[texName]
-      if (!tex) return
+    // 8. Procession of Andon Floor Paper Lanterns along the walkway
+    for (let lx = 1.2; lx <= size - 8; lx += 6.0) {
+      const lantern = createAndonLantern(lx, 1.35, 1.3)
+      g.add(lantern)
+    }
+
+    // 9. Floating Sakura & Zen Motes in Gallery
+    const gallerySakura = createSakuraParticles(48, {
+      xMin: -1,
+      xMax: size + 1,
+      yMin: 0.2,
+      yMax: 3.2,
+      zMin: -0.4,
+      zMax: 1.8,
+    })
+    this.gallerySakuraSystem = gallerySakura
+    g.add(gallerySakura.group)
+
+    // 10. Japanese Hinoki Carved Directional Signs at both ends
+    const signEntranceTex = createJapaneseSignTexture("回廊", "Exhibition Corridor", "right")
+    const signExitTex = createJapaneseSignTexture("本館", "Main Pavilion", "left")
+
+    const addSign = (tex: THREE.CanvasTexture, x: number) => {
       const plane = new THREE.Mesh(
         new THREE.PlaneGeometry(2, 1),
         new THREE.MeshBasicMaterial({
+          map: tex,
           transparent: true,
-          alphaMap: tex,
-          color: "black",
         }),
       )
-      plane.scale.set(0.3, 0.3, 0.3)
-      plane.position.set(x, 1, -0.495)
+      plane.scale.set(0.32, 0.32, 0.32)
+      plane.position.set(x, 1, -0.46)
       g.add(plane)
     }
-    addSign("panneau_galerieR", 0)
-    addSign("panneau_homeL", size - 10.6)
-    addSign("panneau_homeR", size - 10.6 + 0.7)
+    addSign(signEntranceTex, 0)
+    addSign(signExitTex, size - 10.6)
 
-    // all 44 artworks in a long wall row
+    // 11. All 44 artworks in a long wall row
     this.galleryCadres = []
     this.galleryButtons = []
     TV_ARTICLES.forEach((a, n) => {
@@ -966,6 +1018,8 @@ export class TvEngine {
       this.updateLinks()
       if (this.route === "home" && this.sakuraParticleSystem) {
         this.sakuraParticleSystem.update(delta)
+      } else if (this.route === "gallery" && this.gallerySakuraSystem) {
+        this.gallerySakuraSystem.update(delta)
       }
     }
     if (this.mixer) this.mixer.update(delta)
