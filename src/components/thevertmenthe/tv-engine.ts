@@ -13,6 +13,16 @@ import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js"
 import gsap from "gsap"
 import { TV_ARTICLES } from "@/lib/thevertmenthe-articles"
 import { TV_DRAW_FRAGMENT, TV_DRAW_VERTEX } from "./tv-shaders"
+import {
+  createHinokiWoodTextures,
+  createTatamiTexture,
+  createShojiLatticeTexture,
+  createKakejikuTexture,
+  createJapaneseSignTexture,
+  createAndonLantern,
+  createTokonomaAlcove,
+  createSakuraParticles,
+} from "./tv-japanese-theme"
 
 const ASSET_BASE = "/thevertmenthe"
 
@@ -147,6 +157,7 @@ export class TvEngine {
   private gallerySize = 44 * 1.2 + 12
   private autoNavFired = false
   lastGalleryX = 0
+  private sakuraParticleSystem: { group: THREE.Group; update: (delta: number) => void } | null = null
 
   // ---------- character ----------
   private personnage: THREE.Object3D | null = null
@@ -336,17 +347,25 @@ export class TvEngine {
     if (!galerie) return
     galerie.position.y = -0.001
 
+    // Generate Japanese procedural architectural textures
+    const hinoki = createHinokiWoodTextures()
+    const tatamiTex = createTatamiTexture()
+    const shojiTex = createShojiLatticeTexture()
+    const kakejikuTex = createKakejikuTexture()
+
     const floor = galerie.getObjectByName("floor")
     const roof = galerie.getObjectByName("roof")
     const barriere = galerie.getObjectByName("barriere")
     const vitre = galerie.getObjectByName("vitre")
 
+    // 1. Rich Hinoki / Cedar Wood Plank Flooring
     if (floor) {
       floor.receiveShadow = true
       const m = new THREE.MeshStandardMaterial({
-        map: this.items.marble_color,
-        normalMap: this.items.marble_normal,
-        roughnessMap: this.items.marble_roughness,
+        map: hinoki.colorMap,
+        roughnessMap: hinoki.roughnessMap,
+        roughness: 0.45,
+        metalness: 0.04,
       })
       const old: any[] = []
       floor.traverse((o: any) => o.isMesh && old.push(o.material))
@@ -355,26 +374,67 @@ export class TvEngine {
       })
       old.forEach((x) => x?.dispose?.())
     }
+
+    // 2. Traditional Tatami Mat bays flanking the walkway beneath the artworks
+    const tatamiMat = new THREE.MeshStandardMaterial({
+      map: tatamiTex,
+      roughness: 0.85,
+    })
+    const tatamiL = new THREE.Mesh(new THREE.PlaneGeometry(0.82, 9.6), tatamiMat)
+    tatamiL.rotation.x = -Math.PI * 0.5
+    tatamiL.position.set(-1.58, 0.005, -5.0)
+    tatamiL.receiveShadow = true
+    g.add(tatamiL)
+
+    const tatamiR = new THREE.Mesh(new THREE.PlaneGeometry(0.82, 9.6), tatamiMat)
+    tatamiR.rotation.x = -Math.PI * 0.5
+    tatamiR.position.set(1.58, 0.005, -5.0)
+    tatamiR.receiveShadow = true
+    g.add(tatamiR)
+
+    // 3. Warm earthen Juraku plaster walls
     if (roof) {
       roof.receiveShadow = true
       const m = new THREE.MeshStandardMaterial({
+        color: "#ded4c1",
         map: this.items.platre_color,
         normalMap: this.items.platre_normal,
         roughnessMap: this.items.platre_roughness,
+        roughness: 0.9,
       })
       roof.traverse((o: any) => {
         if (o.isMesh) o.material = m
       })
     }
-    if (barriere) {
-      barriere.traverse((o: any) => {
-        if (o.isMesh) o.castShadow = true
+
+    // 4. Shoji & Kumiko Wood Lattice Skylight & Dark Timber Framing
+    if (vitre) {
+      const shojiMat = new THREE.MeshStandardMaterial({
+        map: shojiTex,
+        roughness: 0.65,
+        emissive: "#fff3db",
+        emissiveIntensity: 0.35,
+      })
+      vitre.traverse((o: any) => {
+        if (o.isMesh) o.material = shojiMat
       })
     }
-    if (vitre) {
-      const white = new THREE.MeshBasicMaterial({ color: "white" })
-      vitre.traverse((o: any) => {
-        if (o.isMesh) o.material = white
+
+    const cadreNode = galerie.getObjectByName("vitre_cadre")
+    if (cadreNode) {
+      const darkWood = new THREE.MeshStandardMaterial({ color: "#1c130c", roughness: 0.8 })
+      cadreNode.traverse((o: any) => {
+        if (o.isMesh) o.material = darkWood
+      })
+    }
+
+    if (barriere) {
+      const darkWood = new THREE.MeshStandardMaterial({ color: "#22170f", roughness: 0.75 })
+      barriere.traverse((o: any) => {
+        if (o.isMesh) {
+          o.material = darkWood
+          o.castShadow = true
+        }
       })
     }
 
@@ -388,9 +448,9 @@ export class TvEngine {
     galerie.scale.set(0.08, 0.08, 0.08)
     g.add(galerie)
 
-    // lights (original values)
-    const amb = new THREE.AmbientLight("#ffffff", 0.5)
-    const dir = new THREE.DirectionalLight("#ffffff", 1)
+    // 5. Warm Japanese Sukiya Lighting (In Praise of Shadows)
+    const amb = new THREE.AmbientLight("#ffe7cf", 0.55)
+    const dir = new THREE.DirectionalLight("#fff1da", 1.05)
     dir.position.set(0.9, 2.6, 0)
     dir.target.position.set(-1.2, 0, -0.8)
     dir.shadow.mapSize.width = 1024
@@ -402,7 +462,8 @@ export class TvEngine {
     dir.shadow.camera.near = 0.1
     dir.shadow.camera.far = 20
     dir.castShadow = true
-    const dir2 = new THREE.DirectionalLight("#ffffff", 1.5)
+
+    const dir2 = new THREE.DirectionalLight("#fedeb3", 1.35)
     dir2.position.set(-0.9, 2.6, 0)
     dir2.target.position.set(1.2, 0, 0)
     dir2.shadow.mapSize.width = 1024
@@ -418,7 +479,7 @@ export class TvEngine {
 
     if (!this.isPhone) {
       lightMeshes.forEach((lm, i) => {
-        const spot = new THREE.SpotLight("#ffffff", 5, 6, Math.PI / 6, 0.4, 1)
+        const spot = new THREE.SpotLight("#fff3dd", 4.8, 6, Math.PI / 6, 0.45, 1)
         const pos = new THREE.Vector3()
         lm.getWorldPosition(pos)
         spot.position.copy(pos)
@@ -435,41 +496,39 @@ export class TvEngine {
       })
     }
 
-    // description plane (back-wall bio text, baked into a texture)
-    if (this.items.description) {
-      const geo = new THREE.PlaneGeometry(1, 1)
-      const mat = new THREE.MeshBasicMaterial({
-        transparent: true,
-        alphaMap: this.items.description,
-        color: "black",
-      })
-      const plane = new THREE.Mesh(geo, mat)
-      const anchor = galerie.getObjectByName("description")
-      if (anchor) {
-        const wp = new THREE.Vector3()
-        anchor.getWorldPosition(wp)
-        plane.position.copy(wp)
-        plane.position.z += 0.01
-      }
-      plane.scale.set(150 * 0.015, 120 * 0.015, 1)
-      g.add(plane)
-    }
-
-    // wall signs (Home / Gallery arrows)
-    const signs: Array<[string, number]> = [
-      ["galleryL", 0.01],
-      ["galleryR", -0.01],
+    // 6. Andon (行灯) Floor-Standing Paper Lanterns with warm PointLights
+    const lanternCoords: Array<[number, number]> = [
+      [-1.12, -1.4],
+      [1.12, -1.4],
+      [-1.12, -5.0],
+      [1.12, -5.0],
+      [-1.12, -8.6],
+      [1.12, -8.6],
+      [0.85, 0.8], // entrance greeting lantern
     ]
-    for (const [nm, off] of signs) {
+    lanternCoords.forEach(([lx, lz]) => {
+      const lantern = createAndonLantern(lx, lz, 1.4)
+      g.add(lantern)
+    })
+
+    // 7. Tokonoma (床の間) Alcove with raised lacquer platform & Kakejiku hanging scroll
+    const tokonoma = createTokonomaAlcove(-10.8, kakejikuTex, tatamiTex)
+    g.add(tokonoma)
+
+    // 8. Traditional Hinoki Wood Directional Signs
+    const signLTex = createJapaneseSignTexture("回廊", "Gallery", "left")
+    const signRTex = createJapaneseSignTexture("回廊", "Gallery", "right")
+    const signList: Array<[string, number, THREE.CanvasTexture]> = [
+      ["galleryL", 0.01, signLTex],
+      ["galleryR", -0.01, signRTex],
+    ]
+    for (const [nm, off, signTex] of signList) {
       const anchor = galerie.getObjectByName(nm)
       if (!anchor) continue
-      const tex = this.items[`panneau_${nm}`]
-      if (!tex) continue
       const geo = new THREE.PlaneGeometry(2, 1)
       const mat = new THREE.MeshBasicMaterial({
+        map: signTex,
         transparent: true,
-        alphaMap: tex,
-        color: "black",
       })
       const plane = new THREE.Mesh(geo, mat)
       const wp = new THREE.Vector3()
@@ -479,11 +538,16 @@ export class TvEngine {
       plane.position.copy(wp)
       plane.position.x += off
       plane.quaternion.copy(wq)
-      plane.scale.set(0.3, 0.3, 0.3)
+      plane.scale.set(0.32, 0.32, 0.32)
       g.add(plane)
     }
 
-    // 8 framed artworks on the anchors
+    // 9. Floating Sakura & Zen Motes Particle System
+    const sakura = createSakuraParticles(32)
+    this.sakuraParticleSystem = sakura
+    g.add(sakura.group)
+
+    // 10. Framed Artworks on the Anchors
     const uids = HOME_SLOTS.map((s) => HOME_MAP[s])
     this.homeCadres = []
     this.homeButtons = []
@@ -514,6 +578,17 @@ export class TvEngine {
     instance.quaternion.copy(wq)
     instance.scale.set(0.12 * scale, 0.12 * scale, 0.12 * scale)
 
+    // Dark Hinoki outer frame moulding
+    instance.traverse((o: any) => {
+      if (o.isMesh && o.name !== "draw" && o.name !== "marieLouise") {
+        o.material = new THREE.MeshStandardMaterial({
+          color: "#22170f",
+          roughness: 0.6,
+          metalness: 0.1,
+        })
+      }
+    })
+
     const draw = instance.getObjectByName("draw") as THREE.Mesh | null
     if (draw) {
       if (tex) {
@@ -534,7 +609,8 @@ export class TvEngine {
     const ml = instance.getObjectByName("marieLouise") as THREE.Mesh | null
     if (ml) {
       ml.material = new THREE.MeshStandardMaterial({
-        color: new THREE.Color(0.9058823529411765 * 2, 0.8901960784313725 * 2, 0.8627450980392157 * 2),
+        color: "#f6efe3", // warm washi paper matting
+        roughness: 0.9,
       })
     }
     parentGroup.add(instance)
@@ -888,6 +964,9 @@ export class TvEngine {
       this.updateCamera()
       this.updateFootprints(delta)
       this.updateLinks()
+      if (this.route === "home" && this.sakuraParticleSystem) {
+        this.sakuraParticleSystem.update(delta)
+      }
     }
     if (this.mixer) this.mixer.update(delta)
 
