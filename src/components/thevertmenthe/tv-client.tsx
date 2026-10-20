@@ -439,40 +439,80 @@ Kind regards,
     a.title.toLowerCase().includes(query.toLowerCase()),
   )
 
-  // ---------- joystick ----------
-  const joyRef = useRef<{ id: number; cx: number; cy: number } | null>(null)
+  // ---------- joystick (mobile touch & pointer) ----------
+  const joyRef = useRef<{ id: number; cx: number; cy: number; maxR: number } | null>(null)
   const joyBaseRef = useRef<HTMLDivElement>(null)
   const joyHandleRef = useRef<HTMLDivElement>(null)
 
-  const onJoyStart = (e: React.TouchEvent) => {
-    const t = e.changedTouches[0]
+  const updateJoyFromCoords = (clientX: number, clientY: number) => {
+    const st = joyRef.current
+    if (!st) return
+    const dx = clientX - st.cx
+    const dy = clientY - st.cy
+    const dist = Math.hypot(dx, dy)
+    const max = st.maxR
+    const clampedDist = Math.min(dist, max)
+    const factor = dist > 0 ? clampedDist / dist : 0
+    const hx = dx * factor
+    const hy = dy * factor
+
+    if (joyHandleRef.current) {
+      joyHandleRef.current.style.transform = `translate(${hx}px, ${hy}px)`
+    }
+
+    const deadzone = 4
+    if (dist < deadzone) {
+      getTvEngine()?.setJoystick(0, 0)
+    } else {
+      const normLen = Math.min(1, Math.max(0, (clampedDist - deadzone) / (max - deadzone)))
+      // In Three.js screen space:
+      // UP (dy < 0, dx = 0) -> Math.atan2(0, -1) = PI (walk forward away from camera)
+      // DOWN (dy > 0, dx = 0) -> Math.atan2(0, 1) = 0 (walk backward toward camera)
+      // RIGHT (dx > 0, dy = 0) -> Math.atan2(1, 0) = PI/2 (walk right)
+      // LEFT (dx < 0, dy = 0) -> Math.atan2(-1, 0) = -PI/2 (walk left)
+      const ang = Math.atan2(dx, dy)
+      getTvEngine()?.setJoystick(ang, normLen)
+    }
+  }
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!e.isPrimary) return
     const base = joyBaseRef.current
     if (!base) return
     const r = base.getBoundingClientRect()
-    joyRef.current = { id: t.identifier, cx: r.left + r.width / 2, cy: r.top + r.height / 2 }
-  }
-  const onJoyMove = (e: React.TouchEvent) => {
-    const st = joyRef.current
-    if (!st) return
-    for (const t of Array.from(e.changedTouches)) {
-      if (t.identifier !== st.id) continue
-      const dx = t.clientX - st.cx
-      const dy = t.clientY - st.cy
-      const max = 40
-      const len = Math.min(Math.hypot(dx, dy), max)
-      const ang = Math.atan2(dx, -dy)
-      const nx = len === 0 ? 0 : (Math.sin(ang) * len) / max
-      const ny = len === 0 ? 0 : (-Math.cos(ang) * len) / max
-      if (joyHandleRef.current) {
-        joyHandleRef.current.style.transform = `translate(${nx * max}px, ${ny * max}px)`
-      }
-      getTvEngine()?.setJoystick(ang, len / max)
+    const maxR = Math.max(25, r.width / 2 - 12)
+    joyRef.current = {
+      id: e.pointerId,
+      cx: r.left + r.width / 2,
+      cy: r.top + r.height / 2,
+      maxR,
     }
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId)
+    } catch {}
+    if (joyHandleRef.current) {
+      joyHandleRef.current.style.transition = "none"
+    }
+    updateJoyFromCoords(e.clientX, e.clientY)
   }
-  const onJoyEnd = () => {
-    joyRef.current = null
-    if (joyHandleRef.current) joyHandleRef.current.style.transform = "translate(0px, 0px)"
-    getTvEngine()?.setJoystick(0, 0)
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!joyRef.current || joyRef.current.id !== e.pointerId) return
+    updateJoyFromCoords(e.clientX, e.clientY)
+  }
+
+  const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (joyRef.current && joyRef.current.id === e.pointerId) {
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId)
+      } catch {}
+      joyRef.current = null
+      if (joyHandleRef.current) {
+        joyHandleRef.current.style.transition = "transform 0.15s cubic-bezier(0.2, 0.9, 0.3, 1)"
+        joyHandleRef.current.style.transform = "translate(0px, 0px)"
+      }
+      getTvEngine()?.setJoystick(0, 0)
+    }
   }
 
   return (
@@ -621,13 +661,27 @@ Kind regards,
       {/* mobile joystick */}
       <div
         className={`tv-joystick_container${isArticle ? " tv-hidden" : ""}`}
-        onTouchStart={onJoyStart}
-        onTouchMove={onJoyMove}
-        onTouchEnd={onJoyEnd}
-        onTouchCancel={onJoyEnd}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        onTouchStart={(e) => {
+          e.stopPropagation()
+        }}
+        role="button"
+        aria-label="Movement joystick"
+        tabIndex={-1}
       >
         <div ref={joyBaseRef} className="tv-joystick_base">
-          <div ref={joyHandleRef} className="tv-joystick_handle" />
+          <div className="tv-joystick_crosshair">
+            <span className="tv-joy_dir tv-joy_up" />
+            <span className="tv-joy_dir tv-joy_down" />
+            <span className="tv-joy_dir tv-joy_left" />
+            <span className="tv-joy_dir tv-joy_right" />
+          </div>
+          <div ref={joyHandleRef} className="tv-joystick_handle">
+            <div className="tv-joystick_knob_center" />
+          </div>
         </div>
       </div>
 

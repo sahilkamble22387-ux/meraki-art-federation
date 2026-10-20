@@ -202,7 +202,7 @@ export class TvEngine {
   init(canvas: HTMLCanvasElement, container: HTMLElement) {
     this.canvas = canvas
     this.container = container
-    this.isPhone = window.matchMedia("(max-width: 820px)").matches
+    this.isPhone = window.matchMedia("(max-width: 820px)").matches || "ontouchstart" in window || (navigator.maxTouchPoints > 0 && window.innerWidth <= 1024)
     this.velocity = this.isPhone ? 1.5 : 1
 
     this.renderer = new THREE.WebGLRenderer({
@@ -899,6 +899,8 @@ export class TvEngine {
   }
   private onResize = () => {
     if (!this.renderer) return
+    this.isPhone = window.matchMedia("(max-width: 820px)").matches || "ontouchstart" in window || (navigator.maxTouchPoints > 0 && window.innerWidth <= 1024)
+    this.velocity = this.isPhone ? 1.5 : 1
     this.camera.aspect = window.innerWidth / window.innerHeight
     this.camera.updateProjectionMatrix()
     this.renderer.setSize(window.innerWidth, window.innerHeight)
@@ -979,8 +981,8 @@ export class TvEngine {
   // ================= main loop =================
   private directionOffset(keys: Record<string, boolean>): number {
     let t = 0
-    if (this.isPhone && this.joyDistance > 0) {
-      return -this.joyAngle + Math.PI * 0.5
+    if (this.joyDistance > 0) {
+      return this.joyAngle
     }
     if (keys.keys || keys.arrowdown) {
       if (keys.keyd || keys.arrowright) t = Math.PI / 4
@@ -1040,14 +1042,15 @@ export class TvEngine {
       this.rotateQuaternion.setFromAxisAngle(this.rotateAngle, s + o)
       this.personnage.quaternion.rotateTowards(
         this.rotateQuaternion,
-        this.isPhone ? 0.8 : 0.15,
+        this.joyDistance > 0 ? 0.75 : (this.isPhone ? 0.8 : 0.15),
       )
       this.camera.getWorldDirection(this.walkDir)
       this.walkDir.y = 0
       this.walkDir.normalize()
       this.walkDir.applyAxisAngle(this.rotateAngle, o)
-      const dx = this.walkDir.x * this.velocity * delta * 60 * 0.016
-      const dz = this.walkDir.z * this.velocity * delta * 60 * 0.016
+      const speedMultiplier = this.joyDistance > 0 ? Math.min(1.25, Math.max(0.6, this.joyDistance * 1.1)) : 1.0
+      const dx = this.walkDir.x * this.velocity * speedMultiplier * delta * 60 * 0.016
+      const dz = this.walkDir.z * this.velocity * speedMultiplier * delta * 60 * 0.016
       this.personnage.position.x -= dx
       this.personnage.position.z -= dz
 
