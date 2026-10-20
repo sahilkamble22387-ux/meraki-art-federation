@@ -203,7 +203,7 @@ export class TvEngine {
     this.canvas = canvas
     this.container = container
     this.isPhone = window.matchMedia("(max-width: 820px)").matches || "ontouchstart" in window || (navigator.maxTouchPoints > 0 && window.innerWidth <= 1024)
-    this.velocity = this.isPhone ? 1.5 : 1
+    this.velocity = 0.95
 
     this.renderer = new THREE.WebGLRenderer({
       canvas,
@@ -340,7 +340,7 @@ export class TvEngine {
     const stay = this.mixer.clipAction(findClip("wait"))
     const walk = this.mixer.clipAction(findClip("walk"))
     const hi = this.mixer.clipAction(findClip("coucou"))
-    walk.timeScale = 5 * this.velocity
+    walk.timeScale = 4.5
     hi.timeScale = 5
     stay.play()
     this.walkAction = walk
@@ -900,7 +900,7 @@ export class TvEngine {
   private onResize = () => {
     if (!this.renderer) return
     this.isPhone = window.matchMedia("(max-width: 820px)").matches || "ontouchstart" in window || (navigator.maxTouchPoints > 0 && window.innerWidth <= 1024)
-    this.velocity = this.isPhone ? 1.5 : 1
+    this.velocity = 0.95
     this.camera.aspect = window.innerWidth / window.innerHeight
     this.camera.updateProjectionMatrix()
     this.renderer.setSize(window.innerWidth, window.innerHeight)
@@ -1048,7 +1048,10 @@ export class TvEngine {
       this.walkDir.y = 0
       this.walkDir.normalize()
       this.walkDir.applyAxisAngle(this.rotateAngle, o)
-      const speedMultiplier = this.joyDistance > 0 ? Math.min(1.25, Math.max(0.6, this.joyDistance * 1.1)) : 1.0
+      const speedMultiplier = this.joyDistance > 0 ? Math.max(0.35, Math.min(1.0, this.joyDistance)) : 1.0
+      if (this.walkAction) {
+        this.walkAction.timeScale = 4.5 * (this.joyDistance > 0 ? Math.max(0.65, speedMultiplier) : 1.0)
+      }
       const dx = this.walkDir.x * this.velocity * speedMultiplier * delta * 60 * 0.016
       const dz = this.walkDir.z * this.velocity * speedMultiplier * delta * 60 * 0.016
       this.personnage.position.x -= dx
