@@ -7,7 +7,7 @@
  * starts walking (visibility controlled by TvClient).
  */
 import { ARTIST_FORM_URL } from "@/lib/meraki-content"
-import { getTvEngine } from "@/components/thevertmenthe/tv-engine"
+import { getTvEngine } from "@/components/gallery3d/tv-engine"
 
 export function TvCtaStrip({ visible }: { visible: boolean }) {
   const go = (path: string) => {

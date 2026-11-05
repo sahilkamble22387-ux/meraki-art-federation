@@ -2690,7 +2690,7 @@
 }
 
 /* ============================================================
-   THEVERTMENTHE — 3D gallery station (rebuild of thevertmenthe.dault-lafon.fr)
+   MERAKI — 3D gallery station
    All rem values are the ORIGINAL site's: html font-size becomes
    0.1098vh on these routes only (1rem ≈ 1px @ 900px-tall viewport).
    ============================================================ */
@@ -2700,14 +2700,14 @@
   font-style: normal;
   font-weight: 100 700;
   font-display: swap;
-  src: url("/thevertmenthe/fonts/josefin-sans.woff2") format("woff2");
+  src: url("/meraki/fonts/josefin-sans.woff2") format("woff2");
 }
 @font-face {
   font-family: "Josefin Sans";
   font-style: italic;
   font-weight: 100 700;
   font-display: swap;
-  src: url("/thevertmenthe/fonts/josefin-sans-italic.woff2") format("woff2");
+  src: url("/meraki/fonts/josefin-sans-italic.woff2") format("woff2");
 }
 
 html:has(.tv-page) {
@@ -2765,7 +2765,7 @@ html:has(.tv-page) {
   bottom: 50rem;
   left: 50%;
   transform: translate(-50%);
-  background-image: url(/thevertmenthe/controls.svg);
+  background-image: url(/meraki/controls.svg);
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
@@ -2804,7 +2804,7 @@ html:has(.tv-page) {
 .tv-page .gallery_link div {
   width: 20rem;
   height: 20rem;
-  background-image: url(/thevertmenthe/enter.svg);
+  background-image: url(/meraki/enter.svg);
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -2957,7 +2957,7 @@ html:has(.tv-page) {
   left: 0rem;
   width: 100%;
   height: 100%;
-  background-image: url(/thevertmenthe/hover_small.png);
+  background-image: url(/meraki/hover_small.png);
   background-repeat: no-repeat;
   background-position: 0, 0;
   pointer-events: none;
@@ -3368,10 +3368,10 @@ html:has(.tv-page) {
   cursor: pointer;
 }
 .tv-article .article_arrows .arrowL a {
-  background-image: url(/thevertmenthe/arrowL.svg);
+  background-image: url(/meraki/arrowL.svg);
 }
 .tv-article .article_arrows .arrowR a {
-  background-image: url(/thevertmenthe/arrowR.svg);
+  background-image: url(/meraki/arrowR.svg);
 }
 .tv-article .article_arrows .arrowL a:hover,
 .tv-article .article_arrows .arrowR a:hover {

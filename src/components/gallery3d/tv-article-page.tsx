@@ -1,11 +1,11 @@
 "use client"
 
 /**
- * ThevertMenthe — article detail page (DOM layer over the engine).
+ * Meraki — article detail page (DOM layer over the engine).
  * White sheet: title + artwork center, sizes/notes on the left column,
  * contact button bottom-right, prev/next arrows, back to gallery.
  */
-import { TV_ARTICLES } from "@/lib/thevertmenthe-articles"
+import { TV_ARTICLES } from "@/lib/artworks"
 import { getTvEngine } from "./tv-engine"
 
 type TvArticle = (typeof TV_ARTICLES)[number]

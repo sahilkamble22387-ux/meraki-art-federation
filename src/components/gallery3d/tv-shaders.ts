@@ -1,4 +1,4 @@
-/* ThevertMenthe — shaders ported from the original site bundle. */
+/* Meraki — shaders ported from the original site bundle. */
 
 /** Artwork crossfade shader (draw mesh inside every frame). */
 export const TV_DRAW_VERTEX = /* glsl */ `

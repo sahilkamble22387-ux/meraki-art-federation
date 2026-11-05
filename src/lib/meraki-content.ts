@@ -62,7 +62,7 @@ export const TEAM: TeamMember[] = [
     name: "Kalyani Muley",
     role: "Head of Operations",
     rank: "1st Number",
-    photo: "/thevertmenthe/team/kalyani-muley.png",
+    photo: "/meraki/team/kalyani-muley.png",
     bio: [
       "Overseeing administrative compliance, ground execution protocols, vendor relations, and overall event alignment for Meraki flagships.",
     ],
@@ -72,7 +72,7 @@ export const TEAM: TeamMember[] = [
     name: "Aditya Muley",
     role: "Operations Manager",
     rank: "2nd Number",
-    photo: "/thevertmenthe/team/aditya-muley.png",
+    photo: "/meraki/team/aditya-muley.png",
     bio: [
       "Directing ground logistics, infrastructure execution, and corporate sponsor alignment for seamless operational delivery across all grand showcases.",
     ],
@@ -82,7 +82,7 @@ export const TEAM: TeamMember[] = [
     name: "Khushali Naidu",
     role: "Head of Artist & Curator Relations",
     rank: "3rd Number",
-    photo: "/thevertmenthe/team/khushali-naidu.png",
+    photo: "/meraki/team/khushali-naidu.png",
     bio: [
       "Leading artist outreach, curator onboarding, and community engagement to connect master and emerging creators with Meraki platforms.",
     ],
@@ -92,7 +92,7 @@ export const TEAM: TeamMember[] = [
     name: "Ayush Milind Bhoyar",
     role: "Founder",
     rank: "Founder",
-    photo: "/thevertmenthe/team/ayush-bhoyar.png",
+    photo: "/meraki/team/ayush-bhoyar.png",
     founder: true,
     bio: [
       "Meraki is not everywhere, but somewhere it stands with dignity.",

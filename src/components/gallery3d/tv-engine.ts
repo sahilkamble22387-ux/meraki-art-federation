@@ -1,8 +1,8 @@
 "use client"
 
 /**
- * ThevertMenthe — three.js engine.
- * Faithful rebuild of thevertmenthe.dault-lafon.fr (three.js r158 original):
+ * Meraki — three.js engine.
+ * Meraki 3D exhibition world (three.js):
  * gallery room GLB, 8 wall frames + shader crossfade, floor spot rings,
  * projected "See details" links, walking character (walk/wait/hi animations),
  * camera follow + zoom, footprints, ink-flood page transition, joystick input.
@@ -11,7 +11,7 @@ import * as THREE from "three"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js"
 import gsap from "gsap"
-import { TV_ARTICLES } from "@/lib/thevertmenthe-articles"
+import { TV_ARTICLES } from "@/lib/artworks"
 import { TEAM, PARTNERS, ARTIST_FORM_URL } from "@/lib/meraki-content"
 import { TV_DRAW_FRAGMENT, TV_DRAW_VERTEX } from "./tv-shaders"
 import {
@@ -32,7 +32,7 @@ import {
   createQuoteScrollTexture,
 } from "./tv-japanese-theme"
 
-const ASSET_BASE = "/thevertmenthe"
+const ASSET_BASE = "/meraki"
 
 type TvArticle = (typeof TV_ARTICLES)[number]
 
@@ -376,7 +376,7 @@ export class TvEngine {
     }
     // partner brand marks
     try {
-      const brandTex = await texLoader.loadAsync("/thevertmenthe/brand/foxbytes-mark.png")
+      const brandTex = await texLoader.loadAsync("/meraki/brand/foxbytes-mark.png")
       brandTex.colorSpace = THREE.SRGBColorSpace
       this.items["brand:foxbytes"] = brandTex
     } catch {
@@ -1461,8 +1461,8 @@ export class TvEngine {
   // ================= routing =================
   setRoute(path: string): "home" | "gallery" | "about" | "article" {
     let r: "home" | "gallery" | "about" | "article" = "article"
-    if (path === "" || path === "/" || path === "/thevertmenthe" || path === "/thevertmenthe/") r = "home"
-    else if (path === "/gallery" || path === "/thevertmenthe/gallery") r = "gallery"
+    if (path === "" || path === "/") r = "home"
+    else if (path === "/gallery" || path === "/meraki/gallery") r = "gallery"
     else if (path === "/about") r = "about"
     this.route = r
     if (this.phase !== "ready") return r

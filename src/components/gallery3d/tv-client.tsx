@@ -1,10 +1,10 @@
 "use client"
 
 /**
- * ThevertMenthe — persistent client shell.
+ * Meraki — persistent client shell.
  * Owns the WebGL canvas + engine, the loading screen, the fullscreen menu,
  * the keyboard legend, the mobile joystick and the ink page transition.
- * Mounted once in /thevertmenthe/layout.tsx so the 3D world survives
+ * Mounted once in /meraki/layout.tsx so the 3D world survives
  * client-side navigation between home, gallery and article pages.
  */
 import {
@@ -19,7 +19,7 @@ import {
   createTvEngine,
   getTvEngine,
 } from "./tv-engine"
-import { TV_ARTICLES } from "@/lib/thevertmenthe-articles"
+import { TV_ARTICLES } from "@/lib/artworks"
 import { TvInfoCard } from "@/components/meraki/tv-info-card"
 import { TvCtaStrip } from "@/components/meraki/tv-cta-strip"
 
@@ -577,13 +577,13 @@ Kind regards,
       {/* fullscreen menu */}
       <div ref={menuRef} className="menu tv-menu" style={{ display: "none" }}>
         <div className="menu_canvas_container tv-menu_canvas_container">
-          <img className="menu_image" src="/thevertmenthe/textures/oeuvre.png" alt="" />
+          <img className="menu_image" src="/meraki/textures/oeuvre.png" alt="" />
           <video
             ref={videoRef}
             className="menu_video"
             muted
             playsInline
-            src="/thevertmenthe/videos/ink.mp4"
+            src="/meraki/videos/ink.mp4"
           />
         </div>
         <div className="menu_text tv-menu_text">
@@ -591,7 +591,7 @@ Kind regards,
             <span>
               <a
                 href="/"
-                className={pathname === "/" || pathname === "/thevertmenthe" ? "menu_actif" : undefined}
+                className={pathname === "/" ? "menu_actif" : undefined}
                 onClick={(e) => {
                   e.preventDefault()
                   void navigate("/")
@@ -604,7 +604,7 @@ Kind regards,
             <span>
               <a
                 href="/gallery"
-                className={pathname === "/gallery" || pathname === "/thevertmenthe/gallery" ? "menu_actif" : undefined}
+                className={pathname === "/gallery" || pathname === "/meraki/gallery" ? "menu_actif" : undefined}
                 onClick={(e) => {
                   e.preventDefault()
                   void navigate("/gallery")

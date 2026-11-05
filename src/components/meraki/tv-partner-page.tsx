@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CONTACT, SANMANYA } from "@/lib/meraki-content"
-import { getTvEngine } from "@/components/thevertmenthe/tv-engine"
+import { getTvEngine } from "@/components/gallery3d/tv-engine"
 import { TvFooter } from "./tv-footer"
 
 const DISCIPLINES = ["Fine Art", "Sculpture", "Music", "Dance", "Literature"] as const

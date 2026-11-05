@@ -927,7 +927,7 @@ export function createBonsaiBench(x: number, z: number): THREE.Group {
  */
 export function createSakuraBranchMesh(x: number, y: number, z: number, scale: number = 1.0): THREE.Mesh {
   const loader = new THREE.TextureLoader()
-  const tex = loader.load("/thevertmenthe/textures/sakura_branch.svg")
+  const tex = loader.load("/meraki/textures/sakura_branch.svg")
   tex.colorSpace = THREE.SRGBColorSpace
 
   const mat = new THREE.MeshBasicMaterial({
