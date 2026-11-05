@@ -40,3 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 _backup_maintenance/
+
+# raw source assets at repo root (processed copies live in public/)
+/*.jpg
+/*.png
+/*.heic
