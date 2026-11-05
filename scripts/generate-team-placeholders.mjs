@@ -1,6 +1,6 @@
 /**
  * Generates elegant placeholder portrait PNGs for the About "Leadership Pavilion"
- * until real team photographs are dropped into public/thevertmenthe/team/.
+ * until real team photographs are dropped into public/meraki/team/.
  * Real photos with the same filenames replace these automatically.
  *
  * Run: node scripts/generate-team-placeholders.mjs
@@ -11,7 +11,7 @@ import { join, dirname } from "node:path"
 import { fileURLToPath } from "node:url"
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..")
-const outDir = join(root, "public", "thevertmenthe", "team")
+const outDir = join(root, "public", "meraki", "team")
 mkdirSync(outDir, { recursive: true })
 
 const W = 720

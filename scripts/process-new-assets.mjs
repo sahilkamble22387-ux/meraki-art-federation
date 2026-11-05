@@ -1,15 +1,15 @@
 /**
  * One-off asset pipeline for the batch of new Meraki files (Nov 2026):
- * - team photos        -> public/thevertmenthe/team/*.png (720x960 portrait crop)
- * - 10 paintings       -> public/thevertmenthe/artworks/*.jpg (canvas regions cropped)
- * - Meraki logo        -> src/app/icon.png (favicon) + public/thevertmenthe/brand/meraki-logo.png (footer)
- * - SANMANYA logo      -> public/thevertmenthe/brand/sanmanya-logo.png (/sanmanya hero)
+ * - team photos        -> public/meraki/team/*.png (720x960 portrait crop)
+ * - 10 paintings       -> public/meraki/artworks/*.jpg (canvas regions cropped)
+ * - Meraki logo        -> src/app/icon.png (favicon) + public/meraki/brand/meraki-logo.png (footer)
+ * - SANMANYA logo      -> public/meraki/brand/sanmanya-logo.png (/sanmanya hero)
  */
 import sharp from "sharp"
 
-const A = "public/thevertmenthe/artworks"
-const B = "public/thevertmenthe/brand"
-const T = "public/thevertmenthe/team"
+const A = "public/meraki/artworks"
+const B = "public/meraki/brand"
+const T = "public/meraki/team"
 
 // fractional crop boxes for photos taken against walls/tiles [left, top, right, bottom]
 const CROPS = {
