@@ -3,18 +3,17 @@ import "./globals.css";
 import { TvClient } from "@/components/thevertmenthe/tv-client";
 
 export const metadata: Metadata = {
-  title: "Meraki Art Federation — 3D Art Gallery & Vault",
+  title: "Meraki Art Federation — Art for the Soul, Tour for the World",
   description:
-    "Step into the 3D virtual pavilion of the Meraki Art Federation. Explore curated fine arts, ballpoint pen masterpieces, and global acquisitions.",
+    "Meraki bridges the gap between grassroots creators and global stages—fine art, sculpture, music, dance and literature—with an 80% direct artist payout and two annual flagships: the Summer Session and SANMANYA 2027, the Winter Session at Nagpur.",
   metadataBase: new URL("https://merakiartfed.com"),
   alternates: {
     canonical: "https://merakiartfed.com",
   },
-  icons: { icon: "/favicon.ico" },
   openGraph: {
-    title: "Meraki Art Federation — 3D Art Gallery & Vault",
+    title: "Meraki Art Federation — Art for the Soul, Tour for the World",
     description:
-      "Step into the 3D virtual pavilion of the Meraki Art Federation. Explore curated fine arts, ballpoint pen masterpieces, and global acquisitions.",
+      "Meraki bridges the gap between grassroots creators and global stages—fine art, sculpture, music, dance and literature—with an 80% direct artist payout and two annual flagships: the Summer Session and SANMANYA 2027, the Winter Session at Nagpur.",
     url: "https://merakiartfed.com",
     siteName: "Meraki Art Federation",
     locale: "en_US",
@@ -22,9 +21,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Meraki Art Federation — 3D Art Gallery & Vault",
+    title: "Meraki Art Federation — Art for the Soul, Tour for the World",
     description:
-      "Step into the 3D virtual pavilion of the Meraki Art Federation. Explore curated fine arts, ballpoint pen masterpieces, and global acquisitions.",
+      "Meraki bridges the gap between grassroots creators and global stages—fine art, sculpture, music, dance and literature—with an 80% direct artist payout and two annual flagships: the Summer Session and SANMANYA 2027, the Winter Session at Nagpur.",
   },
 };
 

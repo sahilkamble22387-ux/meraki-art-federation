@@ -20,6 +20,8 @@ import {
   getTvEngine,
 } from "./tv-engine"
 import { TV_ARTICLES } from "@/lib/thevertmenthe-articles"
+import { TvInfoCard } from "@/components/meraki/tv-info-card"
+import { TvCtaStrip } from "@/components/meraki/tv-cta-strip"
 
 const BASE = ""
 
@@ -193,12 +195,15 @@ export function TvClient({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [activeIdx, setActiveIdx] = useState(-1)
+  const [panel, setPanel] = useState<string | null>(null)
+  const [walking, setWalking] = useState(false)
 
   const router = useRouter()
   const pathname = usePathname()
   const inkArmed = useRef(false)
 
-  const isArticle = Boolean(pathname?.match(/^\/(thevertmenthe\/)?gallery\/.+/))
+  const is3d = pathname === "/" || pathname === "/gallery" || pathname === "/about"
+  const isHome = pathname === "/"
 
   // ---------- navigate with ink transition ----------
   const navigate = useCallback(
@@ -241,6 +246,11 @@ export function TvClient({ children }: { children: React.ReactNode }) {
         .add(() => setLoaderGone(true))
     }
     engine.onControlsVisible = (v) => setControlsVisible(v)
+    engine.onWalking = (w) => setWalking(w)
+    engine.openPanel = (id) => {
+      setPanel(id)
+      engine.setControls(false)
+    }
     engine.navigate = (href) => void navigate(href)
     engine.init(canvas, container)
 
@@ -262,6 +272,8 @@ export function TvClient({ children }: { children: React.ReactNode }) {
     const engine = getTvEngine()
     if (!engine) return
     engine.setRoute(pathname ?? "/")
+    setPanel(null)
+    setWalking(false)
     // drain the ink flood after the route content is in place
     if (inkArmed.current) {
       inkArmed.current = false
@@ -269,16 +281,25 @@ export function TvClient({ children }: { children: React.ReactNode }) {
     }
   }, [pathname, ready])
 
-  // ---------- ESC toggles menu ----------
+  const closePanel = useCallback(() => {
+    setPanel(null)
+    getTvEngine()?.setControls(true)
+  }, [])
+
+  // ---------- ESC closes info card, otherwise toggles menu ----------
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.code === "Escape") {
-        setMenuOpen((v) => !v)
+        if (panel) {
+          closePanel()
+        } else {
+          setMenuOpen((v) => !v)
+        }
       }
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [])
+  }, [panel, closePanel])
 
   // ---------- menu open/close animation ----------
   useEffect(() => {
@@ -521,16 +542,22 @@ Kind regards,
       <div className="tv-viewport" style={{ opacity: ready ? 1 : 0 }} />
 
       {/* projected "See details" links live here */}
-      <div ref={containerRef} className="container" style={{ display: isArticle ? "none" : "block" }} />
+      <div ref={containerRef} className="container" style={{ display: is3d ? "block" : "none" }} />
 
       {/* keyboard legend */}
       <div
         className="controls tv-controls"
         style={{
-          opacity: controlsVisible && ready && !isArticle ? 1 : 0,
+          opacity: controlsVisible && ready && is3d ? 1 : 0,
           display: undefined,
         }}
       />
+
+      {/* home corner CTA strip */}
+      {ready && isHome ? <TvCtaStrip visible={!walking && controlsVisible && !menuOpen} /> : null}
+
+      {/* leadership pavilion info card */}
+      {panel ? <TvInfoCard id={panel} onClose={closePanel} /> : null}
 
       {/* article pages render here (above the canvas) */}
       {children}
@@ -584,6 +611,45 @@ Kind regards,
                 }}
               >
                 Gallery
+              </a>{" "}
+              &gt;
+            </span>
+            <span>
+              <a
+                href="/about"
+                className={pathname === "/about" ? "menu_actif" : undefined}
+                onClick={(e) => {
+                  e.preventDefault()
+                  void navigate("/about")
+                }}
+              >
+                About
+              </a>{" "}
+              &gt;
+            </span>
+            <span>
+              <a
+                href="/sanmanya"
+                className={pathname === "/sanmanya" ? "menu_actif" : undefined}
+                onClick={(e) => {
+                  e.preventDefault()
+                  void navigate("/sanmanya")
+                }}
+              >
+                SANMANYA 2027
+              </a>{" "}
+              &gt;
+            </span>
+            <span>
+              <a
+                href="/partner"
+                className={pathname === "/partner" ? "menu_actif" : undefined}
+                onClick={(e) => {
+                  e.preventDefault()
+                  void navigate("/partner")
+                }}
+              >
+                Partner
               </a>{" "}
               &gt;
             </span>
@@ -660,7 +726,7 @@ Kind regards,
 
       {/* mobile joystick */}
       <div
-        className={`tv-joystick_container${isArticle ? " tv-hidden" : ""}`}
+        className={`tv-joystick_container${is3d ? "" : " tv-hidden"}`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}

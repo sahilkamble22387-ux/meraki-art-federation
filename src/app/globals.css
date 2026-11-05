@@ -2909,7 +2909,7 @@ html:has(.tv-page) {
   text-align: right;
   display: flex;
   flex-direction: column;
-  width: 120rem;
+  width: 210rem;
   font-family: var(--tv-font);
 }
 .tv-page .menu_main_links span {
@@ -3411,7 +3411,10 @@ html:has(.tv-page) {
     padding: 30rem;
   }
   .tv-page .menu_main_links {
-    width: 95rem;
+    width: 150rem;
+  }
+  .tv-page .menu_main_links a {
+    font-size: 22rem;
   }
   .tv-page .menu_button button {
     mix-blend-mode: normal;
@@ -3456,4 +3459,640 @@ html:has(.tv-page) {
 
 .tv-hidden {
   display: none !important;
+}
+
+/* ======================================================================
+   Meraki — home corner CTA strip
+   ====================================================================== */
+.tv-ctastrip {
+  position: absolute;
+  /* sits above the keyboard legend, which occupies the bottom 130rem */
+  bottom: 145rem;
+  right: 50rem;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 22rem;
+  pointer-events: none;
+  transition: opacity 0.5s ease-in-out;
+  font-family: var(--tv-font);
+  /* blend the whole strip as one group — a child blend is isolated by this
+     element's stacking context and would never reach the WebGL scene */
+  mix-blend-mode: difference;
+}
+.tv-ctastrip_hidden {
+  opacity: 0;
+}
+.tv-ctastrip a {
+  pointer-events: all;
+  font-size: 14rem;
+  letter-spacing: 2rem;
+  text-transform: uppercase;
+  color: var(--tv-white);
+  text-decoration: none;
+  border-bottom: 1rem solid rgba(255, 255, 255, 0.5);
+  padding-bottom: 3rem;
+  transition: opacity 0.2s ease-in-out;
+}
+.tv-ctastrip a:hover {
+  opacity: 0.55;
+}
+.tv-ctastrip_divider {
+  width: 1rem;
+  height: 14rem;
+  background-color: var(--tv-white);
+  overflow: visible;
+}
+
+/* ======================================================================
+   Meraki — Leadership Pavilion info card
+   ====================================================================== */
+@keyframes tv-card-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes tv-card-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.tv-card_backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 28;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+  animation: tv-card-fade 0.25s ease-in-out;
+  font-family: var(--tv-font);
+}
+.tv-card {
+  position: relative;
+  width: min(720rem, 92vw);
+  max-height: 84vh;
+  overflow-y: auto;
+  background: var(--tv-white);
+  color: var(--tv-black);
+  animation: tv-card-rise 0.3s ease-out;
+}
+.tv-card_close {
+  position: absolute;
+  top: 12rem;
+  right: 16rem;
+  z-index: 2;
+  font-family: var(--tv-font);
+  font-size: 13rem;
+  letter-spacing: 2rem;
+  text-transform: uppercase;
+  color: var(--tv-white);
+  mix-blend-mode: difference;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.tv-card_close:hover {
+  opacity: 0.6;
+}
+.tv-card_photo {
+  display: block;
+  width: 100%;
+  height: 280rem;
+  object-fit: cover;
+  object-position: center 25%;
+}
+.tv-card_body {
+  padding: 38rem 44rem 44rem;
+}
+.tv-card_rank {
+  font-size: 11rem;
+  letter-spacing: 6rem;
+  text-transform: uppercase;
+  color: var(--tv-red);
+  font-weight: 700;
+}
+.tv-card_body h3 {
+  margin-top: 10rem;
+  font-size: 32rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.tv-card_role {
+  margin-top: 6rem;
+  font-size: 14rem;
+  opacity: 0.65;
+}
+.tv-card_body p {
+  margin-top: 16rem;
+  font-size: 14rem;
+  line-height: 1.75;
+  opacity: 0.85;
+}
+.tv-card_quote {
+  font-style: italic;
+  opacity: 1 !important;
+}
+
+/* ======================================================================
+   Meraki — document pages (/sanmanya, /partner)
+   ====================================================================== */
+.tv-doc {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  background: var(--tv-white);
+  color: var(--tv-black);
+  overflow-y: auto;
+  overflow-x: hidden;
+  pointer-events: all;
+  font-family: var(--tv-font);
+  -webkit-user-select: text;
+  user-select: text;
+}
+.tv-doc_back {
+  position: fixed;
+  top: 30rem;
+  left: 30rem;
+  z-index: 30;
+  font-family: var(--tv-font);
+  font-size: 13rem;
+  letter-spacing: 1rem;
+  text-transform: uppercase;
+  color: var(--tv-black);
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  cursor: pointer;
+  opacity: 0.65;
+  transition: opacity 0.2s ease-in-out;
+  padding: 8rem 12rem;
+}
+.tv-doc_back:hover {
+  opacity: 1;
+}
+.tv-doc_inner {
+  max-width: 1100rem;
+  margin: 0 auto;
+  padding: 110rem 50rem 0;
+}
+.tv-doc_sanmanya_logo {
+  max-width: 420rem;
+  display: block;
+  margin: 0 0 36rem;
+}
+.tv-doc_header {
+  border-bottom: 2rem solid var(--tv-black);
+  padding-bottom: 40rem;
+}
+.tv-doc_kicker {
+  font-size: 12rem;
+  letter-spacing: 7rem;
+  text-transform: uppercase;
+  color: var(--tv-red);
+  font-weight: 700;
+}
+.tv-doc_header h1 {
+  margin-top: 16rem;
+  font-size: 64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.tv-doc_lede {
+  margin-top: 18rem;
+  font-size: 15rem;
+  line-height: 1.6;
+  opacity: 0.7;
+  max-width: 700rem;
+}
+.tv-doc section {
+  margin-top: 70rem;
+}
+.tv-doc h2 {
+  font-size: 24rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 16rem;
+}
+.tv-doc h2::after {
+  content: "";
+  flex: 1;
+  height: 1rem;
+  background: rgba(0, 0, 0, 0.25);
+}
+.tv-doc section > p {
+  margin-top: 16rem;
+  font-size: 14.5rem;
+  line-height: 1.8;
+  opacity: 0.85;
+  max-width: 820rem;
+}
+.tv-doc_strong {
+  font-weight: 700;
+  opacity: 1 !important;
+}
+.tv-doc_facts {
+  margin-top: 26rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1rem solid var(--tv-black);
+}
+.tv-doc_fact {
+  padding: 22rem 26rem;
+  border-top: 1rem solid rgba(0, 0, 0, 0.2);
+  border-left: 1rem solid rgba(0, 0, 0, 0.2);
+}
+.tv-doc_fact:nth-child(-n + 2) {
+  border-top: none;
+}
+.tv-doc_fact:nth-child(odd) {
+  border-left: none;
+}
+.tv-doc_fact_label {
+  display: block;
+  font-size: 11rem;
+  letter-spacing: 4rem;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+.tv-doc_fact_value {
+  display: block;
+  margin-top: 8rem;
+  font-size: 15rem;
+  font-weight: 700;
+}
+.tv-doc_commission {
+  margin-top: 26rem;
+  border: 1rem solid var(--tv-black);
+}
+.tv-doc_commission_row {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 20rem;
+  padding: 24rem 26rem;
+  border-top: 1rem solid rgba(0, 0, 0, 0.2);
+}
+.tv-doc_commission_row:first-child {
+  border-top: none;
+}
+.tv-doc_commission_rate {
+  display: block;
+  margin-top: 8rem;
+  font-size: 24rem;
+  font-weight: 700;
+  color: var(--tv-red);
+}
+.tv-doc_commission_row p {
+  font-size: 13.5rem;
+  line-height: 1.7;
+  opacity: 0.75;
+  align-self: center;
+}
+.tv-doc_sessions {
+  margin-top: 26rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30rem;
+}
+.tv-doc_session {
+  border: 1rem solid var(--tv-black);
+  padding: 28rem 30rem;
+}
+.tv-doc_session h3 {
+  font-size: 18rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.tv-doc_session_tag {
+  margin-top: 8rem !important;
+  font-size: 12rem !important;
+  letter-spacing: 2rem;
+  text-transform: uppercase;
+  color: var(--tv-red);
+  font-weight: 700;
+  opacity: 1 !important;
+}
+.tv-doc_session p:not(.tv-doc_session_tag) {
+  margin-top: 14rem;
+  font-size: 13.5rem;
+  line-height: 1.75;
+  opacity: 0.8;
+}
+.tv-doc_values {
+  margin-top: 26rem;
+  list-style: none;
+}
+.tv-doc_values li {
+  display: grid;
+  grid-template-columns: 80rem 1fr;
+  gap: 20rem;
+  padding: 26rem 0;
+  border-top: 1rem solid rgba(0, 0, 0, 0.2);
+}
+.tv-doc_values li:last-child {
+  border-bottom: 1rem solid rgba(0, 0, 0, 0.2);
+}
+.tv-doc_value_num {
+  font-size: 34rem;
+  font-weight: 700;
+  color: var(--tv-red);
+  line-height: 1;
+}
+.tv-doc_values h3 {
+  font-size: 16rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.tv-doc_values p {
+  margin-top: 10rem;
+  font-size: 13.5rem;
+  line-height: 1.75;
+  opacity: 0.8;
+}
+.tv-doc_ctas {
+  margin: 70rem 0 30rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rem;
+}
+.tv-doc_cta {
+  font-family: var(--tv-font);
+  font-size: 13rem;
+  letter-spacing: 2rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--tv-white);
+  background: var(--tv-black);
+  border: 1rem solid var(--tv-black);
+  padding: 15rem 28rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+}
+.tv-doc_cta:hover {
+  opacity: 0.75;
+}
+.tv-doc_cta_ghost {
+  color: var(--tv-black);
+  background: transparent;
+}
+
+/* ---- partner forms ---- */
+.tv-form_cols {
+  margin-top: 46rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 34rem;
+  align-items: start;
+}
+.tv-form_card {
+  border: 1rem solid var(--tv-black);
+  padding: 34rem 36rem 38rem;
+}
+.tv-form_card h3 {
+  font-size: 20rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.tv-form_sub {
+  margin-top: 10rem;
+  font-size: 12.5rem;
+  line-height: 1.6;
+  opacity: 0.65;
+}
+.tv-form_card label {
+  display: block;
+  margin-top: 20rem;
+  font-size: 11rem;
+  letter-spacing: 3rem;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.tv-form_card input[type="text"],
+.tv-form_card input[type="email"],
+.tv-form_card input[type="tel"],
+.tv-form_card input[type="url"],
+.tv-form_card select,
+.tv-form_card textarea {
+  width: 100%;
+  margin-top: 6rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1rem solid rgba(0, 0, 0, 0.4);
+  border-radius: 0;
+  font-family: var(--tv-font);
+  font-size: 14rem;
+  color: var(--tv-black);
+  padding: 8rem 0;
+  outline: none;
+}
+.tv-form_card input:focus,
+.tv-form_card select:focus,
+.tv-form_card textarea:focus {
+  border-bottom-color: var(--tv-black);
+}
+.tv-form_card textarea {
+  resize: vertical;
+}
+.tv-form_error {
+  margin-top: 6rem !important;
+  font-size: 11rem !important;
+  color: var(--tv-red) !important;
+  opacity: 1 !important;
+}
+.tv-form_radios {
+  margin-top: 10rem;
+  display: flex;
+  gap: 24rem;
+}
+.tv-form_radio {
+  display: flex !important;
+  align-items: center;
+  gap: 8rem;
+  margin-top: 0 !important;
+  font-size: 13rem !important;
+  letter-spacing: 1rem !important;
+  text-transform: none !important;
+  opacity: 1 !important;
+  cursor: pointer;
+}
+.tv-form_radio input {
+  accent-color: #000;
+  width: 14rem;
+  height: 14rem;
+}
+.tv-form_submit {
+  margin-top: 30rem;
+  font-family: var(--tv-font);
+  font-size: 13rem;
+  letter-spacing: 2rem;
+  text-transform: uppercase;
+  color: var(--tv-white);
+  background: var(--tv-black);
+  border: 1rem solid var(--tv-black);
+  padding: 14rem 28rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+}
+.tv-form_submit:hover {
+  opacity: 0.75;
+}
+.tv-form_submit:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.tv-form_note {
+  margin-top: 14rem;
+  font-size: 11rem;
+  opacity: 0.5;
+}
+.tv-form_contact {
+  border-top: 1rem solid rgba(0, 0, 0, 0.2);
+}
+.tv-form_contact a {
+  color: var(--tv-black);
+  font-weight: 700;
+}
+
+/* ======================================================================
+   Meraki — footer (document pages)
+   ====================================================================== */
+.tv-footer {
+  margin-top: 90rem;
+  border-top: 1rem solid var(--tv-black);
+  padding: 46rem 0 40rem;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 40rem;
+  font-family: var(--tv-font);
+}
+.tv-footer h4 {
+  font-size: 12rem;
+  letter-spacing: 4rem;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-bottom: 16rem;
+  font-weight: 700;
+}
+.tv-footer_mark {
+  width: 48rem;
+  height: 48rem;
+  border-radius: 10rem;
+  display: block;
+  margin-bottom: 14rem;
+}
+.tv-footer_brand {
+  font-size: 15rem !important;
+  opacity: 1 !important;
+  letter-spacing: 3rem;
+}
+.tv-footer p {
+  font-size: 12.5rem;
+  line-height: 1.7;
+  opacity: 0.75;
+}
+.tv-footer a {
+  display: block;
+  font-size: 12.5rem;
+  line-height: 1.7;
+  color: var(--tv-black);
+  text-decoration: none;
+  opacity: 0.75;
+}
+.tv-footer a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+.tv-footer_bottom {
+  grid-column: 1 / -1;
+  border-top: 1rem solid rgba(0, 0, 0, 0.15);
+  padding-top: 18rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8rem;
+}
+.tv-footer_bottom span {
+  font-size: 10.5rem;
+  letter-spacing: 1rem;
+  text-transform: uppercase;
+  opacity: 0.5;
+  overflow: visible;
+  white-space: normal;
+}
+/* higher specificity than the muted bottom-bar spans — the credit stays crisp */
+.tv-footer_bottom .tv-footer_credit {
+  opacity: 1;
+  color: var(--tv-red);
+  display: inline-flex;
+  align-items: center;
+  gap: 8rem;
+}
+.tv-footer_credit img {
+  width: 15rem;
+  height: auto;
+  display: block;
+}
+
+/* ======================================================================
+   Meraki — phone adjustments
+   ====================================================================== */
+@media (max-width: 820px), ((hover: none) and (pointer: coarse)) {
+  /* stack the CTAs vertically above the joystick — the row overflows 390px screens */
+  .tv-ctastrip {
+    bottom: 270rem;
+    right: 30rem;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14rem;
+  }
+  .tv-ctastrip a {
+    font-size: 12rem;
+    white-space: nowrap;
+  }
+  .tv-page .tv-ctastrip_divider {
+    display: none !important;
+  }
+  .tv-card_body {
+    padding: 28rem 26rem 32rem;
+  }
+  .tv-doc_inner {
+    padding: 90rem 24rem 0;
+  }
+  .tv-doc_header h1 {
+    font-size: 42rem;
+  }
+  .tv-doc_facts {
+    grid-template-columns: 1fr;
+  }
+  .tv-doc_fact {
+    border-left: none !important;
+  }
+  .tv-doc_fact:nth-child(2) {
+    border-top: 1rem solid rgba(0, 0, 0, 0.2) !important;
+  }
+  .tv-doc_sessions {
+    grid-template-columns: 1fr;
+  }
+  .tv-doc_commission_row {
+    grid-template-columns: 1fr;
+  }
+  .tv-form_cols {
+    grid-template-columns: 1fr;
+  }
+  .tv-footer {
+    grid-template-columns: 1fr;
+    gap: 26rem;
+  }
 }

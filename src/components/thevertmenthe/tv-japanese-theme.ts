@@ -1,6 +1,7 @@
 "use client"
 
 import * as THREE from "three"
+import { HERO } from "@/lib/meraki-content"
 
 /**
  * Japanese Sukiya Tea-House & Zen Art Pavilion Theme Generator.
@@ -263,6 +264,246 @@ export function createShojiLatticeTexture(): THREE.CanvasTexture {
   texture.colorSpace = THREE.SRGBColorSpace
   texture.repeat.set(4, 2)
   return texture
+}
+
+/**
+ * Meraki hero banner — the home pavilion's Tokonoma kakejiku scroll carrying
+ * the site headline, sub-headline, the two call-to-action buttons and the
+ * trust badges. The CTA rectangles are exported in UV space so the engine can
+ * raycast clicks against them.
+ */
+export type HeroBannerCta = {
+  id: "sanmanya" | "apply"
+  u0: number
+  u1: number
+  v0: number
+  v1: number
+}
+
+const BANNER_W = 3072
+const BANNER_H = 1536
+const BANNER_CTA_W = 1100
+const BANNER_CTA_H = 180
+const BANNER_CTA_GAP = 160
+const BANNER_CTA_X = (BANNER_W - (BANNER_CTA_W * 2 + BANNER_CTA_GAP)) / 2
+const BANNER_CTA_Y = 990
+
+/** CTA rectangles in banner UV space (v measured from the bottom) — mirrors the drawn buttons. */
+export const HERO_BANNER_CTAS: HeroBannerCta[] = (() => {
+  const uvY1 = (y: number) => 1 - y / BANNER_H
+  const x1 = BANNER_CTA_X
+  const x2 = BANNER_CTA_X + BANNER_CTA_W + BANNER_CTA_GAP
+  return [
+    {
+      id: "sanmanya",
+      u0: x1 / BANNER_W,
+      u1: (x1 + BANNER_CTA_W) / BANNER_W,
+      v0: uvY1(BANNER_CTA_Y + BANNER_CTA_H),
+      v1: uvY1(BANNER_CTA_Y),
+    },
+    {
+      id: "apply",
+      u0: x2 / BANNER_W,
+      u1: (x2 + BANNER_CTA_W) / BANNER_W,
+      v0: uvY1(BANNER_CTA_Y + BANNER_CTA_H),
+      v1: uvY1(BANNER_CTA_Y),
+    },
+  ]
+})()
+
+export function createHeroScrollTexture(
+  logo?: HTMLImageElement | null,
+): {
+  texture: THREE.CanvasTexture
+  ctas: HeroBannerCta[]
+} {
+  const w = BANNER_W
+  const h = BANNER_H
+  const canvas = document.createElement("canvas")
+  canvas.width = w
+  canvas.height = h
+  const ctx = canvas.getContext("2d")!
+
+  // 1. Brocade Silk Mounting Background (Deep indigo Ten & Chi)
+  ctx.fillStyle = "#181a1f"
+  ctx.fillRect(0, 0, w, h)
+  ctx.fillStyle = "rgba(140, 130, 115, 0.15)"
+  for (let y = 0; y < h; y += 32) {
+    for (let x = 0; x < w; x += 32) {
+      if ((x + y) % 64 === 0) {
+        ctx.fillRect(x + 14, y + 14, 4, 4)
+      }
+    }
+  }
+
+  // 2. Mounting borders + Ichimonji ribbons
+  const marginX = 110
+  const topTenH = 110
+  const bottomChiH = 120
+  const artX = marginX
+  const artY = topTenH
+  const artW = w - marginX * 2
+  const artH = h - topTenH - bottomChiH
+  const cx = artX + artW * 0.5
+
+  ctx.fillStyle = "#222528"
+  ctx.fillRect(artX - 20, artY - 24, artW + 40, artH + 48)
+  ctx.fillStyle = "#8a7a60"
+  ctx.fillRect(artX - 20, artY - 24, artW + 40, 8)
+  ctx.fillRect(artX - 20, artY + artH + 16, artW + 40, 8)
+
+  // 3. Parchment field
+  const artGrad = ctx.createLinearGradient(0, artY, 0, artY + artH)
+  artGrad.addColorStop(0, "#f8f5ed")
+  artGrad.addColorStop(0.7, "#f2eee4")
+  artGrad.addColorStop(1, "#e8e1d2")
+  ctx.fillStyle = artGrad
+  ctx.fillRect(artX, artY, artW, artH)
+
+  ctx.save()
+  ctx.beginPath()
+  ctx.rect(artX, artY, artW, artH)
+  ctx.clip()
+
+  ctx.textAlign = "center"
+
+  // 4. Organization kicker
+  ctx.fillStyle = "rgba(50, 45, 40, 0.75)"
+  ctx.font = "600 40px -apple-system, BlinkMacSystemFont, sans-serif"
+  ctx.fillText("M E R A K I   A R T   F E D E R A T I O N", cx, artY + 130)
+
+  // 5. Headline — two lines across the full width
+  const headline = [HERO.headlineA.toUpperCase(), HERO.headlineB.toUpperCase()]
+  const headSize = 175
+  ctx.fillStyle = "rgba(15, 15, 18, 0.94)"
+  ctx.font = `bold ${headSize}px 'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif`
+  let ty = artY + 390
+  for (const line of headline) {
+    ctx.fillText(line, cx, ty)
+    ty += headSize * 1.32
+  }
+
+  // 6. Sub-headline
+  const wrapText = (text: string, font: string, maxWidth: number) => {
+    ctx.font = font
+    const words = text.split(" ")
+    const lines: string[] = []
+    let line = ""
+    for (const word of words) {
+      const test = line ? `${line} ${word}` : word
+      if (ctx.measureText(test).width > maxWidth && line) {
+        lines.push(line)
+        line = word
+      } else {
+        line = test
+      }
+    }
+    if (line) lines.push(line)
+    return lines
+  }
+  const subFont = "italic 38px 'Times New Roman', Georgia, serif"
+  ty = artY + 740
+  ctx.fillStyle = "rgba(40, 36, 32, 0.85)"
+  for (const line of wrapText(HERO.sub, subFont, artW - 260)) {
+    ctx.fillText(line, cx, ty)
+    ty += 60
+  }
+
+  // 7. Call-to-action buttons, side by side (rects exported for click hit-testing)
+  const ctaY = BANNER_CTA_Y
+  const drawCta = (x: number, label: string, solid: boolean) => {
+    if (solid) {
+      ctx.fillStyle = "#14100d"
+      ctx.fillRect(x, ctaY, BANNER_CTA_W, BANNER_CTA_H)
+      ctx.strokeStyle = "rgba(242, 237, 228, 0.4)"
+      ctx.lineWidth = 2
+      ctx.strokeRect(x + 10, ctaY + 10, BANNER_CTA_W - 20, BANNER_CTA_H - 20)
+      ctx.fillStyle = "#f2ede4"
+    } else {
+      ctx.fillStyle = "rgba(20, 16, 13, 0.06)"
+      ctx.fillRect(x, ctaY, BANNER_CTA_W, BANNER_CTA_H)
+      ctx.strokeStyle = "#14100d"
+      ctx.lineWidth = 5
+      ctx.strokeRect(x, ctaY, BANNER_CTA_W, BANNER_CTA_H)
+      ctx.strokeStyle = "rgba(20, 16, 13, 0.35)"
+      ctx.lineWidth = 2
+      ctx.strokeRect(x + 10, ctaY + 10, BANNER_CTA_W - 20, BANNER_CTA_H - 20)
+      ctx.fillStyle = "#14100d"
+    }
+    ctx.font = "bold 52px -apple-system, BlinkMacSystemFont, sans-serif"
+    ctx.fillText(label, x + BANNER_CTA_W * 0.5, ctaY + BANNER_CTA_H * 0.5 + 18)
+  }
+  drawCta(BANNER_CTA_X, "E X P L O R E   S A N M A N Y A   2 0 2 7", true)
+  drawCta(BANNER_CTA_X + BANNER_CTA_W + BANNER_CTA_GAP, "A P P L Y   A S   A N   A R T I S T", false)
+
+  // 8. Trust badges in a row of four
+  const badgeY = ctaY + BANNER_CTA_H + 90
+  ctx.strokeStyle = "rgba(26, 22, 19, 0.22)"
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.moveTo(artX + 60, badgeY)
+  ctx.lineTo(artX + artW - 60, badgeY)
+  ctx.stroke()
+  const cellW = artW / HERO.badges.length
+  HERO.badges.forEach((b, i) => {
+    const cellCx = artX + cellW * (i + 0.5)
+    ctx.fillStyle = "rgba(15, 15, 18, 0.92)"
+    ctx.font = "bold 42px -apple-system, BlinkMacSystemFont, sans-serif"
+    ctx.fillText(b.stat.toUpperCase(), cellCx, badgeY + 72)
+    ctx.fillStyle = "rgba(50, 45, 40, 0.65)"
+    ctx.font = "italic 30px 'Times New Roman', Georgia, serif"
+    ctx.fillText(b.note, cellCx, badgeY + 124)
+  })
+
+  // 9. Vermilion Hanko seal — bottom-left of the field
+  ctx.fillStyle = "#b71c1c"
+  ctx.fillRect(artX + 40, artY + artH - 104, 64, 64)
+  ctx.strokeStyle = "#ffffff"
+  ctx.lineWidth = 3
+  ctx.strokeRect(artX + 46, artY + artH - 98, 52, 52)
+  ctx.fillStyle = "#ffffff"
+  ctx.font = "bold 28px serif"
+  ctx.fillText("美", artX + 72, artY + artH - 61)
+
+  ctx.restore()
+
+  // 10. Hanging ribbons (Fūtai)
+  ctx.fillStyle = "#181a1f"
+  ctx.fillRect(artX + artW * 0.1, 0, 24, topTenH + 60)
+  ctx.fillRect(artX + artW * 0.9 - 24, 0, 24, topTenH + 60)
+
+  // 11. Maker's mark in the bottom mounting band — Designed by Foxbytes Studios
+  if (logo) {
+    const lw = 42
+    const lh = Math.round((logo.naturalHeight / logo.naturalWidth) * lw)
+    const off = document.createElement("canvas")
+    off.width = lw
+    off.height = lh
+    const octx = off.getContext("2d")!
+    octx.drawImage(logo, 0, 0, lw, lh)
+    const img = octx.getImageData(0, 0, lw, lh)
+    const d = img.data
+    for (let i = 0; i < d.length; i += 4) {
+      d[i + 3] = Math.max(d[i], d[i + 1], d[i + 2])
+    }
+    octx.putImageData(img, 0, 0)
+
+    const mark = "A N   E X P E R I E N C E   B Y   F O X B Y T E S   S T U D I O S"
+    ctx.font = "600 26px -apple-system, BlinkMacSystemFont, sans-serif"
+    const markW = ctx.measureText(mark).width
+    const markRight = w - 150
+    const baseline = h - bottomChiH * 0.5 + 10
+    ctx.fillStyle = "rgba(207, 201, 190, 0.7)"
+    ctx.textAlign = "right"
+    ctx.fillText(mark, markRight, baseline)
+    ctx.drawImage(off, markRight - markW - 26 - lw, baseline - lh + 7)
+    ctx.textAlign = "center"
+  }
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.colorSpace = THREE.SRGBColorSpace
+
+  return { texture, ctas: HERO_BANNER_CTAS }
 }
 
 /**
@@ -712,6 +953,7 @@ export function createTokonomaAlcove(
   backWallZ: number = -11.2,
   kakejikuTex: THREE.CanvasTexture,
   tatamiTex: THREE.CanvasTexture,
+  scrollSize?: { w?: number; h?: number; y?: number },
 ): THREE.Group {
   const group = new THREE.Group()
 
@@ -749,10 +991,10 @@ export function createTokonomaAlcove(
   group.add(tatamiTop)
 
   // 2. Kakejiku (掛け軸) Hanging Scroll
-  const scrollW = 1.15
-  const scrollH = 2.3
+  const scrollW = scrollSize?.w ?? 1.15
+  const scrollH = scrollSize?.h ?? 2.3
   const scrollZ = backWallZ + 0.05
-  const scrollY = platformH + 1.6
+  const scrollY = scrollSize?.y ?? platformH + 1.6
 
   // Scroll canvas plane
   const scrollMat = new THREE.MeshStandardMaterial({
@@ -761,6 +1003,7 @@ export function createTokonomaAlcove(
     side: THREE.FrontSide,
   })
   const scrollMesh = new THREE.Mesh(new THREE.PlaneGeometry(scrollW, scrollH), scrollMat)
+  scrollMesh.name = "tokonoma_scroll"
   scrollMesh.position.set(0, scrollY, scrollZ)
   scrollMesh.receiveShadow = true
   group.add(scrollMesh)
@@ -889,6 +1132,308 @@ export function createSakuraParticles(
   }
 
   return { group, update }
+}
+
+// ============================================================================
+// 3. Meraki Leadership Pavilion — plaques, text panels & quote scroll
+// ============================================================================
+
+/**
+ * Dark timber engraved plaque for name plates and partner boards
+ * (Shore Global / Foxbytes) in the Leadership Pavilion.
+ */
+export function createPlaqueTexture(
+  title: string,
+  subtitle: string,
+  logo?: HTMLImageElement | null,
+): THREE.CanvasTexture {
+  const w = 512
+  const h = 192
+  const canvas = document.createElement("canvas")
+  canvas.width = w
+  canvas.height = h
+  const ctx = canvas.getContext("2d")!
+
+  // Ebony timber base with grain
+  ctx.fillStyle = "#1c1815"
+  ctx.fillRect(0, 0, w, h)
+  ctx.fillStyle = "rgba(40, 35, 30, 0.4)"
+  for (let y = 0; y < h; y += 12) {
+    ctx.fillRect(0, y, w, 4)
+  }
+
+  // Frame + inner hairline
+  ctx.strokeStyle = "#0e0c0a"
+  ctx.lineWidth = 8
+  ctx.strokeRect(0, 0, w, h)
+  ctx.strokeStyle = "rgba(180, 165, 135, 0.45)"
+  ctx.lineWidth = 1.5
+  ctx.strokeRect(10, 10, w - 20, h - 20)
+
+  const serif = "'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif"
+  const sans = "-apple-system, BlinkMacSystemFont, sans-serif"
+
+  // Shrink text until it fits its column
+  const fit = (text: string, weight: string, family: string, size: number, min: number, maxW: number) => {
+    ctx.font = `${weight} ${size}px ${family}`
+    while (size > min && ctx.measureText(text).width > maxW) {
+      size -= 1
+      ctx.font = `${weight} ${size}px ${family}`
+    }
+  }
+
+  ctx.textAlign = "center"
+
+  if (logo) {
+    // Key the mark's black background to transparency (white logo on dark timber)
+    const lw = 94
+    const lh = Math.round((logo.naturalHeight / logo.naturalWidth) * lw)
+    const off = document.createElement("canvas")
+    off.width = lw
+    off.height = lh
+    const octx = off.getContext("2d")!
+    octx.drawImage(logo, 0, 0, lw, lh)
+    const img = octx.getImageData(0, 0, lw, lh)
+    const d = img.data
+    for (let i = 0; i < d.length; i += 4) {
+      d[i + 3] = Math.max(d[i], d[i + 1], d[i + 2])
+    }
+    octx.putImageData(img, 0, 0)
+    ctx.drawImage(off, 32, (h - lh) / 2)
+
+    // Text column right of the mark — title and subtitle auto-fit
+    const textL = 32 + lw + 30
+    const textR = w - 34
+    const textCx = (textL + textR) / 2
+    const maxW = textR - textL
+
+    fit(title, "bold", serif, 40, 26, maxW)
+    ctx.fillStyle = "#f2ede4"
+    ctx.fillText(title, textCx, h * 0.4)
+
+    const sub = subtitle.toUpperCase()
+    ctx.font = `600 17px ${sans}`
+    if (ctx.measureText(sub).width <= maxW) {
+      fit(sub, "600", sans, 17, 12, maxW)
+      ctx.fillStyle = "#cfc9be"
+      ctx.fillText(sub, textCx, h * 0.71)
+    } else {
+      // wrap long subtitles onto two lines
+      const words = sub.split(" ")
+      let line1 = ""
+      let line2 = ""
+      ctx.font = `600 15px ${sans}`
+      for (const word of words) {
+        if (ctx.measureText(line1 ? `${line1} ${word}` : word).width <= maxW && !line2) {
+          line1 = line1 ? `${line1} ${word}` : word
+        } else {
+          line2 = line2 ? `${line2} ${word}` : `${word}`
+        }
+      }
+      ctx.fillStyle = "#cfc9be"
+      ctx.fillText(line1, textCx, h * 0.62)
+      ctx.fillText(line2, textCx, h * 0.8)
+    }
+  } else {
+    fit(title, "bold", serif, 44, 28, w - 60)
+    ctx.fillStyle = "#f2ede4"
+    ctx.fillText(title, w * 0.5, h * 0.44)
+
+    fit(subtitle.toUpperCase(), "600", sans, 20, 13, w - 60)
+    ctx.fillStyle = "#cfc9be"
+    ctx.fillText(subtitle.toUpperCase(), w * 0.5, h * 0.74)
+
+    // Small red seal
+    ctx.fillStyle = "#b71c1c"
+    ctx.fillRect(14, h - 44, 26, 26)
+    ctx.fillStyle = "#ffffff"
+    ctx.font = "bold 13px serif"
+    ctx.fillText("美", 27, h - 25)
+  }
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.colorSpace = THREE.SRGBColorSpace
+  return texture
+}
+
+/**
+ * Framed calligraphy panel for the Essence / Mission / Vision / Goals walls
+ * of the Leadership Pavilion: kakejiku-style mounting with a parchment field,
+ * a single kanji motif and an English title. Rendered inside cadre frames.
+ */
+export function createScrollPanelTexture(kanji: string, title: string, subtitle: string): THREE.CanvasTexture {
+  const w = 1024
+  const h = 1440
+  const canvas = document.createElement("canvas")
+  canvas.width = w
+  canvas.height = h
+  const ctx = canvas.getContext("2d")!
+
+  // Indigo brocade mounting
+  ctx.fillStyle = "#181a1f"
+  ctx.fillRect(0, 0, w, h)
+  ctx.fillStyle = "rgba(140, 130, 115, 0.15)"
+  for (let y = 0; y < h; y += 32) {
+    for (let x = 0; x < w; x += 32) {
+      if ((x + y) % 64 === 0) ctx.fillRect(x + 14, y + 14, 4, 4)
+    }
+  }
+
+  // Parchment field
+  const marginX = 90
+  const mountY = 200
+  const artX = marginX
+  const artY = mountY
+  const artW = w - marginX * 2
+  const artH = h - mountY * 2
+  ctx.fillStyle = "#222528"
+  ctx.fillRect(artX - 18, artY - 18, artW + 36, artH + 36)
+  ctx.fillStyle = "#8a7a60"
+  ctx.fillRect(artX - 18, artY - 18, artW + 36, 7)
+  ctx.fillRect(artX - 18, artY + artH + 11, artW + 36, 7)
+  const grad = ctx.createLinearGradient(0, artY, 0, artY + artH)
+  grad.addColorStop(0, "#f8f5ed")
+  grad.addColorStop(0.7, "#f2eee4")
+  grad.addColorStop(1, "#e8e1d2")
+  ctx.fillStyle = grad
+  ctx.fillRect(artX, artY, artW, artH)
+
+  // Kanji motif
+  ctx.fillStyle = "rgba(15, 15, 18, 0.92)"
+  ctx.font = "bold 330px 'Hiragino Mincho ProN', 'Yu Mincho', serif"
+  ctx.textAlign = "center"
+  ctx.fillText(kanji, artX + artW * 0.5, artY + artH * 0.42)
+
+  // Rule
+  ctx.strokeStyle = "rgba(26, 22, 19, 0.5)"
+  ctx.lineWidth = 3
+  ctx.beginPath()
+  ctx.moveTo(artX + artW * 0.2, artY + artH * 0.55)
+  ctx.lineTo(artX + artW * 0.8, artY + artH * 0.55)
+  ctx.stroke()
+
+  // English title + subtitle
+  ctx.fillStyle = "rgba(20, 18, 16, 0.95)"
+  ctx.font = "bold 74px -apple-system, BlinkMacSystemFont, sans-serif"
+  ctx.fillText(title.toUpperCase(), artX + artW * 0.5, artY + artH * 0.68)
+  ctx.fillStyle = "rgba(50, 45, 40, 0.75)"
+  ctx.font = "italic 30px 'Times New Roman', serif"
+  ctx.fillText(subtitle, artX + artW * 0.5, artY + artH * 0.76)
+
+  // Vermilion seal
+  const sealX = artX + artW * 0.5 - 24
+  const sealY = artY + artH * 0.84
+  ctx.fillStyle = "#b71c1c"
+  ctx.fillRect(sealX, sealY, 48, 48)
+  ctx.strokeStyle = "#ffffff"
+  ctx.lineWidth = 2
+  ctx.strokeRect(sealX + 4, sealY + 4, 40, 40)
+  ctx.fillStyle = "#ffffff"
+  ctx.font = "bold 20px serif"
+  ctx.fillText("藝", sealX + 24, sealY + 32)
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.colorSpace = THREE.SRGBColorSpace
+  return texture
+}
+
+/**
+ * Founder's quote rendered as a Tokonoma kakejiku hanging scroll.
+ */
+export function createQuoteScrollTexture(quote: string, author: string): THREE.CanvasTexture {
+  const w = 1024
+  const h = 2048
+  const canvas = document.createElement("canvas")
+  canvas.width = w
+  canvas.height = h
+  const ctx = canvas.getContext("2d")!
+
+  // Brocade mounting
+  ctx.fillStyle = "#181a1f"
+  ctx.fillRect(0, 0, w, h)
+  ctx.fillStyle = "rgba(140, 130, 115, 0.15)"
+  for (let y = 0; y < h; y += 32) {
+    for (let x = 0; x < w; x += 32) {
+      if ((x + y) % 64 === 0) ctx.fillRect(x + 14, y + 14, 4, 4)
+    }
+  }
+
+  const marginX = 96
+  const topTenH = 340
+  const bottomChiH = 360
+  const artX = marginX
+  const artY = topTenH
+  const artW = w - marginX * 2
+  const artH = h - topTenH - bottomChiH
+
+  ctx.fillStyle = "#222528"
+  ctx.fillRect(artX - 20, artY - 24, artW + 40, artH + 48)
+  ctx.fillStyle = "#8a7a60"
+  ctx.fillRect(artX - 20, artY - 24, artW + 40, 8)
+  ctx.fillRect(artX - 20, artY + artH + 16, artW + 40, 8)
+
+  const grad = ctx.createLinearGradient(0, artY, 0, artY + artH)
+  grad.addColorStop(0, "#f8f5ed")
+  grad.addColorStop(0.7, "#f2eee4")
+  grad.addColorStop(1, "#e8e1d2")
+  ctx.fillStyle = grad
+  ctx.fillRect(artX, artY, artW, artH)
+
+  // Wrapped quote text
+  ctx.save()
+  ctx.beginPath()
+  ctx.rect(artX, artY, artW, artH)
+  ctx.clip()
+
+  ctx.fillStyle = "rgba(15, 15, 18, 0.92)"
+  ctx.textAlign = "center"
+  const fontSize = 64
+  ctx.font = `bold ${fontSize}px 'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif`
+  const maxWidth = artW - 120
+  const words = quote.split(" ")
+  const lines: string[] = []
+  let line = ""
+  for (const word of words) {
+    const test = line ? `${line} ${word}` : word
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line)
+      line = word
+    } else {
+      line = test
+    }
+  }
+  if (line) lines.push(line)
+  const blockH = lines.length * fontSize * 1.3
+  let ty = artY + artH * 0.5 - blockH * 0.5 + fontSize
+  for (const l of lines) {
+    ctx.fillText(l, artX + artW * 0.5, ty)
+    ty += fontSize * 1.3
+  }
+
+  // Author
+  ctx.font = "600 30px -apple-system, BlinkMacSystemFont, sans-serif"
+  ctx.fillStyle = "rgba(50, 45, 40, 0.8)"
+  ctx.fillText(author.toUpperCase(), artX + artW * 0.5, artY + artH * 0.86)
+
+  // Vermilion seal
+  const sealX = artX + artW - 86
+  const sealY = artY + artH * 0.08
+  ctx.fillStyle = "#b71c1c"
+  ctx.fillRect(sealX, sealY, 40, 40)
+  ctx.fillStyle = "#ffffff"
+  ctx.font = "bold 17px serif"
+  ctx.fillText("美", sealX + 20, sealY + 26)
+
+  ctx.restore()
+
+  // Hanging ribbons (Fūtai)
+  ctx.fillStyle = "#181a1f"
+  ctx.fillRect(artX + artW * 0.22, 0, 24, topTenH + 60)
+  ctx.fillRect(artX + artW * 0.78, 0, 24, topTenH + 60)
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.colorSpace = THREE.SRGBColorSpace
+  return texture
 }
 
 /**
