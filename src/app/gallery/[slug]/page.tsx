@@ -1,5 +1,5 @@
-import { TV_ARTICLES } from "@/lib/thevertmenthe-articles";
-import { TvArticlePage } from "@/components/thevertmenthe/tv-article-page";
+import { TV_ARTICLES } from "@/lib/artworks";
+import { TvArticlePage } from "@/components/gallery3d/tv-article-page";
 
 export function generateStaticParams() {
   return TV_ARTICLES.map((a) => ({ slug: a.uid }));

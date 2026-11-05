@@ -5,7 +5,7 @@
  * White document sheet over the 3D world, matching the artwork pages' language.
  */
 import { SANMANYA, SESSIONS, CONTACT, ARTIST_FORM_URL } from "@/lib/meraki-content"
-import { getTvEngine } from "@/components/thevertmenthe/tv-engine"
+import { getTvEngine } from "@/components/gallery3d/tv-engine"
 import { TvFooter } from "./tv-footer"
 
 export function TvSanmanyaPage() {
@@ -24,7 +24,7 @@ export function TvSanmanyaPage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             className="tv-doc_sanmanya_logo"
-            src="/thevertmenthe/brand/sanmanya-logo.png"
+            src="/meraki/brand/sanmanya-logo.png"
             alt="SANMANYA — The Dignity of Creation, Phase 2"
           />
           <p className="tv-doc_kicker">Winter Session — Phase 2</p>

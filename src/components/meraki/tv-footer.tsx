@@ -5,7 +5,7 @@
  * Internal links ride the engine's ink transition.
  */
 import { CONTACT } from "@/lib/meraki-content"
-import { getTvEngine } from "@/components/thevertmenthe/tv-engine"
+import { getTvEngine } from "@/components/gallery3d/tv-engine"
 
 const LINKS = [
   { label: "About Meraki", href: "/about" },
@@ -25,7 +25,7 @@ export function TvFooter() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className="tv-footer_mark"
-          src="/thevertmenthe/brand/meraki-logo.png"
+          src="/meraki/brand/meraki-logo.png"
           alt="Meraki Art Federation logo"
         />
         <h4 className="tv-footer_brand">Meraki Art Federation</h4>
@@ -56,7 +56,7 @@ export function TvFooter() {
         <span>© {new Date().getFullYear()} Meraki Art Federation. All rights reserved.</span>
         <span className="tv-footer_credit">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/thevertmenthe/brand/foxbytes-black.png" alt="" />
+          <img src="/meraki/brand/foxbytes-black.png" alt="" />
           Designed by Foxbytes Studios
         </span>
         <span>{CONTACT.headquarters}</span>

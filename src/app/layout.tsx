@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { TvClient } from "@/components/thevertmenthe/tv-client";
+import { TvClient } from "@/components/gallery3d/tv-client";
 
 export const metadata: Metadata = {
   title: "Meraki Art Federation — Art for the Soul, Tour for the World",
